@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26730.16
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Diacritisc-project1", "Diacritisc-project1\Diacritisc-project1.csproj", "{43111188-9DCC-4DBF-B618-2102C4B82666}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Diacritics-project1", "Diacritics-project1\Diacritics-project1.csproj", "{43111188-9DCC-4DBF-B618-2102C4B82666}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
