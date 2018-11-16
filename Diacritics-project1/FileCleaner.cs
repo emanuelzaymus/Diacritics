@@ -18,16 +18,22 @@ namespace Diacritics_project1
         protected string charsPattern = $"[{latinChars}{nonLatinChars}]";
         protected string digitsPattern = $"[{digits}]";
 
-        internal string CompleteProcessing(string path, int rmvWordsFromFreq = 0, int rmvBadWordsFromFreq = int.MaxValue)
+        public enum Type
+        {
+            Dictionary,
+            Ngrams
+        }
+
+        internal string CompleteProcessing(string path, Type t, int rmvWordsFromFreq = 0, int rmvBadWordsFromFreq = int.MaxValue)
         {
             if (rmvWordsFromFreq != 0)
             {
-                path = RemoveWordsFromFreqDown(path, rmvWordsFromFreq);
+                path = RemoveWordsFromFreqDown(path, t, rmvWordsFromFreq);
             }
-            path = Clean(path);
-            return RemoveBadWords(path, rmvBadWordsFromFreq);
+            path = Clean(path, t);
+            return RemoveBadWords(path, t, rmvBadWordsFromFreq);
         }
-        internal string RemoveWordsFromFreqDown(string path, int fromFrequency)
+        internal string RemoveWordsFromFreqDown(string path, Type t, int fromFrequency)
         {
             parsePath(path, out string name, out string extension);
             string line;
@@ -38,7 +44,7 @@ namespace Diacritics_project1
             {
                 while ((line = sr.ReadLine()) != null)
                 {
-                    if (getFrequency(line) <= fromFrequency)
+                    if (getFrequency(line, t) <= fromFrequency)
                     {
                         fromDown_sw.WriteLine(line);
                     }
@@ -51,7 +57,7 @@ namespace Diacritics_project1
             return $"{name}_TO-{fromFrequency}{extension}";
         }
 
-        internal string Clean(string path)
+        internal string Clean(string path, Type t)
         {
             parsePath(path, out string name, out string extension);
             string line, word;
@@ -64,7 +70,7 @@ namespace Diacritics_project1
             {
                 while ((line = sr.ReadLine()) != null)
                 {
-                    word = getWord(line);
+                    word = join(getWords(line, t), false);
 
                     if (Regex.IsMatch(word, charsPattern) && Regex.IsMatch(word, digitsPattern))
                     {
@@ -87,7 +93,7 @@ namespace Diacritics_project1
             return $"{name}_CLEANED{extension}";
         }
 
-        internal string RemoveBadWords(string path, int fromFrequency = int.MaxValue)
+        internal string RemoveBadWords(string path, Type t, int fromFrequency = int.MaxValue)
         {
             parsePath(path, out string name, out string extension);
             string line;
@@ -98,7 +104,7 @@ namespace Diacritics_project1
             {
                 while ((line = sr.ReadLine()) != null)
                 {
-                    if (getFrequency(line) > fromFrequency || isGoodWord(removeDiacritics(getWord(line))))
+                    if (getFrequency(line, t) > fromFrequency || isGoodWord(removeDiacritics(join(getWords(line, t), true))))
                     {
                         goodWords_sw.WriteLine(line);
                     }
@@ -136,14 +142,46 @@ namespace Diacritics_project1
         //    }
         //}
 
-        private static string getWord(string line)
+        private string join(string[] words, bool withWhiteSpaces)
         {
-            return line.Substring(0, line.IndexOf("\t"));
+            if (withWhiteSpaces)
+            {
+                return String.Join(" ", words);
+            }
+            else
+            {
+                return String.Join("", words);
+            }
         }
 
-        private static int getFrequency(string line)
+        private static string[] getWords(string line, Type t)
         {
-            string frequencyStr = line.Substring(line.IndexOf("\t") + 1);
+            if (t == Type.Dictionary)
+            {
+                string[] words = { line.Substring(0, line.IndexOf("\t")) };
+                return words;
+            }
+            else
+            {
+                line = line.Trim();
+                line = line.Substring(line.IndexOf(' ') + 1);
+
+                string[] words = line.Split('\t');
+                return words;
+            }
+        }
+
+        private static int getFrequency(string line, Type t)
+        {
+            string frequencyStr = line.Trim();
+            if (t == Type.Dictionary)
+            {
+                frequencyStr = frequencyStr.Substring(frequencyStr.IndexOf("\t") + 1);
+            }
+            else
+            {
+                frequencyStr = frequencyStr.Substring(0, frequencyStr.IndexOf(' '));
+            }
             return Convert.ToInt32(frequencyStr);
         }
 
