@@ -15,10 +15,43 @@ namespace Diacritics_project1
         private string nonDiacriticsCharsPattern = $"[{latinChars}]";
         private string diacriticsCharsPattern = $"[{nonLatinChars}]";
 
-        private string charsPattern = $"[{latinChars}{nonLatinChars}]";
-        private string digitsPattern = $"[{digits}]";
+        protected string charsPattern = $"[{latinChars}{nonLatinChars}]";
+        protected string digitsPattern = $"[{digits}]";
 
-        internal void Clean(string path)
+        internal string CompleteProcessing(string path, int rmvWordsFromFreq = 0, int rmvBadWordsFromFreq = int.MaxValue)
+        {
+            if (rmvWordsFromFreq != 0)
+            {
+                path = RemoveWordsFromFreqDown(path, rmvWordsFromFreq);
+            }
+            path = Clean(path);
+            return RemoveBadWords(path, rmvBadWordsFromFreq);
+        }
+        internal string RemoveWordsFromFreqDown(string path, int fromFrequency)
+        {
+            parsePath(path, out string name, out string extension);
+            string line;
+
+            using (StreamReader sr = File.OpenText(path))
+            using (var fromDown_sw = new StreamWriter($"{name}_FROM-{fromFrequency}-DOWN{extension}"))
+            using (var to_sw = new StreamWriter($"{name}_TO-{fromFrequency}{extension}"))
+            {
+                while ((line = sr.ReadLine()) != null)
+                {
+                    if (getFrequency(line) <= fromFrequency)
+                    {
+                        fromDown_sw.WriteLine(line);
+                    }
+                    else
+                    {
+                        to_sw.WriteLine(line);
+                    }
+                }
+            }
+            return $"{name}_TO-{fromFrequency}{extension}";
+        }
+
+        internal string Clean(string path)
         {
             parsePath(path, out string name, out string extension);
             string line, word;
@@ -31,7 +64,7 @@ namespace Diacritics_project1
             {
                 while ((line = sr.ReadLine()) != null)
                 {
-                    word = line.Substring(0, line.IndexOf("\t"));
+                    word = getWord(line);
 
                     if (Regex.IsMatch(word, charsPattern) && Regex.IsMatch(word, digitsPattern))
                     {
@@ -41,7 +74,7 @@ namespace Diacritics_project1
                     {
                         nums_sw.WriteLine(line);
                     }
-                    else if (Regex.IsMatch(word, charsPattern))
+                    else if (Regex.IsMatch(word, $@"^{charsPattern}+$"))
                     {
                         cleaned_sw.WriteLine(line);
                     }
@@ -51,11 +84,13 @@ namespace Diacritics_project1
                     }
                 }
             }
+            return $"{name}_CLEANED{extension}";
         }
-        internal void RemoveBadWords(string path)
+
+        internal string RemoveBadWords(string path, int fromFrequency = int.MaxValue)
         {
             parsePath(path, out string name, out string extension);
-            string line, word;
+            string line;
 
             using (StreamReader sr = File.OpenText(path))
             using (var goodWords_sw = new StreamWriter($"{name}_GOOD-WORDS{extension}"))
@@ -63,10 +98,7 @@ namespace Diacritics_project1
             {
                 while ((line = sr.ReadLine()) != null)
                 {
-                    word = line.Substring(0, line.IndexOf("\t"));
-                    //word = removeDiacritics(word);
-
-                    if (isGoodWord(word))
+                    if (getFrequency(line) > fromFrequency || isGoodWord(removeDiacritics(getWord(line))))
                     {
                         goodWords_sw.WriteLine(line);
                     }
@@ -76,24 +108,59 @@ namespace Diacritics_project1
                     }
                 }
             }
+            return $"{name}_GOOD-WORDS{extension}";
+        }
+
+        //internal void RemoveWordsWithoutDiacritics(string path)
+        //{
+        //    parsePath(path, out string name, out string extension);
+        //    string line, word;
+
+        //    using (StreamReader sr = File.OpenText(path))
+        //    using (var withDiac_sw = new StreamWriter($"{name}_WITH-DIACRITICS{extension}"))
+        //    using (var withoutDiac_sw = new StreamWriter($"{name}_WITHOUT-DIACRITICS{extension}"))
+        //    {
+        //        while ((line = sr.ReadLine()) != null)
+        //        {
+        //            word = getWord(line);
+
+        //            if (Regex.IsMatch(word, diacriticsCharsPattern))
+        //            {
+        //                withDiac_sw.WriteLine(line);
+        //            }
+        //            else
+        //            {
+        //                withoutDiac_sw.WriteLine(line);
+        //            }
+        //        }
+        //    }
+        //}
+
+        private static string getWord(string line)
+        {
+            return line.Substring(0, line.IndexOf("\t"));
+        }
+
+        private static int getFrequency(string line)
+        {
+            string frequencyStr = line.Substring(line.IndexOf("\t") + 1);
+            return Convert.ToInt32(frequencyStr);
         }
 
         private string removeDiacritics(string word)
         {
-            //var normalizedString = word.Normalize(NormalizationForm.FormD);
-            //var stringBuilder = new StringBuilder();
+            var normalizedString = word.Normalize(NormalizationForm.FormD);
+            var stringBuilder = new StringBuilder();
 
-            //foreach (var c in normalizedString)
-            //{
-            //    var unicodeCategory = CharUnicodeInfo.GetUnicodeCategory(c);
-            //    if (unicodeCategory != UnicodeCategory.NonSpacingMark)
-            //    {
-            //        stringBuilder.Append(c);
-            //    }
-            //}
-
-            //return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
-            throw new NotImplementedException();
+            foreach (var c in normalizedString)
+            {
+                var unicodeCategory = CharUnicodeInfo.GetUnicodeCategory(c);
+                if (unicodeCategory != UnicodeCategory.NonSpacingMark)
+                {
+                    stringBuilder.Append(c);
+                }
+            }
+            return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
         }
 
         private bool isGoodWord(string word)
@@ -120,63 +187,13 @@ namespace Diacritics_project1
             return true;
         }
 
-        internal void RemoveWordsWithFreq(string path, int frequency)
-        {
-            parsePath(path, out string name, out string extension);
-            string line, word;
-
-            using (StreamReader sr = File.OpenText(path))
-            using (var with_sw = new StreamWriter($"{name}_WITH-{frequency}{extension}"))
-            using (var without_sw = new StreamWriter($"{name}_WITHOUT-{frequency}{extension}"))
-            {
-                while ((line = sr.ReadLine()) != null)
-                {
-                    word = line.Substring(line.IndexOf("\t") + 1);
-
-                    if (Convert.ToInt32(word) == frequency)
-                    {
-                        with_sw.WriteLine(line);
-                    }
-                    else
-                    {
-                        without_sw.WriteLine(line);
-                    }
-                }
-            }
-        }
-
-        //internal void RemoveWordsWithoutDiacritics(string path)
-        //{
-        //    parsePath(path, out string name, out string extension);
-        //    string line, subStr;
-
-        //    using (StreamReader sr = File.OpenText(path))
-        //    using (var withDiac_sw = new StreamWriter($"{name}_WITH-DIACRITICS{extension}"))
-        //    using (var withoutDiac_sw = new StreamWriter($"{name}_WITHOUT-DIACRITICS{extension}"))
-        //    {
-        //        while ((line = sr.ReadLine()) != null)
-        //        {
-        //            subStr = line.Substring(0, line.IndexOf("\t"));
-
-        //            if (Regex.IsMatch(subStr, diacriticsCharsPattern))
-        //            {
-        //                withDiac_sw.WriteLine(line);
-        //            }
-        //            else
-        //            {
-        //                withoutDiac_sw.WriteLine(line);
-        //            }
-        //        }
-        //    }
-        //}
-
         private static void parsePath(string path, out string name, out string extension)
         {
             name = path.Substring(0, path.LastIndexOf('.'));
             extension = path.Substring(path.LastIndexOf('.'));
         }
 
-        public void ReadingSpeedTest(string path)
+        internal void ReadingSpeedTest(string path)
         {
             DateTime start, end;
             int counter = 0;
