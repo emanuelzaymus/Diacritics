@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Diacritisc_project1;
+using System;
 using System.Globalization;
 using System.IO;
 using System.Text;
@@ -15,132 +16,102 @@ namespace Diacritics_project1
         private string nonDiacriticsCharsPattern = $"[{latinChars}]";
         private string diacriticsCharsPattern = $"[{nonLatinChars}]";
 
-        protected string charsPattern = $"[{latinChars}{nonLatinChars}]";
-        protected string digitsPattern = $"[{digits}]";
+        private string charsPattern = $"[{latinChars}{nonLatinChars}]";
+        private string digitsPattern = $"[{digits}]";
 
-        public enum Type
-        {
-            Dictionary,
-            Ngrams
-        }
-
-        internal string CompleteProcessing(string path, Type t, int rmvWordsFromFreq = 0, int rmvBadWordsFromFreq = int.MaxValue)
+        internal string CompleteProcessing(NgramFile file, int rmvWordsFromFreq = 0, int rmvBadWordsFromFreq = int.MaxValue)
         {
             if (rmvWordsFromFreq != 0)
             {
-                path = RemoveWordsFromFreqDown(path, t, rmvWordsFromFreq);
+                file = new NgramFile(RemoveWordsFromFreqDown(file, rmvWordsFromFreq), file.GetFileType());
             }
-            path = Clean(path, t);
-            return RemoveBadWords(path, t, rmvBadWordsFromFreq);
+            file = new NgramFile(Clean(file), file.GetFileType());
+            return RemoveBadWords(file, rmvBadWordsFromFreq);
         }
-        internal string RemoveWordsFromFreqDown(string path, Type t, int fromFrequency)
+        internal string RemoveWordsFromFreqDown(NgramFile file, int fromFrequency)
         {
-            parsePath(path, out string name, out string extension);
-            string line;
+            string name = file.FileName;
+            string extension = file.FileExtension;
 
-            using (StreamReader sr = File.OpenText(path))
             using (var fromDown_sw = new StreamWriter($"{name}_FROM-{fromFrequency}-DOWN{extension}"))
             using (var to_sw = new StreamWriter($"{name}_TO-{fromFrequency}{extension}"))
             {
-                while ((line = sr.ReadLine()) != null)
+                Ngram ngram;
+                while ((ngram = file.Next()) != null)
                 {
-                    if (getFrequency(line, t) <= fromFrequency)
+                    if (ngram.Frequency <= fromFrequency)
                     {
-                        fromDown_sw.WriteLine(line);
+                        fromDown_sw.WriteLine(ngram.Line);
                     }
                     else
                     {
-                        to_sw.WriteLine(line);
+                        to_sw.WriteLine(ngram.Line);
                     }
                 }
             }
             return $"{name}_TO-{fromFrequency}{extension}";
         }
 
-        internal string Clean(string path, Type t)
+        internal string Clean(NgramFile file)
         {
-            parsePath(path, out string name, out string extension);
-            string line, word;
+            string name = file.FileName;
+            string extension = file.FileExtension;
+            string word;
 
-            using (StreamReader sr = File.OpenText(path))
             using (var cleaned_sw = new StreamWriter($"{name}_CLEANED{extension}"))
             using (var chrs_nums_sw = new StreamWriter($"{name}_TRASH-CHRS+NUMS{extension}"))
             using (var nums_sw = new StreamWriter($"{name}_TRASH-NUMS{extension}"))
             using (var trash_sw = new StreamWriter($"{name}_TRASH{extension}"))
             {
-                while ((line = sr.ReadLine()) != null)
+                Ngram ngram;
+                while ((ngram = file.Next()) != null)
                 {
-                    word = join(getWords(line, t), false);
+                    word = join(ngram.Words, false);
 
                     if (Regex.IsMatch(word, charsPattern) && Regex.IsMatch(word, digitsPattern))
                     {
-                        chrs_nums_sw.WriteLine(line);
+                        chrs_nums_sw.WriteLine(ngram.Line);
                     }
                     else if (Regex.IsMatch(word, digitsPattern))
                     {
-                        nums_sw.WriteLine(line);
+                        nums_sw.WriteLine(ngram.Line);
                     }
                     else if (Regex.IsMatch(word, $@"^{charsPattern}+$"))
                     {
-                        cleaned_sw.WriteLine(line);
+                        cleaned_sw.WriteLine(ngram.Line);
                     }
                     else
                     {
-                        trash_sw.WriteLine(line);
+                        trash_sw.WriteLine(ngram.Line);
                     }
                 }
             }
             return $"{name}_CLEANED{extension}";
         }
 
-        internal string RemoveBadWords(string path, Type t, int fromFrequency = int.MaxValue)
+        internal string RemoveBadWords(NgramFile file, int fromFrequency = int.MaxValue)
         {
-            parsePath(path, out string name, out string extension);
-            string line;
+            string name = file.FileName;
+            string extension = file.FileExtension;
 
-            using (StreamReader sr = File.OpenText(path))
             using (var goodWords_sw = new StreamWriter($"{name}_GOOD-WORDS{extension}"))
             using (var badWords_sw = new StreamWriter($"{name}_BAD-WORDS{extension}"))
             {
-                while ((line = sr.ReadLine()) != null)
+                Ngram ngram;
+                while ((ngram = file.Next()) != null)
                 {
-                    if (getFrequency(line, t) > fromFrequency || isGoodWord(removeDiacritics(join(getWords(line, t), true))))
+                    if (ngram.Frequency > fromFrequency || isGoodWord(RemoveDiacritics(join(ngram.Words, true))))
                     {
-                        goodWords_sw.WriteLine(line);
+                        goodWords_sw.WriteLine(ngram.Line);
                     }
                     else
                     {
-                        badWords_sw.WriteLine(line);
+                        badWords_sw.WriteLine(ngram.Line);
                     }
                 }
             }
             return $"{name}_GOOD-WORDS{extension}";
         }
-
-        //internal void RemoveWordsWithoutDiacritics(string path)
-        //{
-        //    parsePath(path, out string name, out string extension);
-        //    string line, word;
-
-        //    using (StreamReader sr = File.OpenText(path))
-        //    using (var withDiac_sw = new StreamWriter($"{name}_WITH-DIACRITICS{extension}"))
-        //    using (var withoutDiac_sw = new StreamWriter($"{name}_WITHOUT-DIACRITICS{extension}"))
-        //    {
-        //        while ((line = sr.ReadLine()) != null)
-        //        {
-        //            word = getWord(line);
-
-        //            if (Regex.IsMatch(word, diacriticsCharsPattern))
-        //            {
-        //                withDiac_sw.WriteLine(line);
-        //            }
-        //            else
-        //            {
-        //                withoutDiac_sw.WriteLine(line);
-        //            }
-        //        }
-        //    }
-        //}
 
         private string join(string[] words, bool withWhiteSpaces)
         {
@@ -154,38 +125,7 @@ namespace Diacritics_project1
             }
         }
 
-        private static string[] getWords(string line, Type t)
-        {
-            if (t == Type.Dictionary)
-            {
-                string[] words = { line.Substring(0, line.IndexOf("\t")) };
-                return words;
-            }
-            else
-            {
-                line = line.Trim();
-                line = line.Substring(line.IndexOf(' ') + 1);
-
-                string[] words = line.Split('\t');
-                return words;
-            }
-        }
-
-        private static int getFrequency(string line, Type t)
-        {
-            string frequencyStr = line.Trim();
-            if (t == Type.Dictionary)
-            {
-                frequencyStr = frequencyStr.Substring(frequencyStr.IndexOf("\t") + 1);
-            }
-            else
-            {
-                frequencyStr = frequencyStr.Substring(0, frequencyStr.IndexOf(' '));
-            }
-            return Convert.ToInt32(frequencyStr);
-        }
-
-        private string removeDiacritics(string word)
+        public static string RemoveDiacritics(string word)
         {
             var normalizedString = word.Normalize(NormalizationForm.FormD);
             var stringBuilder = new StringBuilder();
@@ -223,12 +163,6 @@ namespace Diacritics_project1
                 lastChar = ch;
             }
             return true;
-        }
-
-        private static void parsePath(string path, out string name, out string extension)
-        {
-            name = path.Substring(0, path.LastIndexOf('.'));
-            extension = path.Substring(path.LastIndexOf('.'));
         }
 
         internal void ReadingSpeedTest(string path)
