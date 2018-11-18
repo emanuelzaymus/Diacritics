@@ -45,7 +45,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DiacriticsReconstructor.cs" />
+    <Compile Include="DiacriticsTester.cs" />
     <Compile Include="FileCleaner.cs" />
+    <Compile Include="FileHandler.cs" />
     <Compile Include="Ngram.cs" />
     <Compile Include="NgramFile.cs" />
     <Compile Include="Program.cs" />

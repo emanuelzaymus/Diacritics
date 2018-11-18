@@ -23,23 +23,23 @@ namespace Diacritisc_project1
         internal void Load(NgramFile file)
         {
             Ngram ngram;
-            int i = 10;
+            string lineWordsFormated;
             while ((ngram = file.Next()) != null)
             {
+                lineWordsFormated = String.Join(" ", ngram.Words);
                 foreach (string w in ngram.Words)
                 {
                     string nonDiacriticsWord = FileCleaner.RemoveDiacritics(w);
                     List<string> foundList = trie.Find(nonDiacriticsWord);
                     if (foundList == null)
                     {
-                        trie.Add(nonDiacriticsWord, new List<string> { $"{ngram.Frequency} - {w}" });
+                        trie.Add(nonDiacriticsWord, new List<string> { lineWordsFormated });
                     }
                     else
                     {
-                        foundList.Add($"{ngram.Frequency} - {w}");
+                        foundList.Add(lineWordsFormated);
                     }
                 }
-                if (--i <= 0) return;
             }
         }
 

@@ -16,7 +16,7 @@ namespace Diacritics_project1
         private string nonDiacriticsCharsPattern = $"[{latinChars}]";
         private string diacriticsCharsPattern = $"[{nonLatinChars}]";
 
-        private string charsPattern = $"[{latinChars}{nonLatinChars}]";
+        public static string charsPattern = $"[{latinChars}{nonLatinChars}]";
         private string digitsPattern = $"[{digits}]";
 
         internal string CompleteProcessing(NgramFile file, int rmvWordsFromFreq = 0, int rmvBadWordsFromFreq = int.MaxValue)
