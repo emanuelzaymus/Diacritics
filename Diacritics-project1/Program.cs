@@ -22,10 +22,7 @@ namespace Diacritics_project1
             //var file2 = new NgramFile("D:/ngramy/prim-8.0-public-img-sk-n-gramy/prim-8.0-public-img-sk-4-gramy.txt", NgramFile.Type.Ngrams);
             //Console.WriteLine(fc.CompleteProcessing(file2, rmvWordsFromFreq: 1));
 
-            //var t = FileHandler.ReadUTF8("C:/Users/3m0/Google Drive/School/Bakalarka/testovacie_texty/Retz.txt");
-            //FileHandler.WriteUTF8("C:/Users/3m0/Google Drive/School/Bakalarka/testovacie_texty/Retz22.txt", t);
-
-
+            DiacriticsTester.Test("E:/testovacie_texty/Retz.txt");
 
             return;
 
