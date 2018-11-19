@@ -16,10 +16,10 @@ namespace Diacritisc_project1
         public DiacriticsReconstructor()
         {
             var files = new List<NgramFile> {
-                new NgramFile("E:/ngramy/prim-8.0-public-img-sk-n-gramy/prim-8.0-public-img-sk-4-gramy_TO-1_CLEANED_GOOD-WORDS.txt", NgramFile.Type.Ngrams),
-                new NgramFile("E:/ngramy/prim-8.0-public-img-sk-n-gramy/prim-8.0-public-img-sk-3-gramy_TO-1_CLEANED_GOOD-WORDS.txt", NgramFile.Type.Ngrams),
-                new NgramFile("E:/ngramy/prim-8.0-public-img-sk-n-gramy/prim-8.0-public-img-sk-2-gramy_TO-1_CLEANED_GOOD-WORDS.txt", NgramFile.Type.Ngrams),
-                new NgramFile("E:/slovniky/prim-8.0-public-all-word_frequency_non_case_sensitive/prim-8.0-public-all-word_frequency_non_case_sensitive_CLEANED_GOOD-WORDS.txt", NgramFile.Type.Dictionary)
+                new NgramFile("D:/ngramy/prim-8.0-public-img-sk-n-gramy/prim-8.0-public-img-sk-4-gramy_TO-1_CLEANED_GOOD-WORDS.txt", NgramFile.Type.Ngrams),
+                new NgramFile("D:/ngramy/prim-8.0-public-img-sk-n-gramy/prim-8.0-public-img-sk-3-gramy_TO-1_CLEANED_GOOD-WORDS.txt", NgramFile.Type.Ngrams),
+                new NgramFile("D:/ngramy/prim-8.0-public-img-sk-n-gramy/prim-8.0-public-img-sk-2-gramy_TO-1_CLEANED_GOOD-WORDS.txt", NgramFile.Type.Ngrams),
+                new NgramFile("D:/slovniky/prim-8.0-public-all-word_frequency_non_case_sensitive/prim-8.0-public-all-word_frequency_non_case_sensitive_CLEANED_GOOD-WORDS.txt", NgramFile.Type.Dictionary)
             };
 
             var creator = new TrieCreator();
