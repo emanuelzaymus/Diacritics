@@ -5,12 +5,13 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 
+
 namespace Diacritics_project1
 {
     internal class FileCleaner
     {
         private static string latinChars = "a-z";
-        private static string nonLatinChars = "áäčďéíĺľňóôŕšťúýžěřů";
+        private static string nonLatinChars = "áäčďéíĺľňóôŕšťúýžěřůöüẞß";
         private static string digits = "0-9";
 
         private string nonDiacriticsCharsPattern = $"[{latinChars}]";
@@ -23,15 +24,18 @@ namespace Diacritics_project1
         {
             if (rmvWordsFromFreq != 0)
             {
-                file = new NgramFile(RemoveWordsFromFreqDown(file, rmvWordsFromFreq), file.GetFileType());
+                file = (file is UniGramFile)
+                    ? new UniGramFile(RemoveWordsFromFreqDown(file, rmvWordsFromFreq))
+                    : file = new NgramFile(RemoveWordsFromFreqDown(file, rmvWordsFromFreq));
             }
-            file = new NgramFile(Clean(file), file.GetFileType());
+            file = (file is UniGramFile) ? file = new UniGramFile(Clean(file)) : file = new NgramFile(Clean(file));
             return RemoveBadWords(file, rmvBadWordsFromFreq);
         }
+
         internal string RemoveWordsFromFreqDown(NgramFile file, int fromFrequency)
         {
-            string name = file.FileName;
-            string extension = file.FileExtension;
+            string name = file.FileName();
+            string extension = file.FileExtension();
 
             using (var fromDown_sw = new StreamWriter($"{name}_FROM-{fromFrequency}-DOWN{extension}"))
             using (var to_sw = new StreamWriter($"{name}_TO-{fromFrequency}{extension}"))
@@ -54,8 +58,8 @@ namespace Diacritics_project1
 
         internal string Clean(NgramFile file)
         {
-            string name = file.FileName;
-            string extension = file.FileExtension;
+            string name = file.FileName();
+            string extension = file.FileExtension();
             string word;
 
             using (var cleaned_sw = new StreamWriter($"{name}_CLEANED{extension}"))
@@ -66,7 +70,7 @@ namespace Diacritics_project1
                 Ngram ngram;
                 while ((ngram = file.Next()) != null)
                 {
-                    word = join(ngram.Words, false);
+                    word = String.Join("", ngram.Words);
 
                     if (Regex.IsMatch(word, charsPattern) && Regex.IsMatch(word, digitsPattern))
                     {
@@ -91,8 +95,8 @@ namespace Diacritics_project1
 
         internal string RemoveBadWords(NgramFile file, int fromFrequency = int.MaxValue)
         {
-            string name = file.FileName;
-            string extension = file.FileExtension;
+            string name = file.FileName();
+            string extension = file.FileExtension();
 
             using (var goodWords_sw = new StreamWriter($"{name}_GOOD-WORDS{extension}"))
             using (var badWords_sw = new StreamWriter($"{name}_BAD-WORDS{extension}"))
@@ -100,7 +104,7 @@ namespace Diacritics_project1
                 Ngram ngram;
                 while ((ngram = file.Next()) != null)
                 {
-                    if (ngram.Frequency > fromFrequency || isGoodWord(RemoveDiacritics(join(ngram.Words, true))))
+                    if (ngram.Frequency > fromFrequency || isGoodWord(RemoveDiacritics(String.Join(" ", ngram.Words))))
                     {
                         goodWords_sw.WriteLine(ngram.Line);
                     }
@@ -113,19 +117,7 @@ namespace Diacritics_project1
             return $"{name}_GOOD-WORDS{extension}";
         }
 
-        private string join(string[] words, bool withWhiteSpaces)
-        {
-            if (withWhiteSpaces)
-            {
-                return String.Join(" ", words);
-            }
-            else
-            {
-                return String.Join("", words);
-            }
-        }
-
-        public static string RemoveDiacritics(string word)
+        public static string RemoveDiacritics(string word)  // TODO: StringRoutines
         {
             var normalizedString = word.Normalize(NormalizationForm.FormD);
             var stringBuilder = new StringBuilder();
@@ -139,6 +131,89 @@ namespace Diacritics_project1
                 }
             }
             return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
+        }
+
+        public static string MyDiacriticsRemover(string word)
+        {
+            var sb = new StringBuilder();
+            foreach (var ch in word)
+            {
+                switch (ch)
+                {
+                    case 'á':
+                        sb.Append('a');
+                        break;
+                    case 'ä':
+                        sb.Append('a');
+                        break;
+                    case 'č':
+                        sb.Append('c');
+                        break;
+                    case 'ď':
+                        sb.Append('d');
+                        break;
+                    case 'é':
+                        sb.Append('e');
+                        break;
+                    case 'í':
+                        sb.Append('i');
+                        break;
+                    case 'ĺ':
+                        sb.Append('l');
+                        break;
+                    case 'ľ':
+                        sb.Append('l');
+                        break;
+                    case 'ň':
+                        sb.Append('n');
+                        break;
+                    case 'ó':
+                        sb.Append('o');
+                        break;
+                    case 'ô':
+                        sb.Append('o');
+                        break;
+                    case 'ŕ':
+                        sb.Append('r');
+                        break;
+                    case 'š':
+                        sb.Append('s');
+                        break;
+                    case 'ť':
+                        sb.Append('t');
+                        break;
+                    case 'ú':
+                        sb.Append('u');
+                        break;
+                    case 'ý':
+                        sb.Append('y');
+                        break;
+                    case 'ž':
+                        sb.Append('z');
+                        break;
+                    case 'ě':
+                        sb.Append('e');
+                        break;
+                    case 'ř':
+                        sb.Append('r');
+                        break;
+                    case 'ů':
+                        sb.Append('u');
+                        break;
+                    case 'ö':
+                        sb.Append('o');
+                        break;
+                    case 'ü':
+                        sb.Append('u');
+                        break;
+
+                    default:
+                        sb.Append(ch);
+                        break;
+                }
+            }
+
+            return sb.ToString();
         }
 
         private bool isGoodWord(string word)

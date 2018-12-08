@@ -7,32 +7,27 @@ using System.Threading.Tasks;
 
 namespace Diacritisc_project1
 {
-    internal class Ngram
+    internal class UniGram : Ngram
     {
-
-        public Ngram(string line)
+        public UniGram(string line) : base(line)
         {
-            this.Line = line;
         }
 
-        internal string Line { get; }
-
-        internal virtual string[] Words
+        internal override string[] Words
         {
             get
             {
                 string str = Line.Trim();
-                str = str.Substring(str.IndexOf(' ') + 1);
-                return str.Split('\t');
+                return new string[] { str.Substring(0, str.IndexOf("\t")) };
             }
         }
 
-        internal virtual int Frequency
+        internal override int Frequency
         {
             get
             {
                 string frequencyStr = Line.Trim();
-                frequencyStr = frequencyStr.Substring(0, frequencyStr.IndexOf(' '));
+                frequencyStr = frequencyStr.Substring(frequencyStr.IndexOf("\t") + 1);
                 return Convert.ToInt32(frequencyStr);
             }
         }

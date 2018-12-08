@@ -7,6 +7,7 @@ using PBCD.Algorithms.DataStructure;
 using Diacritics_project1;
 using System.Text.RegularExpressions;
 
+
 namespace Diacritisc_project1
 {
     class DiacriticsReconstructor
@@ -16,10 +17,10 @@ namespace Diacritisc_project1
         public DiacriticsReconstructor()
         {
             var files = new List<NgramFile> {
-                new NgramFile("D:/ngramy/prim-8.0-public-img-sk-n-gramy/prim-8.0-public-img-sk-4-gramy_TO-1_CLEANED_GOOD-WORDS.txt", NgramFile.Type.Ngrams),
-                new NgramFile("D:/ngramy/prim-8.0-public-img-sk-n-gramy/prim-8.0-public-img-sk-3-gramy_TO-1_CLEANED_GOOD-WORDS.txt", NgramFile.Type.Ngrams),
-                new NgramFile("D:/ngramy/prim-8.0-public-img-sk-n-gramy/prim-8.0-public-img-sk-2-gramy_TO-1_CLEANED_GOOD-WORDS.txt", NgramFile.Type.Ngrams),
-                new NgramFile("D:/slovniky/prim-8.0-public-all-word_frequency_non_case_sensitive/prim-8.0-public-all-word_frequency_non_case_sensitive_CLEANED_GOOD-WORDS.txt", NgramFile.Type.Dictionary)
+                new NgramFile("D:/ngramy/prim-8.0-public-img-sk-n-gramy/prim-8.0-public-img-sk-4-gramy_TO-1_CLEANED_GOOD-WORDS.txt"),
+                new NgramFile("D:/ngramy/prim-8.0-public-img-sk-n-gramy/prim-8.0-public-img-sk-3-gramy_TO-1_CLEANED_GOOD-WORDS.txt"),
+                new NgramFile("D:/ngramy/prim-8.0-public-img-sk-n-gramy/prim-8.0-public-img-sk-2-gramy_TO-1_CLEANED_GOOD-WORDS.txt"),
+                new UniGramFile("D:/slovniky/prim-8.0-public-all-word_frequency_non_case_sensitive/prim-8.0-public-all-word_frequency_non_case_sensitive_CLEANED_GOOD-WORDS.txt")
             };
 
             var creator = new TrieCreator();
@@ -27,7 +28,7 @@ namespace Diacritisc_project1
             foreach (var f in files)
             {
                 creator.Load(f);
-                Console.WriteLine($"Loaded: {f.FileName}");
+                Console.WriteLine($"Loaded: {f.FileName()}");
             }
 
             trie = creator.Get();
@@ -41,7 +42,7 @@ namespace Diacritisc_project1
             string current;
             for (int i = 0; i < parsedStrings.Count; i++)
             {
-                if (isWord(parsedStrings[i]))
+                if (isWord(parsedStrings[i]) && !isURL(parsedStrings[i]))
                 {
                     nearWords(parsedStrings, i, out string[] nthBefore, out string[] nthAfter);
                     current = normalize(parsedStrings[i]);
@@ -62,6 +63,20 @@ namespace Diacritisc_project1
             }
 
             return finalBuilder.ToString();
+        }
+
+        protected bool isURL(string str)
+        {
+            string[] domains = { "http", ".sk", ".com", ".cz", ".uk", ".us", ".to", ".org", ".pl",
+                ".de", ".net", ".gov", ".edu", ".ru", ".fr", ".es", ".ch", ".ca", ".at", ".info" };
+            foreach (var dom in domains)
+            {
+                if (str.Contains(dom))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         private string recounstructOriginalUpCase(string current, string original)

@@ -7,6 +7,7 @@ using Diacritics_project1;
 using System.IO;
 using PBCD.Algorithms.DataStructure;
 
+
 namespace Diacritisc_project1
 {
     class TrieCreator
@@ -26,7 +27,7 @@ namespace Diacritisc_project1
             string lineWordsFormated;
             while ((ngram = file.Next()) != null)
             {
-                lineWordsFormated = String.Join(" ", ngram.Words);
+                lineWordsFormated = string.Join(" ", ngram.Words);
                 foreach (string w in ngram.Words)
                 {
                     string nonDiacriticsWord = FileCleaner.RemoveDiacritics(w);

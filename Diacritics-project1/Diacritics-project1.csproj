@@ -49,15 +49,18 @@
     <Compile Include="DiacriticsReconstructor.cs" />
     <Compile Include="DiacriticsTester.cs" />
     <Compile Include="FileCleaner.cs" />
-    <Compile Include="FileHandler.cs" />
+    <Compile Include="TextFile.cs" />
     <Compile Include="Ngram.cs" />
     <Compile Include="NgramFile.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TrieCreator.cs" />
+    <Compile Include="UniGram.cs" />
+    <Compile Include="UniGramFile.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="ClassDiagram1.cd" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

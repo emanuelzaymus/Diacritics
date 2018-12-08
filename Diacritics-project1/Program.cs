@@ -4,6 +4,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("Diacritics-project1.UnitTests")]
+
+
 namespace Diacritics_project1
 {
     class Program
@@ -24,7 +29,6 @@ namespace Diacritics_project1
 
             DiacriticsTester.Test("D:/testovacie_texty/Retz.txt");
 
-            return;
 
         }
 
