@@ -3,12 +3,12 @@
   <Class Name="Diacritisc_project1.DiacriticsReconstructor">
     <Position X="0.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AACBAAAAAAAQIgAAgABAAAAAABAAACAAAAAAAAEAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAkAAkCAAAAAAAAAAAAAQAQAhAAAAgAA=</HashCode>
       <FileName>DiacriticsReconstructor.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Diacritisc_project1.DiacriticsTester">
-    <Position X="10.5" Y="1.5" Width="1.5" />
+    <Position X="10.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAACAAAAAA=</HashCode>
       <FileName>DiacriticsTester.cs</FileName>
@@ -36,14 +36,14 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Diacritics_project1.FileCleaner">
-    <Position X="12.5" Y="1.5" Width="1.75" />
+    <Position X="10.5" Y="2.5" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AEAAAAEAAAAAAAAAADAAAQAAgAABgARAAgEAAAAGQAA=</HashCode>
       <FileName>FileCleaner.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Diacritics_project1.Program">
-    <Position X="1.25" Y="4" Width="1.5" />
+    <Position X="1.25" Y="4.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
       <FileName>Program.cs</FileName>

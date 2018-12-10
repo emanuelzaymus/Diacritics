@@ -19,9 +19,9 @@ namespace Diacritisc_project1
             this.path = path;
         }
 
-        internal string FileName() => FileName(path);
+        internal new string FileName => FileName(path);
 
-        internal string FileExtension() => FileExtension(path);
+        internal new string FileExtension => FileExtension(path);
 
         internal virtual Ngram Next()
         {

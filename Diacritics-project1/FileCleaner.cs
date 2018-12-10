@@ -34,8 +34,8 @@ namespace Diacritics_project1
 
         internal string RemoveWordsFromFreqDown(NgramFile file, int fromFrequency)
         {
-            string name = file.FileName();
-            string extension = file.FileExtension();
+            string name = file.FileName;
+            string extension = file.FileExtension;
 
             using (var fromDown_sw = new StreamWriter($"{name}_FROM-{fromFrequency}-DOWN{extension}"))
             using (var to_sw = new StreamWriter($"{name}_TO-{fromFrequency}{extension}"))
@@ -58,8 +58,8 @@ namespace Diacritics_project1
 
         internal string Clean(NgramFile file)
         {
-            string name = file.FileName();
-            string extension = file.FileExtension();
+            string name = file.FileName;
+            string extension = file.FileExtension;
             string word;
 
             using (var cleaned_sw = new StreamWriter($"{name}_CLEANED{extension}"))
@@ -95,8 +95,8 @@ namespace Diacritics_project1
 
         internal string RemoveBadWords(NgramFile file, int fromFrequency = int.MaxValue)
         {
-            string name = file.FileName();
-            string extension = file.FileExtension();
+            string name = file.FileName;
+            string extension = file.FileExtension;
 
             using (var goodWords_sw = new StreamWriter($"{name}_GOOD-WORDS{extension}"))
             using (var badWords_sw = new StreamWriter($"{name}_BAD-WORDS{extension}"))
@@ -105,7 +105,7 @@ namespace Diacritics_project1
                 while ((ngram = file.Next()) != null)
                 {
                     //if (ngram.Frequency > fromFrequency || isGoodWord(RemoveDiacritics(String.Join(" ", ngram.Words))))
-                    if (ngram.Frequency > fromFrequency || isGoodWord(MyDiacriticsRemover(String.Join(" ", ngram.Words))))
+                    if (ngram.Frequency > fromFrequency || IsGoodWord(MyDiacriticsRemover(String.Join(" ", ngram.Words))))
                     {
                         goodWords_sw.WriteLine(ngram.Line);
                     }
@@ -139,6 +139,7 @@ namespace Diacritics_project1
             var sb = new StringBuilder();
             foreach (var ch in word)
             {
+                // dictionary TODO
                 switch (ch)
                 {
                     case 'á':
@@ -217,7 +218,7 @@ namespace Diacritics_project1
             return sb.ToString();
         }
 
-        private bool isGoodWord(string word)
+        private bool IsGoodWord(string word)
         {
             char lastChar = ' ';
             bool wasTwoTimes = false;

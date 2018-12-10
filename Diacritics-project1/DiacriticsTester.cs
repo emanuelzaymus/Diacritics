@@ -29,14 +29,15 @@ namespace Diacritisc_project1
             File.WriteAllText($"{TextFile.FileName(path)}_RENCOSTRUCTED{TextFile.FileExtension(path)}", reconstructedText);
 
             Console.WriteLine("Testing...");
-            findMistakes(originalText, reconstructedText, path);
+            FindMistakes(originalText, reconstructedText, path);
             Console.WriteLine("Done.\n");
         }
 
-        private static void findMistakes(string originalText, string reconstructedText, string path)
+        private static void FindMistakes(string originalText, string reconstructedText, string path)
         {
             string[] originalWords = originalText.Split(' ');
             string[] reconstructedWords = reconstructedText.Split(' ');
+            // TODO: zapametanie pozicie slova (class Word)
 
             Console.WriteLine($"originalWords.Length = {originalWords.Length}");
             Console.WriteLine($"reconstructedWords.Length = {reconstructedWords.Length}");
