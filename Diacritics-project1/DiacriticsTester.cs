@@ -11,17 +11,16 @@ namespace Diacritisc_project1
 {
     class DiacriticsTester
     {
-        internal static void Test(string path)
+        internal static void Test(string path, DiacriticsReconstructor dr)
         {
-            Console.WriteLine("Reading...");
+            Console.WriteLine($"Reading {path}");
             string originalText = File.OpenText(path).ReadToEnd();
 
             Console.WriteLine("Removing diacritics...");
-            string textWithoutDiacritics = FileCleaner.RemoveDiacritics(originalText);
+            //string textWithoutDiacritics = FileCleaner.RemoveDiacritics(originalText);
+            string textWithoutDiacritics = FileCleaner.MyDiacriticsRemover(originalText);
 
             File.WriteAllText($"{TextFile.FileName(path)}_WITHOUT-DIACRITICS{TextFile.FileExtension(path)}", textWithoutDiacritics);
-
-            DiacriticsReconstructor dr = new DiacriticsReconstructor();
 
             Console.WriteLine("Reconstructing...");
             string reconstructedText = dr.Reconstruct(textWithoutDiacritics);
@@ -30,27 +29,33 @@ namespace Diacritisc_project1
             File.WriteAllText($"{TextFile.FileName(path)}_RENCOSTRUCTED{TextFile.FileExtension(path)}", reconstructedText);
 
             Console.WriteLine("Testing...");
-            findMistakes(originalText, reconstructedText);
-            Console.WriteLine("Done.");
+            findMistakes(originalText, reconstructedText, path);
+            Console.WriteLine("Done.\n");
         }
 
-        private static void findMistakes(string originaltext, string reconstructedText) // DOTO: probably bug
+        private static void findMistakes(string originalText, string reconstructedText, string path)
         {
-            string[] originalWords = originaltext.Split(' ');
+            string[] originalWords = originalText.Split(' ');
             string[] reconstructedWords = reconstructedText.Split(' ');
+
+            Console.WriteLine($"originalWords.Length = {originalWords.Length}");
+            Console.WriteLine($"reconstructedWords.Length = {reconstructedWords.Length}");
+
             int count = 0;
-            
-            Console.WriteLine("Mistakes:\nOriginal - Reconstructed");
-            for (int i = 0; i < originalWords.Length; i++)
+
+            using (var sw = new StreamWriter($"{TextFile.FileName(path)}_MISTAKES-ORIG-RECONST{TextFile.FileExtension(path)}"))
             {
-                if (i < reconstructedWords.Length && originalWords[i] != reconstructedWords[i]) // TODO: out of bound exception
+                for (int i = 0; i < originalWords.Length; i++)
                 {
-                    Console.WriteLine($"{originalWords[i]} - {reconstructedWords[i]}");
-                    count++;
-                }
+                    if (i < reconstructedWords.Length && originalWords[i] != reconstructedWords[i]) // TODO: out of bound exception
+                    {
+                        sw.WriteLine($"{originalWords[i]} - {reconstructedWords[i]}");
+                        count++;
+                    }
+                } // TODO: print whats the difference between {originalWords.Length} and {reconstructedWords.Length}
             }
 
-            Console.WriteLine($"\nNumber of mistakes: {count}");
+            Console.WriteLine($"Number of mistakes: {count}");
         }
 
     }

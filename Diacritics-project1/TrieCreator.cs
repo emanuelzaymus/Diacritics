@@ -30,7 +30,8 @@ namespace Diacritisc_project1
                 lineWordsFormated = string.Join(" ", ngram.Words);
                 foreach (string w in ngram.Words)
                 {
-                    string nonDiacriticsWord = FileCleaner.RemoveDiacritics(w);
+                    //string nonDiacriticsWord = FileCleaner.RemoveDiacritics(w);
+                    string nonDiacriticsWord = FileCleaner.MyDiacriticsRemover(w);
                     List<string> foundList = trie.Find(nonDiacriticsWord);
                     if (foundList == null)
                     {

@@ -104,7 +104,8 @@ namespace Diacritics_project1
                 Ngram ngram;
                 while ((ngram = file.Next()) != null)
                 {
-                    if (ngram.Frequency > fromFrequency || isGoodWord(RemoveDiacritics(String.Join(" ", ngram.Words))))
+                    //if (ngram.Frequency > fromFrequency || isGoodWord(RemoveDiacritics(String.Join(" ", ngram.Words))))
+                    if (ngram.Frequency > fromFrequency || isGoodWord(MyDiacriticsRemover(String.Join(" ", ngram.Words))))
                     {
                         goodWords_sw.WriteLine(ngram.Line);
                     }

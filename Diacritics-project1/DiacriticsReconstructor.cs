@@ -65,7 +65,7 @@ namespace Diacritisc_project1
             return finalBuilder.ToString();
         }
 
-        protected bool isURL(string str)
+        protected bool isURL(string str) // TODO: doesnt work ({this.split} splits the whole ulr apart)
         {
             string[] domains = { "http", ".sk", ".com", ".cz", ".uk", ".us", ".to", ".org", ".pl",
                 ".de", ".net", ".gov", ".edu", ".ru", ".fr", ".es", ".ch", ".ca", ".at", ".info" };
@@ -149,7 +149,8 @@ namespace Diacritisc_project1
         private bool matchesUp(string word, string ngram, string[] nthBefore, string[] nthAfter, ref string result)
         {
             string[] ngramWordsDiacritics = ngram.Split(' ');
-            ngram = FileCleaner.RemoveDiacritics(ngram);
+            //ngram = FileCleaner.RemoveDiacritics(ngram);
+            ngram = FileCleaner.MyDiacriticsRemover(ngram);
             string[] ngramWords = ngram.Split(' ');
             bool matches;
             int res;
@@ -235,7 +236,8 @@ namespace Diacritisc_project1
 
         private string normalize(string word)
         {
-            return FileCleaner.RemoveDiacritics(word).ToLower();
+            //return FileCleaner.RemoveDiacritics(word).ToLower();
+            return FileCleaner.MyDiacriticsRemover(word).ToLower();
         }
 
     }
