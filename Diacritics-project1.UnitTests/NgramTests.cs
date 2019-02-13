@@ -1,5 +1,5 @@
 ﻿using NUnit.Framework;
-using Diacritisc_project1;
+using Diacritics_project1;
 
 
 namespace Tests

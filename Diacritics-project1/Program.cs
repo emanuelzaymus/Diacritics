@@ -1,10 +1,11 @@
-﻿using Diacritisc_project1;
+﻿using Diacritics_project1;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
 using System.Runtime.CompilerServices;
+using DiacriticsProject1;
 
 [assembly: InternalsVisibleTo("Diacritics-project1.UnitTests")]
 

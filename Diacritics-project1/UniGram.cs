@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-namespace Diacritisc_project1
+namespace Diacritics_project1
 {
     internal class UniGram : Ngram
     {

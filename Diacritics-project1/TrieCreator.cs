@@ -8,7 +8,7 @@ using System.IO;
 using PBCD.Algorithms.DataStructure;
 
 
-namespace Diacritisc_project1
+namespace Diacritics_project1
 {
     class TrieCreator
     {

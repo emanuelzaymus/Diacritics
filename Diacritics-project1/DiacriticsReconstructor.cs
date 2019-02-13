@@ -1,18 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using PBCD.Algorithms.DataStructure;
-using Diacritics_project1;
 using System.Text.RegularExpressions;
+using Diacritics_project1;
+using PBCD.Algorithms.DataStructure;
 
-
-namespace Diacritisc_project1
+namespace DiacriticsProject1
 {
     class DiacriticsReconstructor
     {
-        private Trie<char, List<string>> trie;
+        private Trie<char, List<string>> _trie;
 
         public DiacriticsReconstructor()
         {
@@ -28,27 +25,27 @@ namespace Diacritisc_project1
             foreach (var f in files)
             {
                 creator.Load(f);
-                Console.WriteLine($"Loaded: {f.FileName()}");
+                Console.WriteLine($"Loaded: {f.FileName}");
             }
 
-            trie = creator.Get();
+            _trie = creator.Get();
         }
 
         internal string Reconstruct(string text)
         {
-            List<string> parsedStrings = split(text);
+            List<string> parsedStrings = Split(text);
             StringBuilder finalBuilder = new StringBuilder();
 
             string current;
             for (int i = 0; i < parsedStrings.Count; i++)
             {
-                if (isWord(parsedStrings[i]) && !isURL(parsedStrings[i]))
+                if (IsWord(parsedStrings[i]) && !IsURL(parsedStrings[i]))
                 {
-                    nearWords(parsedStrings, i, out string[] nthBefore, out string[] nthAfter);
-                    current = normalize(parsedStrings[i]);
-                    if (setDiacritics(ref current, nthBefore, nthAfter))
+                    NearWords(parsedStrings, i, out string[] nthBefore, out string[] nthAfter);
+                    current = Normalize(parsedStrings[i]);
+                    if (SetDiacritics(ref current, nthBefore, nthAfter))
                     {
-                        current = recounstructOriginalUpCase(current, parsedStrings[i]);
+                        current = RecounstructOriginalUpCase(current, parsedStrings[i]);
                         finalBuilder.Append(current);
                     }
                     else
@@ -65,9 +62,9 @@ namespace Diacritisc_project1
             return finalBuilder.ToString();
         }
 
-        protected bool isURL(string str) // TODO: doesnt work ({this.split} splits the whole ulr apart)
+        private bool IsURL(string str) // TODO: doesnt work ({this.split} splits the whole ulr apart)
         {
-            string[] domains = { "http", ".sk", ".com", ".cz", ".uk", ".us", ".to", ".org", ".pl",
+            string[] domains = { "http", "www", "ftp", ".sk", ".com", ".cz", ".uk", ".us", ".to", ".org", ".pl",
                 ".de", ".net", ".gov", ".edu", ".ru", ".fr", ".es", ".ch", ".ca", ".at", ".info" };
             foreach (var dom in domains)
             {
@@ -79,7 +76,7 @@ namespace Diacritisc_project1
             return false;
         }
 
-        private string recounstructOriginalUpCase(string current, string original)
+        private string RecounstructOriginalUpCase(string current, string original)
         {
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < original.Length; i++)
@@ -96,7 +93,7 @@ namespace Diacritisc_project1
             return sb.ToString();
         }
 
-        private void nearWords(List<string> parsedStrings, int wordPosition, out string[] nthBefore, out string[] nthAfter)
+        private void NearWords(List<string> parsedStrings, int wordPosition, out string[] nthBefore, out string[] nthAfter)
         {
             nthBefore = new string[3];
             nthAfter = new string[3];
@@ -126,15 +123,15 @@ namespace Diacritisc_project1
             }
         }
 
-        private bool setDiacritics(ref string word, string[] nthBefore, string[] nthAfter)
+        private bool SetDiacritics(ref string word, string[] nthBefore, string[] nthAfter)
         {
             List<string> foundNgrams;
-            if ((foundNgrams = trie.Find(word)) != null)
+            if ((foundNgrams = _trie.Find(word)) != null)
             {
                 string result = null;
                 foreach (var ngram in foundNgrams)
                 {
-                    if (matchesUp(word, ngram, nthBefore, nthAfter, ref result))
+                    if (MatchesUp(word, ngram, nthBefore, nthAfter, ref result))
                     {
                         word = result;
                         return true;
@@ -146,7 +143,7 @@ namespace Diacritisc_project1
             return false;
         }
 
-        private bool matchesUp(string word, string ngram, string[] nthBefore, string[] nthAfter, ref string result)
+        private bool MatchesUp(string word, string ngram, string[] nthBefore, string[] nthAfter, ref string result)
         {
             string[] ngramWordsDiacritics = ngram.Split(' ');
             //ngram = FileCleaner.RemoveDiacritics(ngram);
@@ -202,13 +199,14 @@ namespace Diacritisc_project1
             return false;
         }
 
-        private bool isWord(string str)
+        private bool IsWord(string str)
         {
             return Regex.IsMatch(str, FileCleaner.charsPattern);
         }
 
-        private List<string> split(string text)
+        private List<string> Split(string text)
         {
+            // TODO: html www ftp ignorovat
             var parsedStrings = new List<string>();
             bool wasLetter = false;
             bool first = true;
@@ -216,7 +214,7 @@ namespace Diacritisc_project1
             StringBuilder wordBuilder = new StringBuilder();
             for (int i = 0; i < text.Length; i++)
             {
-                bool isLetter = Regex.IsMatch(text[i].ToString().ToLower(), FileCleaner.charsPattern);
+                bool isLetter = Regex.IsMatch(text[i].ToString().ToLower(), FileCleaner.charsPattern); // TODO new Regex
                 if (first)
                 {
                     wasLetter = isLetter;
@@ -234,7 +232,7 @@ namespace Diacritisc_project1
             return parsedStrings;
         }
 
-        private string normalize(string word)
+        private string Normalize(string word)
         {
             //return FileCleaner.RemoveDiacritics(word).ToLower();
             return FileCleaner.MyDiacriticsRemover(word).ToLower();

@@ -1,23 +1,11 @@
 ﻿using NUnit.Framework;
-using Diacritisc_project1;
+using Diacritics_project1;
 
 namespace Tests
 {
     [TestFixture]
-    internal class DiacriticsReconstructorTests : DiacriticsReconstructor
+    internal class DiacriticsReconstructorTests
     {
-        //[Test]
-        //public void isURL_URL_ReturnsTrue()
-        //{
-        //    //Assert.True(base.isURL("https://en.wikipedia.org/wiki/URL"));
-        //    Assert.True(base.isURL("https:"));
-        //}
-
-        //[Test]
-        //public void isURL_NoURL_ReturnsFalse()
-        //{
-        //    //Assert.True(base.isURL("component"));
-        //}
 
     }
 }
