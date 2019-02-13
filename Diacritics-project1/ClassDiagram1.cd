@@ -4,7 +4,11 @@
     <Position X="0.5" Y="0.5" Width="6.75" />
     <TypeIdentifier>
 <<<<<<< HEAD
+<<<<<<< HEAD
       <HashCode>AAAAAAAAAAAAAkAAECAAAAAAAAAAAAAQAQAhAAAAgAA=</HashCode>
+=======
+      <HashCode>AAAAAAAAAAAAAkAAkCAAAAAAAAAAAAAQAQAhAAAAgAA=</HashCode>
+>>>>>>> 962ceb545928e8b8d47f2c8ade057b8e82c1e4b2
 =======
       <HashCode>AAAAAAAAAAAAAkAAkCAAAAAAAAAAAAAQAQAhAAAAgAA=</HashCode>
 >>>>>>> 962ceb545928e8b8d47f2c8ade057b8e82c1e4b2
@@ -41,7 +45,11 @@
   </Class>
   <Class Name="Diacritics_project1.FileCleaner">
 <<<<<<< HEAD
+<<<<<<< HEAD
     <Position X="10.5" Y="2.5" Width="7.25" />
+=======
+    <Position X="10.5" Y="2.5" Width="1.75" />
+>>>>>>> 962ceb545928e8b8d47f2c8ade057b8e82c1e4b2
 =======
     <Position X="10.5" Y="2.5" Width="1.75" />
 >>>>>>> 962ceb545928e8b8d47f2c8ade057b8e82c1e4b2
@@ -52,7 +60,11 @@
   </Class>
   <Class Name="Diacritics_project1.Program">
 <<<<<<< HEAD
+<<<<<<< HEAD
     <Position X="1.25" Y="4.5" Width="2" />
+=======
+    <Position X="1.25" Y="4.5" Width="1.5" />
+>>>>>>> 962ceb545928e8b8d47f2c8ade057b8e82c1e4b2
 =======
     <Position X="1.25" Y="4.5" Width="1.5" />
 >>>>>>> 962ceb545928e8b8d47f2c8ade057b8e82c1e4b2
