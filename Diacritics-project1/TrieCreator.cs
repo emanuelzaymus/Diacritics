@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Diacritics_project1;
 using System.IO;
 using PBCD.Algorithms.DataStructure;
-
+using DiacriticsProject1;
 
 namespace Diacritics_project1
 {
@@ -31,7 +31,7 @@ namespace Diacritics_project1
                 foreach (string w in ngram.Words)
                 {
                     //string nonDiacriticsWord = FileCleaner.RemoveDiacritics(w);
-                    string nonDiacriticsWord = FileCleaner.MyDiacriticsRemover(w);
+                    string nonDiacriticsWord = StringRoutines.MyDiacriticsRemover(w);
                     List<string> foundList = trie.Find(nonDiacriticsWord);
                     if (foundList == null)
                     {

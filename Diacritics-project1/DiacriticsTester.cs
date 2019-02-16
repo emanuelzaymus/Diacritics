@@ -19,7 +19,7 @@ namespace Diacritics_project1
 
             Console.WriteLine("Removing diacritics...");
             //string textWithoutDiacritics = FileCleaner.RemoveDiacritics(originalText);
-            string textWithoutDiacritics = FileCleaner.MyDiacriticsRemover(originalText);
+            string textWithoutDiacritics = StringRoutines.MyDiacriticsRemover(originalText);
 
             File.WriteAllText($"{TextFile.FileName(path)}_WITHOUT-DIACRITICS{TextFile.FileExtension(path)}", textWithoutDiacritics);
 

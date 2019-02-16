@@ -146,7 +146,7 @@ namespace DiacriticsProject1
         private bool MatchesUp(string word, string ngram, string[] nthBefore, string[] nthAfter, ref string result)
         {
             string[] ngramWordsDiacritics = ngram.Split(' ');
-            ngram = FileCleaner.MyDiacriticsRemover(ngram);
+            ngram = StringRoutines.MyDiacriticsRemover(ngram);
             string[] ngramWords = ngram.Split(' ');
             bool matches;
             int res;
@@ -233,7 +233,7 @@ namespace DiacriticsProject1
 
         private string Normalize(string word)
         {
-            return FileCleaner.MyDiacriticsRemover(word).ToLower();
+            return StringRoutines.MyDiacriticsRemover(word).ToLower();
         }
 
     }

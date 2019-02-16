@@ -1,4 +1,5 @@
 ﻿using Diacritics_project1;
+using DiacriticsProject1;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -114,7 +115,7 @@ namespace Diacritics_project1
                 while ((ngram = file.Next()) != null)
                 {
                     //if (ngram.Frequency > fromFrequency || isGoodWord(RemoveDiacritics(String.Join(" ", ngram.Words))))
-                    if (ngram.Frequency > fromFrequency || IsGoodWord(MyDiacriticsRemover(String.Join(" ", ngram.Words))))
+                    if (ngram.Frequency > fromFrequency || IsGoodWord(StringRoutines.MyDiacriticsRemover(String.Join(" ", ngram.Words))))
                     {
                         goodWords_sw.WriteLine(ngram.Line);
                     }
