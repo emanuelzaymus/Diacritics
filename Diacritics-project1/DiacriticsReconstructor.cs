@@ -14,9 +14,9 @@ namespace DiacriticsProject1
         public DiacriticsReconstructor()
         {
             var files = new List<NgramFile> {
-                new NgramFile("D:/ngramy/prim-8.0-public-img-sk-n-gramy/prim-8.0-public-img-sk-4-gramy_TO-1_CLEANED_GOOD-WORDS.txt"),
-                new NgramFile("D:/ngramy/prim-8.0-public-img-sk-n-gramy/prim-8.0-public-img-sk-3-gramy_TO-1_CLEANED_GOOD-WORDS.txt"),
-                new NgramFile("D:/ngramy/prim-8.0-public-img-sk-n-gramy/prim-8.0-public-img-sk-2-gramy_TO-1_CLEANED_GOOD-WORDS.txt"),
+                //new NgramFile("D:/ngramy/prim-8.0-public-all-4-gramy/prim-8.0-public-all-4-gramy_TO-1_CLEANED_GOOD-WORDS.txt"),
+                //new NgramFile("D:/ngramy/prim-8.0-public-all-3-gramy/prim-8.0-public-all-3-gramy_TO-1_CLEANED_GOOD-WORDS.txt"),
+                //new NgramFile("D:/ngramy/prim-8.0-public-all-2-gramy/prim-8.0-public-all-2-gramy_TO-1_CLEANED_GOOD-WORDS.txt"),
                 new UniGramFile("D:/slovniky/prim-8.0-public-all-word_frequency_non_case_sensitive/prim-8.0-public-all-word_frequency_non_case_sensitive_CLEANED_GOOD-WORDS.txt")
             };
 
@@ -146,7 +146,6 @@ namespace DiacriticsProject1
         private bool MatchesUp(string word, string ngram, string[] nthBefore, string[] nthAfter, ref string result)
         {
             string[] ngramWordsDiacritics = ngram.Split(' ');
-            //ngram = FileCleaner.RemoveDiacritics(ngram);
             ngram = FileCleaner.MyDiacriticsRemover(ngram);
             string[] ngramWords = ngram.Split(' ');
             bool matches;
@@ -201,7 +200,7 @@ namespace DiacriticsProject1
 
         private bool IsWord(string str)
         {
-            return Regex.IsMatch(str, FileCleaner.charsPattern);
+            return FileCleaner.rgxChars.IsMatch(str);
         }
 
         private List<string> Split(string text)
@@ -214,7 +213,7 @@ namespace DiacriticsProject1
             StringBuilder wordBuilder = new StringBuilder();
             for (int i = 0; i < text.Length; i++)
             {
-                bool isLetter = Regex.IsMatch(text[i].ToString().ToLower(), FileCleaner.charsPattern); // TODO new Regex
+                bool isLetter = FileCleaner.rgxChars.IsMatch(text[i].ToString().ToLower());
                 if (first)
                 {
                     wasLetter = isLetter;
@@ -234,7 +233,6 @@ namespace DiacriticsProject1
 
         private string Normalize(string word)
         {
-            //return FileCleaner.RemoveDiacritics(word).ToLower();
             return FileCleaner.MyDiacriticsRemover(word).ToLower();
         }
 

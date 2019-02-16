@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 using Diacritics_project1;
-
+using System;
 
 namespace Tests
 {
@@ -14,6 +14,9 @@ namespace Tests
         {
             var name = "D:/slovniky/prim-8.0-public-all-word_frequency_non_case_sensitive/prim-8.0-public-all-word_frequency_non_case_sensitive_CLEANED_GOOD-WORDS";
             var result = TextFile.FileName(path);
+
+            Console.WriteLine($"name  : {name}");
+            Console.WriteLine($"result: {result}");
 
             Assert.AreEqual(result, name);
         }

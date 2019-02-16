@@ -1,11 +1,11 @@
 ﻿using NUnit.Framework;
 using Diacritics_project1;
-
+using DiacriticsProject1;
 
 namespace Tests
 {
     [TestFixture]
-    public class FileCleanerTests
+    public class StringRoutinesTests
     {
         [Test]
         public void RemoveDiacritics_WordWithDiacritics_ReturnsWithoutDiacritics()
@@ -13,7 +13,7 @@ namespace Tests
             string input = "áäčďéíĺľňóôŕšťúýžěřůäöüẞß abcdefghijklmnopqrstuvwxyz ,./;'[]{} 1234567890 ~`!@#$%^&*()+_-";
             string expected = "aacdeillnoorstuyzeruaouẞß abcdefghijklmnopqrstuvwxyz ,./;'[]{} 1234567890 ~`!@#$%^&*()+_-";
 
-            string result = FileCleaner.RemoveDiacritics(input);
+            string result = StringRoutines.RemoveDiacritics(input);
 
             Assert.AreEqual(expected, result);
         }
@@ -24,7 +24,7 @@ namespace Tests
             string input = "áäčďéíĺľňóôŕšťúýžěřůäöüẞß abcdefghijklmnopqrstuvwxyz ,./;'[]{} 1234567890 ~`!@#$%^&*()+_-";
             string expected = "aacdeillnoorstuyzeruaouẞß abcdefghijklmnopqrstuvwxyz ,./;'[]{} 1234567890 ~`!@#$%^&*()+_-";
 
-            string result = FileCleaner.MyDiacriticsRemover(input);
+            string result = StringRoutines.MyDiacriticsRemover(input);
 
             Assert.AreEqual(expected, result);
         }

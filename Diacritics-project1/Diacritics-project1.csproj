@@ -49,6 +49,7 @@
     <Compile Include="DiacriticsReconstructor.cs" />
     <Compile Include="DiacriticsTester.cs" />
     <Compile Include="FileCleaner.cs" />
+    <Compile Include="StringRoutines.cs" />
     <Compile Include="TextFile.cs" />
     <Compile Include="Ngram.cs" />
     <Compile Include="NgramFile.cs" />

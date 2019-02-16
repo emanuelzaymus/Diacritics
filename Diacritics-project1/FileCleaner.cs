@@ -1,5 +1,6 @@
 ﻿using Diacritics_project1;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Text;
@@ -17,15 +18,20 @@ namespace Diacritics_project1
         private static string nonLatinChars = "áäčďéíĺľňóôŕšťúýžěřůöüẞß";
         private static string digits = "0-9";
 
-        private string nonDiacriticsCharsPattern = $"[{latinChars}]";
-        private string diacriticsCharsPattern = $"[{nonLatinChars}]";
+        public static Regex rgxChars = new Regex($"[{latinChars}{nonLatinChars}]");
 
-        public static string charsPattern = $"[{latinChars}{nonLatinChars}]";
-        private string digitsPattern = $"[{digits}]";
+        private Regex rgxNonChars;
+        private Regex rgxDigits;
+
+        public FileCleaner()
+        {
+            rgxNonChars = new Regex($@"^[{latinChars}{nonLatinChars}]+$");
+            rgxDigits = new Regex($"[{digits}]");
+        }
 
         internal string CompleteProcessing(NgramFile file, int rmvWordsFromFreq = 0, int rmvBadWordsFromFreq = int.MaxValue)
         {
-            if (rmvWordsFromFreq != 0)
+            if (rmvWordsFromFreq > 0)
             {
                 file = (file is UniGramFile)
                     ? new UniGramFile(RemoveWordsFromFreqDown(file, rmvWordsFromFreq))
@@ -75,15 +81,15 @@ namespace Diacritics_project1
                 {
                     word = String.Join("", ngram.Words);
 
-                    if (Regex.IsMatch(word, charsPattern) && Regex.IsMatch(word, digitsPattern))
+                    if (rgxChars.IsMatch(word) && rgxDigits.IsMatch(word))
                     {
                         chrs_nums_sw.WriteLine(ngram.Line);
                     }
-                    else if (Regex.IsMatch(word, digitsPattern))
+                    else if (rgxDigits.IsMatch(word))
                     {
                         nums_sw.WriteLine(ngram.Line);
                     }
-                    else if (Regex.IsMatch(word, $@"^{charsPattern}+$"))
+                    else if (rgxNonChars.IsMatch(word))
                     {
                         cleaned_sw.WriteLine(ngram.Line);
                     }
@@ -121,105 +127,7 @@ namespace Diacritics_project1
             return $"{name}_GOOD-WORDS{extension}";
         }
 
-        public static string RemoveDiacritics(string word)  // TODO: StringRoutines
-        {
-            var normalizedString = word.Normalize(NormalizationForm.FormD);
-            var stringBuilder = new StringBuilder();
-
-            foreach (var c in normalizedString)
-            {
-                var unicodeCategory = CharUnicodeInfo.GetUnicodeCategory(c);
-                if (unicodeCategory != UnicodeCategory.NonSpacingMark)
-                {
-                    stringBuilder.Append(c);
-                }
-            }
-            return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
-        }
-
-        public static string MyDiacriticsRemover(string word)
-        {
-            var sb = new StringBuilder();
-            foreach (var ch in word)
-            {
-                // dictionary TODO
-                switch (ch)
-                {
-                    case 'á':
-                        sb.Append('a');
-                        break;
-                    case 'ä':
-                        sb.Append('a');
-                        break;
-                    case 'č':
-                        sb.Append('c');
-                        break;
-                    case 'ď':
-                        sb.Append('d');
-                        break;
-                    case 'é':
-                        sb.Append('e');
-                        break;
-                    case 'í':
-                        sb.Append('i');
-                        break;
-                    case 'ĺ':
-                        sb.Append('l');
-                        break;
-                    case 'ľ':
-                        sb.Append('l');
-                        break;
-                    case 'ň':
-                        sb.Append('n');
-                        break;
-                    case 'ó':
-                        sb.Append('o');
-                        break;
-                    case 'ô':
-                        sb.Append('o');
-                        break;
-                    case 'ŕ':
-                        sb.Append('r');
-                        break;
-                    case 'š':
-                        sb.Append('s');
-                        break;
-                    case 'ť':
-                        sb.Append('t');
-                        break;
-                    case 'ú':
-                        sb.Append('u');
-                        break;
-                    case 'ý':
-                        sb.Append('y');
-                        break;
-                    case 'ž':
-                        sb.Append('z');
-                        break;
-                    case 'ě':
-                        sb.Append('e');
-                        break;
-                    case 'ř':
-                        sb.Append('r');
-                        break;
-                    case 'ů':
-                        sb.Append('u');
-                        break;
-                    case 'ö':
-                        sb.Append('o');
-                        break;
-                    case 'ü':
-                        sb.Append('u');
-                        break;
-
-                    default:
-                        sb.Append(ch);
-                        break;
-                }
-            }
-
-            return sb.ToString();
-        }
+        
 
         private bool IsGoodWord(string word)
         {
