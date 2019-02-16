@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
-using Diacritics_project1;
+using DiacriticsProject1;
 using System;
+
 
 namespace Tests
 {

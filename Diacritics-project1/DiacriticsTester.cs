@@ -1,14 +1,8 @@
-﻿using Diacritics_project1;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DiacriticsProject1;
 
 
-namespace Diacritics_project1
+namespace DiacriticsProject1
 {
     class DiacriticsTester
     {

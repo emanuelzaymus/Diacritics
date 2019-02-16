@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Diacritics_project1;
-using System.IO;
+﻿using System.Collections.Generic;
 using PBCD.Algorithms.DataStructure;
-using DiacriticsProject1;
 
-namespace Diacritics_project1
+namespace DiacriticsProject1
 {
     class TrieCreator
     {

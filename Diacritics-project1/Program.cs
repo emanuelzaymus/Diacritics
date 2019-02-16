@@ -1,17 +1,9 @@
-﻿using Diacritics_project1;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
+﻿using System.Runtime.CompilerServices;
 
-using System.Runtime.CompilerServices;
-using DiacriticsProject1;
-using System.Timers;
-
-[assembly: InternalsVisibleTo("Diacritics-project1.UnitTests")]
+[assembly: InternalsVisibleTo("DiacriticsProject1.UnitTests")]
 
 
-namespace Diacritics_project1
+namespace DiacriticsProject1
 {
     class Program
     {
@@ -30,10 +22,10 @@ namespace Diacritics_project1
             //Console.WriteLine(fc.CompleteProcessing(file3, rmvWordsFromFreq: 1, rmvBadWordsFromFreq: 11));
             //var file4 = new NgramFile("D:/ngramy/prim-8.0-public-all-4-gramy/prim-8.0-public-all-4-gramy.txt");
             //Console.WriteLine(fc.CompleteProcessing(file4, rmvWordsFromFreq:   1, rmvBadWordsFromFreq: 11));
-            //var dr = new DiacriticsReconstructor();
+            var dr = new DiacriticsReconstructor();
 
             //DiacriticsTester.Test("D:/testovacie_texty/1/Retz.txt", dr);
-            //DiacriticsTester.Test("D:/testovacie_texty/2/Ako sa eseťákom pokúsili ukradnúť hotel Carlton.txt", dr);
+            DiacriticsTester.Test("D:/testovacie_texty/2/Ako sa eseťákom pokúsili ukradnúť hotel Carlton.txt", dr);
             //DiacriticsTester.Test("D:/testovacie_texty/3/Macron ako novodobý Ľudovít XVI.txt", dr);
             //DiacriticsTester.Test("D:/testovacie_texty/4/Bobby Robson.txt", dr);
             //DiacriticsTester.Test("D:/testovacie_texty/5/Mor ho.txt", dr);
