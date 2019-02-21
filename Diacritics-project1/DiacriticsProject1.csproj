@@ -61,10 +61,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Reconstructors\FileDR\NgramFilesCreator.cs" />
-    <Compile Include="Reconstructors\TrieDR\DiacriticsReconstructor.cs" />
+    <Compile Include="Reconstructors\TrieDR\TrieDR.cs" />
     <Compile Include="Reconstructors\DRBase.cs" />
-    <Compile Include="Reconstructors\FileDR\NgramFileDR.cs" />
     <Compile Include="Reconstructors\IDiacriticsReconstructor.cs" />
     <Compile Include="Tester\DiacriticsTester.cs" />
     <Compile Include="Common\FileCleaner.cs" />

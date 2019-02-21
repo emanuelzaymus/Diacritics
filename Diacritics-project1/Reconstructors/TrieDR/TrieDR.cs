@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using DiacriticsProject1.Common.Files;
 using PBCD.Algorithms.DataStructure;
 
 namespace DiacriticsProject1.Reconstructors.FileDR
 {
-    class DiacriticsReconstructor : DRBase
+    class TrieDR : DRBase
     {
         private Trie<char, List<string>> trie;
 
-        public DiacriticsReconstructor()
+        public TrieDR()
         {
             var files = new List<NgramFile> {
                 //new NgramFile("D:/ngramy/prim-8.0-public-all-4-gramy/prim-8.0-public-all-4-gramy_TO-1_CLEANED_GOOD-WORDS.txt"),

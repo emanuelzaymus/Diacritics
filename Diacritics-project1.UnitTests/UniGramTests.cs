@@ -1,6 +1,5 @@
 ﻿using NUnit.Framework;
-using DiacriticsProject1;
-
+using DiacriticsProject1.Common.Ngrams;
 
 namespace Tests
 {

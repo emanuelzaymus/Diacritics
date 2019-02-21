@@ -1,11 +1,12 @@
 ﻿using DiacriticsProject1.Common;
 using DiacriticsProject1.Common.Files;
+using DiacriticsProject1.Reconstructors;
 using DiacriticsProject1.Reconstructors.FileDR;
+using DiacriticsProject1.Tester;
 using System;
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("DiacriticsProject1.UnitTests")]
-
 
 namespace DiacriticsProject1
 {
@@ -25,13 +26,11 @@ namespace DiacriticsProject1
 
         static void Main(string[] args)
         {
-            //CleanFiles();
+            CleanFiles();
 
-            CreateWordFiles();
+            IDiacriticsReconstructor dr = new TrieDR();
 
-            //IDiacriticsReconstructor dr = new NgramFileDR(wordsFilesRootFolder);
-
-            //DiacriticsTester.Test(testTexts[2 - 1], dr);
+            DiacriticsTester.Test(testTexts[2 - 1], dr);
         }
 
         private static void CleanFiles()
@@ -49,11 +48,6 @@ namespace DiacriticsProject1
 
             var file4 = new NgramFile("D:/ngramy/prim-8.0-public-all-4-gramy/prim-8.0-public-all-4-gramy.txt");
             Console.WriteLine(fc.CompleteProcessing(file4, rmvWordsFromFreq: 1, rmvBadWordsFromFreq: 11));
-        }
-
-        private static void CreateWordFiles()
-        {
-            NgramFilesCreator.Create(wordsFilesRootFolder);
         }
 
     }

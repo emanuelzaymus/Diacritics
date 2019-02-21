@@ -1,5 +1,4 @@
 ﻿using NUnit.Framework;
-using DiacriticsProject1;
 using System;
 using DiacriticsProject1.Common.Files;
 

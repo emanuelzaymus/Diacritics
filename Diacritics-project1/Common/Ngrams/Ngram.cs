@@ -1,6 +1,5 @@
 ﻿using System;
 
-
 namespace DiacriticsProject1.Common.Ngrams
 {
     internal class Ngram
