@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System;
+using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("DiacriticsProject1.UnitTests")]
 
@@ -30,7 +31,6 @@ namespace DiacriticsProject1
             //DiacriticsTester.Test("D:/testovacie_texty/4/Bobby Robson.txt", dr);
             //DiacriticsTester.Test("D:/testovacie_texty/5/Mor ho.txt", dr);
             //DiacriticsTester.Test("D:/testovacie_texty/6/PETER HOTRA.txt", dr);
-
 
         }
 

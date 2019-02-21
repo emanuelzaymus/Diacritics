@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 
 
@@ -6,29 +7,42 @@ namespace DiacriticsProject1
 {
     class DiacriticsTester
     {
-        internal static void Test(string path, DiacriticsReconstructor dr)
+        private static string statisticsPath;
+        internal static void Test(string path, DiacriticsReconstructor dr, bool writeStatistics = true)
         {
+            long bytes = GC.GetTotalMemory(true);
+            Console.WriteLine($"Memory (bytes): {bytes}");
+            if (writeStatistics)
+            {
+                statisticsPath = $"{TextFile.FileName(path)}_STATISTICS{TextFile.FileExtension(path)}";
+                File.WriteAllText(statisticsPath, $"Memory (bytes): {bytes}\n");
+            }
+
             Console.WriteLine($"Reading {path}");
             string originalText = File.OpenText(path).ReadToEnd();
 
             Console.WriteLine("Removing diacritics...");
-            //string textWithoutDiacritics = FileCleaner.RemoveDiacritics(originalText);
             string textWithoutDiacritics = StringRoutines.MyDiacriticsRemover(originalText);
 
             File.WriteAllText($"{TextFile.FileName(path)}_WITHOUT-DIACRITICS{TextFile.FileExtension(path)}", textWithoutDiacritics);
 
             Console.WriteLine("Reconstructing...");
+            var sw = Stopwatch.StartNew();
             string reconstructedText = dr.Reconstruct(textWithoutDiacritics);
+            sw.Stop();
+            Console.WriteLine($"Elapsed (milliseconds): {sw.Elapsed.Milliseconds}");
+            if (writeStatistics) { File.AppendAllText(statisticsPath, $"Elapsed (milliseconds): {sw.Elapsed.Milliseconds}\n"); }
+            if (writeStatistics) { File.AppendAllText(statisticsPath, $"Elapsed (totalMilliseconds): {sw.Elapsed.TotalMilliseconds}\n"); }
             Console.WriteLine("Done.");
 
             File.WriteAllText($"{TextFile.FileName(path)}_RENCOSTRUCTED{TextFile.FileExtension(path)}", reconstructedText);
 
             Console.WriteLine("Testing...");
-            FindMistakes(originalText, reconstructedText, path);
+            FindMistakes(originalText, reconstructedText, path, writeStatistics);
             Console.WriteLine("Done.\n");
         }
 
-        private static void FindMistakes(string originalText, string reconstructedText, string path)
+        private static void FindMistakes(string originalText, string reconstructedText, string path, bool writeStatistics)
         {
             string[] originalWords = originalText.Split(' ');
             string[] reconstructedWords = reconstructedText.Split(' ');
@@ -52,6 +66,12 @@ namespace DiacriticsProject1
             }
 
             Console.WriteLine($"Number of mistakes: {count}");
+            if (writeStatistics)
+            {
+                File.AppendAllText(statisticsPath, $"originalWords.Length = {originalWords.Length}\n");
+                File.AppendAllText(statisticsPath, $"reconstructedWords.Length = {reconstructedWords.Length}\n");
+                File.AppendAllText(statisticsPath, $"Number of mistakes: {count}\n");
+            }
         }
 
     }

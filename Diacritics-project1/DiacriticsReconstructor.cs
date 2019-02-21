@@ -37,7 +37,7 @@ namespace DiacriticsProject1
             string current;
             for (int i = 0; i < parsedStrings.Count; i++)
             {
-                if (IsWord(parsedStrings[i]) && !IsURL(parsedStrings[i]))
+                if (IsWord(parsedStrings[i]) /*&& !IsURL(parsedStrings[i])*/)
                 {
                     NearWords(parsedStrings, i, out string[] nthBefore, out string[] nthAfter);
                     current = Normalize(parsedStrings[i]);
@@ -220,7 +220,7 @@ namespace DiacriticsProject1
                 else if (isLetter && !wasLetter || !isLetter && wasLetter)
                 {
                     parsedStrings.Add(wordBuilder.ToString());
-                    wordBuilder = new StringBuilder();
+                    wordBuilder.Clear(); // = new StringBuilder(); // todo untested
                     wasLetter = isLetter;
                 }
                 wordBuilder.Append(text[i]);
