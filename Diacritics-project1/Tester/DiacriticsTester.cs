@@ -1,14 +1,17 @@
-﻿using System;
+﻿using DiacriticsProject1.Common;
+using DiacriticsProject1.Common.Files;
+using DiacriticsProject1.Reconstructors;
+using System;
 using System.Diagnostics;
 using System.IO;
 
 
-namespace DiacriticsProject1
+namespace DiacriticsProject1.Tester
 {
     class DiacriticsTester
     {
         private static string statisticsPath;
-        internal static void Test(string path, DiacriticsReconstructor dr, bool writeStatistics = true)
+        internal static void Test(string path, IDiacriticsReconstructor dr, bool writeStatistics = true)
         {
             long bytes = GC.GetTotalMemory(true);
             Console.WriteLine($"Memory (bytes): {bytes}");
@@ -30,9 +33,8 @@ namespace DiacriticsProject1
             var sw = Stopwatch.StartNew();
             string reconstructedText = dr.Reconstruct(textWithoutDiacritics);
             sw.Stop();
-            Console.WriteLine($"Elapsed (milliseconds): {sw.Elapsed.Milliseconds}");
-            if (writeStatistics) { File.AppendAllText(statisticsPath, $"Elapsed (milliseconds): {sw.Elapsed.Milliseconds}\n"); }
-            if (writeStatistics) { File.AppendAllText(statisticsPath, $"Elapsed (totalMilliseconds): {sw.Elapsed.TotalMilliseconds}\n"); }
+            Console.WriteLine($"Elapsed (milliseconds): {sw.Elapsed.TotalMilliseconds}");
+            if (writeStatistics) { File.AppendAllText(statisticsPath, $"Elapsed (milliseconds): {sw.Elapsed.TotalMilliseconds}\n"); }
             Console.WriteLine("Done.");
 
             File.WriteAllText($"{TextFile.FileName(path)}_RENCOSTRUCTED{TextFile.FileExtension(path)}", reconstructedText);

@@ -1,7 +1,7 @@
 ﻿using System.IO;
 
 
-namespace DiacriticsProject1
+namespace DiacriticsProject1.Common.Files
 {
     class TextFile
     {

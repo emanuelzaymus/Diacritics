@@ -1,4 +1,6 @@
-﻿namespace DiacriticsProject1
+﻿using DiacriticsProject1.Common.Ngrams;
+
+namespace DiacriticsProject1.Common.Files
 {
     class UniGramFile : NgramFile
     {

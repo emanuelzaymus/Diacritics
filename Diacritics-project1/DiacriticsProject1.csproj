@@ -11,6 +11,21 @@
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -46,23 +61,40 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DiacriticsReconstructor.cs" />
-    <Compile Include="DiacriticsTester.cs" />
-    <Compile Include="FileCleaner.cs" />
-    <Compile Include="StringRoutines.cs" />
-    <Compile Include="TextFile.cs" />
-    <Compile Include="Ngram.cs" />
-    <Compile Include="NgramFile.cs" />
+    <Compile Include="Reconstructors\FileDR\NgramFilesCreator.cs" />
+    <Compile Include="Reconstructors\TrieDR\DiacriticsReconstructor.cs" />
+    <Compile Include="Reconstructors\DRBase.cs" />
+    <Compile Include="Reconstructors\FileDR\NgramFileDR.cs" />
+    <Compile Include="Reconstructors\IDiacriticsReconstructor.cs" />
+    <Compile Include="Tester\DiacriticsTester.cs" />
+    <Compile Include="Common\FileCleaner.cs" />
+    <Compile Include="Common\StringRoutines.cs" />
+    <Compile Include="Common\Files\TextFile.cs" />
+    <Compile Include="Common\Ngrams\Ngram.cs" />
+    <Compile Include="Common\Files\NgramFile.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TrieCreator.cs" />
-    <Compile Include="UniGram.cs" />
-    <Compile Include="UniGramFile.cs" />
+    <Compile Include="Reconstructors\TrieDR\TrieCreator.cs" />
+    <Compile Include="Common\Ngrams\UniGram.cs" />
+    <Compile Include="Common\Files\UniGramFile.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="ClassDiagram1.cd" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.6.1">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.6.1 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

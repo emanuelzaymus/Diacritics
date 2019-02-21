@@ -1,13 +1,12 @@
-﻿using System;
+﻿using DiacriticsProject1.Common.Files;
+using DiacriticsProject1.Common.Ngrams;
+using System;
 using System.IO;
 using System.Text.RegularExpressions;
 
 
-namespace DiacriticsProject1
+namespace DiacriticsProject1.Common
 {
-    /// <summary>
-    /// 
-    /// </summary>
     internal class FileCleaner
     {
         private static string latinChars = "a-z";

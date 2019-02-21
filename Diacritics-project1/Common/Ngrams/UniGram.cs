@@ -1,7 +1,7 @@
 ﻿using System;
 
 
-namespace DiacriticsProject1
+namespace DiacriticsProject1.Common.Ngrams
 {
     internal class UniGram : Ngram
     {

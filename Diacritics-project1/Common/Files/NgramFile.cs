@@ -1,7 +1,8 @@
-﻿using System.IO;
+﻿using DiacriticsProject1.Common.Ngrams;
+using System.IO;
 
 
-namespace DiacriticsProject1
+namespace DiacriticsProject1.Common.Files
 {
     internal class NgramFile : TextFile
     {

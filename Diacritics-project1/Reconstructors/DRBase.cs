@@ -1,35 +1,15 @@
-﻿using System;
+﻿using DiacriticsProject1.Common;
+using System;
 using System.Collections.Generic;
 using System.Text;
-using PBCD.Algorithms.DataStructure;
 
-namespace DiacriticsProject1
+namespace DiacriticsProject1.Reconstructors
 {
-    class DiacriticsReconstructor
+    abstract class DRBase : IDiacriticsReconstructor
     {
-        private Trie<char, List<string>> _trie;
+        abstract protected bool SetDiacritics(ref string word, string[] nthBefore, string[] nthAfter);
 
-        public DiacriticsReconstructor()
-        {
-            var files = new List<NgramFile> {
-                //new NgramFile("D:/ngramy/prim-8.0-public-all-4-gramy/prim-8.0-public-all-4-gramy_TO-1_CLEANED_GOOD-WORDS.txt"),
-                //new NgramFile("D:/ngramy/prim-8.0-public-all-3-gramy/prim-8.0-public-all-3-gramy_TO-1_CLEANED_GOOD-WORDS.txt"),
-                //new NgramFile("D:/ngramy/prim-8.0-public-all-2-gramy/prim-8.0-public-all-2-gramy_TO-1_CLEANED_GOOD-WORDS.txt"),
-                new UniGramFile("D:/slovniky/prim-8.0-public-all-word_frequency_non_case_sensitive/prim-8.0-public-all-word_frequency_non_case_sensitive_CLEANED_GOOD-WORDS.txt")
-            };
-
-            var creator = new TrieCreator();
-
-            foreach (var f in files)
-            {
-                creator.Load(f);
-                Console.WriteLine($"Loaded: {f.FileName}");
-            }
-
-            _trie = creator.Get();
-        }
-
-        internal string Reconstruct(string text)
+        public string Reconstruct(string text)
         {
             List<string> parsedStrings = Split(text);
             StringBuilder finalBuilder = new StringBuilder();
@@ -121,27 +101,7 @@ namespace DiacriticsProject1
             }
         }
 
-        private bool SetDiacritics(ref string word, string[] nthBefore, string[] nthAfter)
-        {
-            List<string> foundNgrams;
-            if ((foundNgrams = _trie.Find(word)) != null)
-            {
-                string result = null;
-                foreach (var ngram in foundNgrams)
-                {
-                    if (MatchesUp(word, ngram, nthBefore, nthAfter, ref result))
-                    {
-                        word = result;
-                        return true;
-                    }
-
-                }
-                throw new Exception("No match in ngrams!");
-            }
-            return false;
-        }
-
-        private bool MatchesUp(string word, string ngram, string[] nthBefore, string[] nthAfter, ref string result)
+        protected bool MatchesUp(string word, string ngram, string[] nthBefore, string[] nthAfter, ref string result)
         {
             string[] ngramWordsDiacritics = ngram.Split(' ');
             ngram = StringRoutines.MyDiacriticsRemover(ngram);
@@ -200,7 +160,6 @@ namespace DiacriticsProject1
         {
             return FileCleaner.rgxChars.IsMatch(str);
         }
-
         private List<string> Split(string text)
         {
             // TODO: html www ftp ignorovat
@@ -228,11 +187,9 @@ namespace DiacriticsProject1
 
             return parsedStrings;
         }
-
         private string Normalize(string word)
         {
             return StringRoutines.MyDiacriticsRemover(word).ToLower();
         }
-
     }
 }

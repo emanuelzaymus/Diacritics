@@ -3,12 +3,13 @@
   <PropertyGroup>
     <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
     <HasSharedItems>true</HasSharedItems>
-    <SharedGUID>82d18580-a83d-4e16-8cb4-e5214ec25536</SharedGUID>
+    <SharedGUID>e662233a-80c8-4835-ab8e-bce08e8c6303</SharedGUID>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
-    <Import_RootNamespace>Shared</Import_RootNamespace>
+    <Import_RootNamespace>DiacriticsShared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)DRBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IDiacriticsReconstructor.cs" />
   </ItemGroup>
 </Project>

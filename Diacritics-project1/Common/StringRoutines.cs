@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Text;
 
-namespace DiacriticsProject1
+namespace DiacriticsProject1.Common
 {
     class StringRoutines
     {

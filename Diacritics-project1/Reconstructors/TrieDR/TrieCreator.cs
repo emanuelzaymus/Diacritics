@@ -1,7 +1,10 @@
 ﻿using System.Collections.Generic;
+using DiacriticsProject1.Common;
+using DiacriticsProject1.Common.Files;
+using DiacriticsProject1.Common.Ngrams;
 using PBCD.Algorithms.DataStructure;
 
-namespace DiacriticsProject1
+namespace DiacriticsProject1.Reconstructors.FileDR
 {
     class TrieCreator
     {
