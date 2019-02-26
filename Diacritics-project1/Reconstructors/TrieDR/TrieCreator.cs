@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using DiacriticsProject1.Common;
 using DiacriticsProject1.Common.Files;
 using DiacriticsProject1.Common.Ngrams;
@@ -16,6 +17,15 @@ namespace DiacriticsProject1.Reconstructors.FileDR
         }
 
         internal Trie<char, List<string>> Get() => trie;
+
+        internal void Load(List<NgramFile> files)
+        {
+            foreach (var f in files)
+            {
+                Load(f);
+                Console.WriteLine($"Loaded: {f.FileName}");
+            }
+        }
 
         internal void Load(NgramFile file)
         {

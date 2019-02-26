@@ -101,11 +101,51 @@ namespace DiacriticsProject1.Reconstructors
             }
         }
 
-        protected bool MatchesUp(string word, string ngram, string[] nthBefore, string[] nthAfter, ref string result)
+        private bool IsWord(string str)
         {
-            string[] ngramWordsDiacritics = ngram.Split(' ');
-            ngram = StringRoutines.MyDiacriticsRemover(ngram);
-            string[] ngramWords = ngram.Split(' ');
+            return FileCleaner.rgxChars.IsMatch(str);
+        }
+        private List<string> Split(string text)
+        {
+            // TODO: html www ftp ignorovat
+            var parsedStrings = new List<string>();
+            bool wasLetter = false;
+            bool first = true;
+
+            StringBuilder wordBuilder = new StringBuilder();
+            for (int i = 0; i < text.Length; i++)
+            {
+                bool isLetter = FileCleaner.rgxChars.IsMatch(text[i].ToString().ToLower());
+                if (first)
+                {
+                    wasLetter = isLetter;
+                    first = false;
+                }
+                else if (isLetter && !wasLetter || !isLetter && wasLetter)
+                {
+                    parsedStrings.Add(wordBuilder.ToString());
+                    wordBuilder.Clear(); // = new StringBuilder(); // todo untested
+                    wasLetter = isLetter;
+                }
+                wordBuilder.Append(text[i]);
+            }
+
+            return parsedStrings;
+        }
+        private string Normalize(string word)
+        {
+            return StringRoutines.MyDiacriticsRemover(word).ToLower();
+        }
+
+        protected bool MatchesUp(string word, string[] ngram, string[] nthBefore, string[] nthAfter, ref string result)
+        {
+            string[] ngramWordsDiacritics = ngram;
+            string[] ngramWords = new string[ngram.Length];
+            for (int i = 0; i < ngram.Length; i++)
+            {
+                ngramWords[i]= StringRoutines.MyDiacriticsRemover(ngram[i]);
+            }
+
             bool matches;
             int res;
 
@@ -156,40 +196,5 @@ namespace DiacriticsProject1.Reconstructors
             return false;
         }
 
-        private bool IsWord(string str)
-        {
-            return FileCleaner.rgxChars.IsMatch(str);
-        }
-        private List<string> Split(string text)
-        {
-            // TODO: html www ftp ignorovat
-            var parsedStrings = new List<string>();
-            bool wasLetter = false;
-            bool first = true;
-
-            StringBuilder wordBuilder = new StringBuilder();
-            for (int i = 0; i < text.Length; i++)
-            {
-                bool isLetter = FileCleaner.rgxChars.IsMatch(text[i].ToString().ToLower());
-                if (first)
-                {
-                    wasLetter = isLetter;
-                    first = false;
-                }
-                else if (isLetter && !wasLetter || !isLetter && wasLetter)
-                {
-                    parsedStrings.Add(wordBuilder.ToString());
-                    wordBuilder.Clear(); // = new StringBuilder(); // todo untested
-                    wasLetter = isLetter;
-                }
-                wordBuilder.Append(text[i]);
-            }
-
-            return parsedStrings;
-        }
-        private string Normalize(string word)
-        {
-            return StringRoutines.MyDiacriticsRemover(word).ToLower();
-        }
     }
 }

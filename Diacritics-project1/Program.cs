@@ -1,9 +1,10 @@
 ﻿using DiacriticsProject1.Common;
 using DiacriticsProject1.Common.Files;
-using DiacriticsProject1.Reconstructors;
-using DiacriticsProject1.Reconstructors.FileDR;
+using DiacriticsProject1.Reconstructors.DBDR;
 using DiacriticsProject1.Tester;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("DiacriticsProject1.UnitTests")]
@@ -12,6 +13,19 @@ namespace DiacriticsProject1
 {
     class Program
     {
+        private static List<NgramFile> files = new List<NgramFile>()
+            {
+                new UniGramFile("D:/slovniky/prim-8.0-public-all-word_frequency_non_case_sensitive/skuska3.txt")
+                //new UniGramFile("D:/slovniky/prim-8.0-public-all-word_frequency_non_case_sensitive/skuska2.txt")
+                //new UniGramFile("D:/slovniky/prim-8.0-public-all-word_frequency_non_case_sensitive/skuska1.txt")
+
+                //new NgramFile("D:/ngramy/prim-8.0-public-all-4-gramy/prim-8.0-public-all-4-gramy_TO-1_CLEANED_GOOD-WORDS.txt"),
+                //new NgramFile("D:/ngramy/prim-8.0-public-all-3-gramy/prim-8.0-public-all-3-gramy_TO-1_CLEANED_GOOD-WORDS.txt"),
+                //new NgramFile("D:/ngramy/prim-8.0-public-all-2-gramy/prim-8.0-public-all-2-gramy_TO-1_CLEANED_GOOD-WORDS.txt"),
+                //new UniGramFile("D:/slovniky/prim-8.0-public-all-word_frequency_non_case_sensitive/prim-8.0-public-all-word_frequency_non_case_sensitive_CLEANED_GOOD-WORDS.txt")
+            };
+
+
         private static string[] testTexts =
             {
                 "D:/testovacie_texty/1/Retz.txt",
@@ -22,15 +36,18 @@ namespace DiacriticsProject1
                 "D:/testovacie_texty/6/PETER HOTRA.txt"
             };
 
-        private static string wordsFilesRootFolder = "D:/words";
-
         static void Main(string[] args)
         {
-            CleanFiles();
+            //CleanFiles();
 
-            IDiacriticsReconstructor dr = new TrieDR();
+            //IDiacriticsReconstructor dr = new TrieDR();
+            //DiacriticsTester.Test(testTexts[2 - 1], dr);
 
-            DiacriticsTester.Test(testTexts[2 - 1], dr);
+            DBCreator.Load(files);
+
+            //DBDR dbdr = new DBDR() { db = new DiacriticsDBEntities() };
+            //DiacriticsTester.Test(testTexts[2 - 1], dbdr);
+            //dbdr.db.Dispose();
         }
 
         private static void CleanFiles()

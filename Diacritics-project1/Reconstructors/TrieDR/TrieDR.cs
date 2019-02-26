@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using DiacriticsProject1.Common;
 using DiacriticsProject1.Common.Files;
 using PBCD.Algorithms.DataStructure;
 
@@ -9,22 +10,11 @@ namespace DiacriticsProject1.Reconstructors.FileDR
     {
         private Trie<char, List<string>> trie;
 
-        public TrieDR()
+        public TrieDR(List<NgramFile> files)
         {
-            var files = new List<NgramFile> {
-                //new NgramFile("D:/ngramy/prim-8.0-public-all-4-gramy/prim-8.0-public-all-4-gramy_TO-1_CLEANED_GOOD-WORDS.txt"),
-                //new NgramFile("D:/ngramy/prim-8.0-public-all-3-gramy/prim-8.0-public-all-3-gramy_TO-1_CLEANED_GOOD-WORDS.txt"),
-                //new NgramFile("D:/ngramy/prim-8.0-public-all-2-gramy/prim-8.0-public-all-2-gramy_TO-1_CLEANED_GOOD-WORDS.txt"),
-                new UniGramFile("D:/slovniky/prim-8.0-public-all-word_frequency_non_case_sensitive/prim-8.0-public-all-word_frequency_non_case_sensitive_CLEANED_GOOD-WORDS.txt")
-            };
-
             var creator = new TrieCreator();
 
-            foreach (var f in files)
-            {
-                creator.Load(f);
-                Console.WriteLine($"Loaded: {f.FileName}");
-            }
+            creator.Load(files);
 
             trie = creator.Get();
         }
@@ -46,6 +36,11 @@ namespace DiacriticsProject1.Reconstructors.FileDR
                 throw new Exception("No match in ngrams!");
             }
             return false;
+        }
+
+        private bool MatchesUp(string word, string ngram, string[] nthBefore, string[] nthAfter, ref string result)
+        {
+            return base.MatchesUp(word, ngram.Split(' '), nthBefore, nthAfter, ref result);
         }
 
     }
