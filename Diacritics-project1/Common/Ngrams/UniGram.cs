@@ -26,5 +26,11 @@ namespace DiacriticsProject1.Common.Ngrams
                 return Convert.ToInt32(frequencyStr);
             }
         }
+
+        public override string ToString()
+        {
+            string str = Line.Trim();
+            return str.Substring(0, str.IndexOf("\t"));
+        }
     }
 }

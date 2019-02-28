@@ -15,10 +15,13 @@ namespace DiacriticsProject1
     public partial class UniGramEntity
     {
         public string Word1 { get; set; }
+
         public int WordId { get; set; }
+
         public int Id { get; set; }
+
         public int Frequency { get; set; }
-    
+
         public virtual Word Word { get; set; }
     }
 }

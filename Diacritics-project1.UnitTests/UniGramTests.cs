@@ -30,5 +30,17 @@ namespace Tests
             Assert.AreEqual(result, frequency);
         }
 
+        [Test]
+        public void ToString_OneWordLine_ReturnsSimpleWord()
+        {
+            string line = "a\t33198366";
+            string expectedToString = "a";
+            var ngram = new UniGram(line);
+
+            var result = ngram.ToString();
+
+            Assert.AreEqual(result, expectedToString);
+        }
+
     }
 }

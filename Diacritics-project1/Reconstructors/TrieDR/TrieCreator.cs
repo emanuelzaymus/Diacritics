@@ -27,6 +27,22 @@ namespace DiacriticsProject1.Reconstructors.FileDR
             }
         }
 
+        [Flags]
+        enum MyEnum : short
+        {
+            BezDiakritiky = 1,
+            SDiakritikou = 2,
+            Tretie = 4
+        }
+
+        private void temp()
+        {
+            MyEnum me = MyEnum.SDiakritikou;
+
+            var isFlagBezDiakritiky = (me & MyEnum.BezDiakritiky) == MyEnum.BezDiakritiky;
+            
+        }
+
         internal void Load(NgramFile file)
         {
             Ngram ngram;

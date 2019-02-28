@@ -1,6 +1,7 @@
 ﻿using DiacriticsProject1.Common.Files;
 using DiacriticsProject1.Common.Ngrams;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 
@@ -23,16 +24,29 @@ namespace DiacriticsProject1.Common
             rgxDigits = new Regex($"[{digits}]");
         }
 
-        internal string CompleteProcessing(NgramFile file, int rmvWordsFromFreq = 0, int rmvBadWordsFromFreq = int.MaxValue)
+        internal string CompleteProcessing(NgramFile file, int rmvWordsFromFreq = 0, int rmvBadWordsFromFreq = int.MaxValue,
+            int rmvWordsFromLength = int.MaxValue)
         {
+            bool isUniGramFile = file is UniGramFile;
+
             if (rmvWordsFromFreq > 0)
             {
-                file = (file is UniGramFile)
+                file = isUniGramFile
                     ? new UniGramFile(RemoveWordsFromFreqDown(file, rmvWordsFromFreq))
                     : file = new NgramFile(RemoveWordsFromFreqDown(file, rmvWordsFromFreq));
             }
-            file = (file is UniGramFile) ? file = new UniGramFile(Clean(file)) : file = new NgramFile(Clean(file));
-            return RemoveBadWords(file, rmvBadWordsFromFreq);
+            file = isUniGramFile ? file = new UniGramFile(Clean(file)) : file = new NgramFile(Clean(file));
+
+            if (rmvWordsFromLength == int.MaxValue)
+            {
+                return RemoveBadWords(file, rmvBadWordsFromFreq);
+            }
+            else
+            {
+                file = isUniGramFile ? file = new UniGramFile(RemoveBadWords(file, rmvBadWordsFromFreq))
+                    : file = new NgramFile(RemoveBadWords(file, rmvBadWordsFromFreq));
+                return RemoveWordsFromLength(file, rmvWordsFromLength);
+            }
         }
 
         internal string RemoveWordsFromFreqDown(NgramFile file, int fromFrequency)
@@ -96,7 +110,7 @@ namespace DiacriticsProject1.Common
             return $"{name}_CLEANED{extension}";
         }
 
-        internal string RemoveBadWords(NgramFile file, int fromFrequency = int.MaxValue)
+        private string RemoveBadWords(NgramFile file, int fromFrequency)
         {
             string name = file.FileName;
             string extension = file.FileExtension;
@@ -107,7 +121,7 @@ namespace DiacriticsProject1.Common
                 Ngram ngram;
                 while ((ngram = file.Next()) != null)
                 {
-                    if (ngram.Frequency > fromFrequency || IsGoodWord(StringRoutines.MyDiacriticsRemover(String.Join(" ", ngram.Words))))
+                    if (ngram.Frequency > fromFrequency || IsGoodWord(StringRoutines.MyDiacriticsRemover(ngram.ToString())))
                     {
                         goodWords_sw.WriteLine(ngram.Line);
                     }
@@ -120,7 +134,40 @@ namespace DiacriticsProject1.Common
             return $"{name}_GOOD-WORDS{extension}";
         }
 
-        
+        internal string RemoveWordsFromLength(NgramFile file, int fromLength)
+        {
+            string name = file.FileName;
+            string extension = file.FileExtension;
+
+            using (var toLength_sw = new StreamWriter($"{name}_TO-LENGTH-{fromLength}{extension}"))
+            using (var fromLength_sw = new StreamWriter($"{name}_FROM-LENGTH-{fromLength}{extension}"))
+            {
+                bool isToLength;
+                Ngram ngram;
+                while ((ngram = file.Next()) != null)
+                {
+                    isToLength = true;
+                    foreach (var w in ngram.Words)
+                    {
+                        if (w.Length > fromLength)
+                        {
+                            isToLength = false;
+                            break;
+                        }
+                    }
+
+                    if (isToLength)
+                    {
+                        toLength_sw.WriteLine(ngram.Line);
+                    }
+                    else
+                    {
+                        fromLength_sw.WriteLine(ngram.Line);
+                    }
+                }
+            }
+            return $"{name}_TO-LENGTH-{fromLength}{extension}";
+        }
 
         private bool IsGoodWord(string word)
         {
@@ -144,6 +191,27 @@ namespace DiacriticsProject1.Common
                 lastChar = ch;
             }
             return true;
+        }
+
+        internal void SortByLineLength(NgramFile file)
+        {
+            var words = new List<Ngram>();
+            Ngram ng;
+            while ((ng = file.Next()) != null)
+            {
+                words.Add(ng);
+            }
+            var arr = words.ToArray();
+            Array.Sort(arr, (x, y) => x.ToString().Length.CompareTo(y.ToString().Length));
+
+            using (var writer = new StreamWriter($"{file.FileName}_SORTED{file.FileExtension}"))
+            {
+                foreach (var n in arr)
+                {
+                    writer.WriteLine(n.ToString() + $" {n.Frequency} ({n.ToString().Length})");
+                }
+            }
+
         }
 
         internal void ReadingSpeedTest(string path)

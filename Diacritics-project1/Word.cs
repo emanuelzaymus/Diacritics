@@ -11,7 +11,9 @@ namespace DiacriticsProject1
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+
     public partial class Word
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -21,6 +23,11 @@ namespace DiacriticsProject1
         }
     
         public int Id { get; set; }
+
+        // TODO: Index na value
+        [Column(TypeName = "VARCHAR")]
+        [StringLength(100)]
+        [Index]
         public string Value { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

@@ -30,5 +30,17 @@ namespace Tests
             Assert.AreEqual(result, frequency);
         }
 
+        [Test]
+        public void ToString_MultipleWords_ReturnsWhiteSpaceSeparatedWords()
+        {
+            string line = " 2301 a\tja\tsom\tsa";
+            string expectedToString = "a ja som sa";
+            Ngram ngram = new Ngram(line);
+
+            var result = ngram.ToString();
+
+            Assert.AreEqual(result, expectedToString);
+        }
+
     }
 }

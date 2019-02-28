@@ -6,8 +6,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DiacriticsProject1.Reconstructors.DBDR
 {
@@ -29,7 +27,7 @@ namespace DiacriticsProject1.Reconstructors.DBDR
                 switch (file.Next().Words.Length)
                 {
                     case 1:
-                        LoadUniGramsSqlQuery(file, db);
+                        LoadUniGramsSqlCmd(file, db);
                         break;
                     default:
                         throw new Exception("Unknown length of ngams!");
@@ -38,59 +36,64 @@ namespace DiacriticsProject1.Reconstructors.DBDR
             }
         }
 
-        private static void LoadUniGramsSqlQuery(NgramFile file, DiacriticsDBEntities db)
+        private static void LoadUniGramsSqlCmd(NgramFile file, DiacriticsDBEntities db)
         {
-            //var sqlSelect = new SqlCommand("SELECT * FROM dbo.Words WHERE Value = @value", db.Database.Connection as SqlConnection);
-            //sqlSelect.CommandType = CommandType.Text;
+            var sqlSelect = new SqlCommand("SELECT * FROM dbo.Words WHERE Value = @value", db.Database.Connection as SqlConnection);
+            sqlSelect.CommandType = CommandType.Text;
+            sqlSelect.Parameters.Add("value", SqlDbType.NVarChar);
+
             var sqlInsertWord = new SqlCommand("INSERT INTO dbo.Words (Value) VALUES (@value)", db.Database.Connection as SqlConnection);
             sqlInsertWord.CommandType = CommandType.Text;
-            var sqlInsertUniGram = new SqlCommand("INSERT INTO dbo.UniGramEntities (Word1, WordId, Frequency) VALUES (@word1, @wordId, @frequency)", db.Database.Connection as SqlConnection);
+            sqlInsertWord.Parameters.Add("value", SqlDbType.NVarChar);
+
+            var sqlInsertUniGram = new SqlCommand("INSERT INTO dbo.UniGramEntities (Word1, WordId, Frequency) VALUES (@word1, @wordId, @frequency)",
+                db.Database.Connection as SqlConnection);
             sqlInsertUniGram.CommandType = CommandType.Text;
+            sqlInsertUniGram.Parameters.Add("word1", SqlDbType.NVarChar);
+            sqlInsertUniGram.Parameters.Add("wordId", SqlDbType.Int);
+            sqlInsertUniGram.Parameters.Add("frequency", SqlDbType.Int);
 
             db.Database.Connection.Open();
 
             file.ReOpen();
             Ngram ngram;
-            Word word;
             int i = 0;
             while ((ngram = file.Next()) != null)
             {
                 foreach (var w in ngram.Words)
                 {
                     string nonDiacriticsW = StringRoutines.MyDiacriticsRemover(w);
-                    //word = db.Words.Where(a => a.Value == nonDiacriticsW).SingleOrDefault();
-                    word = db.Database.SqlQuery<Word>("SELECT * FROM dbo.Words WHERE Value = @p0", nonDiacriticsW).FirstOrDefault();
-
-                    if (word == null)
+                    int id = -1;
+                    bool wasIserted;
+                    do
                     {
-                        word = new Word()
+                        wasIserted = false;
+                        sqlSelect.Parameters["value"].Value = nonDiacriticsW;
+                        SqlDataReader reader = sqlSelect.ExecuteReader();
+
+                        if (reader.Read())
                         {
-                            Value = nonDiacriticsW
-                        };
-                        //db.Words.Add(word);
-                        sqlInsertWord.Parameters.AddWithValue("value", nonDiacriticsW);
-                        sqlInsertWord.ExecuteNonQuery();
-                    }
-                    //db.UniGramEntities.Add(new UniGramEntity()
-                    //{
-                    //    Word1 = w,
-                    //    WordId = word.Id,
-                    //    Frequency = ngram.Frequency,
-                    //    Word = word
-                    //});
-                    sqlInsertUniGram.Parameters.AddWithValue("word1", w);
-                    sqlInsertUniGram.Parameters.AddWithValue("wordId", word.Id);
-                    sqlInsertUniGram.Parameters.AddWithValue("frequency", ngram.Frequency);
+                            id = (int)reader[0];
+                        }
+                        else
+                        {
+                            sqlInsertWord.Parameters["value"].Value = nonDiacriticsW;
+                            sqlInsertWord.ExecuteNonQuery();
+                            wasIserted = true;
+                        }
+                        reader.Close();
+                    } while (wasIserted);
+
+                    sqlInsertUniGram.Parameters["word1"].Value = w;
+                    sqlInsertUniGram.Parameters["wordId"].Value = id;
+                    sqlInsertUniGram.Parameters["frequency"].Value = ngram.Frequency;
                     sqlInsertUniGram.ExecuteNonQuery();
                 }
-                if (++i % 100 == 0)
-                {
-                    db.SaveChanges();
-                    Console.WriteLine(i);
-                }
+                if (++i % 10000 == 0) Console.WriteLine(i);
             }
+            db.Database.Connection.Close();
 
-            //sqlSelect.Dispose();
+            sqlSelect.Dispose();
             sqlInsertWord.Dispose();
             sqlInsertUniGram.Dispose();
         }
