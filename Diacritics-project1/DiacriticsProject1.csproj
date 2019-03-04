@@ -92,6 +92,7 @@
     </Compile>
     <Compile Include="Reconstructors\DBDR\DBCreator.cs" />
     <Compile Include="Reconstructors\DBDR\DBDR.cs" />
+    <Compile Include="Reconstructors\DBDR\DBTrieCreator.cs" />
     <Compile Include="Reconstructors\TrieDR\TrieDR.cs" />
     <Compile Include="Reconstructors\DRBase.cs" />
     <Compile Include="Reconstructors\IDiacriticsReconstructor.cs" />
