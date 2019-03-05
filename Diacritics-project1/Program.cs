@@ -1,6 +1,7 @@
 ﻿using DiacriticsProject1.Common;
 using DiacriticsProject1.Common.Files;
 using DiacriticsProject1.Reconstructors.DBDR;
+using DiacriticsProject1.Reconstructors.FileDR;
 using DiacriticsProject1.Tester;
 using System;
 using System.Collections.Generic;
@@ -47,10 +48,10 @@ namespace DiacriticsProject1
 
             //CreateDB();
 
-            using (var dbdr = new DBDR())
-            {
-                DiacriticsTester.Test(testTexts[2 - 1], dbdr);
-            }
+            //using (var dbdr = new DBDR()) { DiacriticsTester.Test(testTexts[2 - 1], dbdr); }
+
+            //FileCreator.CreateFile("D:/binFile/file.bin");
+            FileCreator.CreateBinaryFile("D:/binFile/data.dat");
         }
 
         private static void CleanFiles()
