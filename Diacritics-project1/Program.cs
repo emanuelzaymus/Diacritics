@@ -50,8 +50,9 @@ namespace DiacriticsProject1
 
             //using (var dbdr = new DBDR()) { DiacriticsTester.Test(testTexts[2 - 1], dbdr); }
 
-            //FileCreator.CreateFile("D:/binFile/file.bin");
-            FileCreator.CreateBinaryFile("D:/binFile/data.dat");
+            FileCreator.CreateBinaryFile();
+
+            //using (FileDR fdr = new FileDR()) { fdr.Read(); }
         }
 
         private static void CleanFiles()

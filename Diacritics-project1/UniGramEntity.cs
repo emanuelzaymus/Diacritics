@@ -11,11 +11,13 @@ namespace DiacriticsProject1
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations.Schema;
+
     public partial class UniGramEntity
     {
         public string Word1 { get; set; }
 
+        [Index]
         public int WordId { get; set; }
 
         public int Id { get; set; }

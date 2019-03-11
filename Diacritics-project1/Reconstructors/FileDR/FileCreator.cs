@@ -1,78 +1,64 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace DiacriticsProject1.Reconstructors.FileDR
 {
     class FileCreator
     {
-        public static void CreateFile(string path)
+        public static void CreateBinaryFile()
         {
-            if (File.Exists(path))
+            using (var db = new DiacriticsDBEntities())
             {
-                File.Delete(path);
-            }
+                db.Database.Connection.Open();
 
-            using (FileStream fs = File.Create(path))
-            {
-                AddText(fs, "áäčďéíĺľňóôŕšťúýžěřůöüẞß");
-                AddText(fs, "This is some more text,");
-                AddText(fs, "\n and this is on a new line");
-            }
+                var sqlSelectUniGrams = new SqlCommand("SELECT Word1 FROM dbo.UniGramEntities WHERE WordId = @id ORDER BY Frequency DESC",
+                db.Database.Connection as SqlConnection);
+                sqlSelectUniGrams.CommandType = CommandType.Text;
+                sqlSelectUniGrams.Parameters.Add("id", SqlDbType.Int);
 
-            //Open the stream and read it back.
-            using (FileStream fs = File.OpenRead(path))
-            {
-                byte[] b = new byte[1024];
-                UTF8Encoding temp = new UTF8Encoding(true);
-                while (fs.Read(b, 0, b.Length) > 0)
+                var sqlSelectWord = new SqlCommand("SELECT Value FROM dbo.Words WHERE Id = @id",
+                db.Database.Connection as SqlConnection);
+                sqlSelectWord.CommandType = CommandType.Text;
+                sqlSelectWord.Parameters.Add("id", SqlDbType.Int);
+
+                int from = db.Words.Min(w => w.Id);
+                int to = db.Words.Max(w => w.Id);
+
+                using (BinaryWriter fileWriter = new BinaryWriter(File.Open("D:/binFile/data.dat", FileMode.Create)))
+                using (var trieWriter = new StreamWriter("D:/binFile/fileTrie.txt"))
                 {
-                    Console.WriteLine(temp.GetString(b));
-                }
-            }
-        }
-
-        private static void AddText(FileStream fs, string value)
-        {
-            byte[] info = new UTF8Encoding(true).GetBytes(value);
-            fs.Write(info, 0, info.Length);
-        }
-
-
-        public static void CreateBinaryFile(string path)
-        {
-            string[] arr1 = { "ahoj", "cau", "bye" };
-            string[] arr2 = { "jablko", "hruska", "slivka", "hrozno" };
-            string[] arr3 = { "stolicka", "stol" };
-
-            var arrs = new List<string[]> { arr1, arr2, arr3 };
-
-            using (BinaryWriter writer = new BinaryWriter(File.Open(path, FileMode.Create)))
-            {
-                foreach (var a in arrs)
-                {
-                    Console.WriteLine("Position: " + writer.BaseStream.Position);
-                    Int32 len = a.Length;
-                    writer.Write(len);
-                    foreach (var item in a)
+                    for (int id = from; id < to + 1; id++)
                     {
-                        writer.Write(item);
+                        sqlSelectUniGrams.Parameters["id"].Value = id;
+                        sqlSelectWord.Parameters["id"].Value = id;
+
+                        using (SqlDataReader unigramsReader = sqlSelectUniGrams.ExecuteReader())
+                        using (SqlDataReader wordReader = sqlSelectWord.ExecuteReader())
+                        {
+                            var ngrms = new List<string>();
+                            while (unigramsReader.Read())
+                            {
+                                ngrms.Add((string)unigramsReader[0]);
+                            }
+                            wordReader.Read();
+                            trieWriter.WriteLine(wordReader.GetString(0) + " " + fileWriter.BaseStream.Position);
+
+                            fileWriter.Write(ngrms.Count);
+
+                            foreach (var ng in ngrms)
+                            {
+                                fileWriter.Write(ng);
+                            }
+                        }
+                        if (id % 100000 == 0) { Console.WriteLine(id); }
                     }
                 }
-            }
-
-            using (BinaryReader reader = new BinaryReader(File.Open(path, FileMode.Open)))
-            {
-                reader.BaseStream.Position = 49;
-
-                int length = reader.ReadInt32();
-                Console.WriteLine(length);
-
-                for (int i = 0; i < length; i++)
-                {
-                    Console.WriteLine(reader.ReadString());
-                }
+                db.Database.Connection.Close();
             }
         }
 
