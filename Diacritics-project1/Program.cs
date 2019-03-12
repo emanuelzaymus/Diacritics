@@ -5,7 +5,6 @@ using DiacriticsProject1.Reconstructors.FileDR;
 using DiacriticsProject1.Tester;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("DiacriticsProject1.UnitTests")]
@@ -50,9 +49,11 @@ namespace DiacriticsProject1
 
             //using (var dbdr = new DBDR()) { DiacriticsTester.Test(testTexts[2 - 1], dbdr); }
 
-            FileCreator.CreateBinaryFile();
+            //FileCreator.CreateBinaryFile();
+            //FileCreator.Test(files[0].Path);
 
-            //using (FileDR fdr = new FileDR()) { fdr.Read(); }
+            using (FileDR fdr = new FileDR()) { DiacriticsTester.Test(testTexts[2 - 1], fdr); }
+
         }
 
         private static void CleanFiles()

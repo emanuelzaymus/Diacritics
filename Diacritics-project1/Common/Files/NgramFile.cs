@@ -5,18 +5,18 @@ namespace DiacriticsProject1.Common.Files
 {
     internal class NgramFile : TextFile
     {
-        private readonly string path;
+        public string Path { get; }
 
         protected StreamReader reader;
 
         public NgramFile(string path)
         {
-            this.path = path;
+            this.Path = path;
         }
 
-        internal new string FileName => FileName(path);
+        internal new string FileName => FileName(Path);
 
-        internal new string FileExtension => FileExtension(path);
+        internal new string FileExtension => FileExtension(Path);
 
         internal virtual Ngram Next()
         {
@@ -30,7 +30,7 @@ namespace DiacriticsProject1.Common.Files
 
         internal void ReOpen()
         {
-            reader = File.OpenText(path);
+            reader = File.OpenText(Path);
         }
 
     }
