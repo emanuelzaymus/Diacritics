@@ -33,29 +33,6 @@ namespace DiacriticsProject1.Reconstructors.FileDR
             }
         }
 
-        public void Read()
-        {
-            List<string> testWords = new List<string>()
-            {
-                "a", "v", "sa", "na", "je","ze", "s", "z", "to", "aj", "o",
-                "do", "ako", "si", "som", "za", "po", "by", "ale", "pre"
-            };
-
-            foreach (var item in testWords)
-            {
-                int position = positionTrie.Find(item);
-
-                reader.BaseStream.Position = position;
-                var length = reader.ReadInt32();
-                Console.WriteLine(position);
-
-                for (int i = 0; i < length; i++)
-                {
-                    Console.WriteLine(reader.ReadString());
-                }
-            }
-        }
-
         protected override bool SetDiacritics(ref string word, string[] nthBefore, string[] nthAfter)
         {
             int position = positionTrie.Find(word);
@@ -89,5 +66,6 @@ namespace DiacriticsProject1.Reconstructors.FileDR
         {
             reader.Close();
         }
+
     }
 }

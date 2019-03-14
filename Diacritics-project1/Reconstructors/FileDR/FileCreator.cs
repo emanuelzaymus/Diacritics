@@ -1,4 +1,9 @@
-﻿using System;
+﻿using DiacriticsProject1.Common;
+using DiacriticsProject1.Common.Files;
+using DiacriticsProject1.Common.Ngrams;
+using DiacriticsProject1.Reconstructors.DBDR;
+using PBCD.Algorithms.DataStructure;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -9,37 +14,159 @@ namespace DiacriticsProject1.Reconstructors.FileDR
 {
     class FileCreator
     {
-        class DBRow
-        {
-            public string Word1 { get; }
-            public int WordId { get; }
-            public int Frequency { get; }
+        private Trie<char, int> idTrie;
+        private int maxId;
+        private int minId;
 
-            public DBRow(string word1, int wordId, int frequency)
+        public FileCreator()
+        {
+            using (var db = new DiacriticsDBEntities())
             {
-                Word1 = word1;
-                WordId = wordId;
-                Frequency = frequency;
+                idTrie = DBTrieCreator.CreateDBTrie(db);
+                maxId = db.Words.Max(x => x.Id);
+                minId = db.Words.Min(x => x.Id);
             }
         }
 
-        public static void CreateBinaryFile()
+        internal void CreateBinaryFilesFromTextFiles(List<NgramFile> files, string directoryPath)
+        {
+            foreach (var f in files)
+            {
+                int count = GetSuitableCountForDivision(f);
+                List<FileNgram> devidedNgrams;
+                int i = 0;
+                bool eof = false;
+                do
+                {
+                    devidedNgrams = DivideFileBy(f, count, ref eof);
+                    string path = directoryPath + Path.GetFileNameWithoutExtension(f.Path) + "_BIN-FILE-FROM-" + (count * i++) + ".dat";
+                    CreateBinaryFileFromTextFile(devidedNgrams, path);
+                    Console.WriteLine(path);
+                } while (!eof);
+            }
+        }
+
+        private int GetSuitableCountForDivision(NgramFile file)
+        {
+            int count;
+            switch (file.Next().Words.Length)
+            {
+                case 1:
+                    count = 20000000;
+                    break;
+                case 2:
+                    count = 10000000;
+                    break;
+                case 3:
+                    count = 5000000;
+                    break;
+                case 4:
+                    count = 2500000;
+                    break;
+                default:
+                    throw new Exception("Unknown length of ngrams");
+            }
+            file.ReOpen();
+            return count;
+        }
+
+        private List<FileNgram> DivideFileBy(NgramFile file, int count, ref bool endOfFile)
+        {
+            var ret = new List<FileNgram>();
+            Ngram ng;
+            int i = 0;
+            while ((ng = file.Next()) != null && i++ < count)
+            {
+                foreach (var w in ng.Words)
+                {
+                    int id = idTrie.Find(StringRoutines.MyDiacriticsRemover(w));
+                    if (id == 0)
+                    {
+                        throw new Exception("Word '" + w + "' is not in idTrie!!!");
+                    }
+                    ret.Add(new FileNgram(ng.ToString(), ng.Frequency, id));
+                }
+            }
+            endOfFile = ng == null;
+            Console.WriteLine("part of file loaded...");
+            return ret;
+        }
+
+        internal void CreateBinaryFileFromTextFile(List<FileNgram> ngrams, string path)
+        {
+            SortByIdAsc(ngrams);
+            Console.WriteLine("Sorted...");
+
+            using (var fileWriter = new BinaryWriter(File.Open(path, FileMode.Create)))
+            {
+                for (int id = minId; id <= maxId; id++)
+                {
+                    var result = FindFileNgramsBinarySearch(ngrams, id);
+                    SortByFrequencyDesc(result);
+
+                    fileWriter.Write(result.Count);
+                    foreach (var ng in result)
+                    {
+                        fileWriter.Write(ng.Value);
+                    }
+                    if (id % 1000000 == 0) { Console.WriteLine("id = " + id); }
+                }
+            }
+        }
+
+        private List<FileNgram> GetFileNgrams(NgramFile file, int from, int to)
+        {
+            var ngrams = new List<FileNgram>();
+            Ngram ng;
+            int i = 1;
+
+            while (i < from)
+            {
+                if ((ng = file.Next()) == null)
+                {
+                    return ngrams;
+                }
+                i++;
+            }
+
+            while (i <= to)
+            {
+                if ((ng = file.Next()) != null)
+                {
+                    foreach (var w in ng.Words)
+                    {
+                        int id = idTrie.Find(StringRoutines.MyDiacriticsRemover(w));
+                        ngrams.Add(new FileNgram(ng.ToString(), ng.Frequency, id));
+                    }
+                    i++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            return ngrams;
+        }
+
+        // Creating files from DB
+
+        internal static void CreateBinaryFileFromDBWordsAndUniGramsEntities(string positionTriePath, string fileUniGramsPath)
         {
             using (var db = new DiacriticsDBEntities())
             {
                 db.Database.Connection.Open();
 
-                List<DBRow> rows = GetAllDBRows(db);
+                List<FileNgram> ngrams = GetAllFileNgrams(db);
                 Console.WriteLine("rows created...");
-                //DataTable dt = sqlSelectUniGrams.ExecuteReader().GetSchemaTable();
 
                 var sqlSelectWord = new SqlCommand("SELECT Id, Value FROM dbo.Words ORDER BY Id ASC",
                     db.Database.Connection as SqlConnection);
                 sqlSelectWord.CommandType = CommandType.Text;
 
                 using (SqlDataReader wordReader = sqlSelectWord.ExecuteReader())
-                using (var trieWriter = new StreamWriter("D:/binFile/fileTrie.txt"))
-                using (BinaryWriter fileWriter = new BinaryWriter(File.Open("D:/binFile/data.dat", FileMode.Create)))
+                using (var trieWriter = new StreamWriter(positionTriePath))
+                using (BinaryWriter fileWriter = new BinaryWriter(File.Open(fileUniGramsPath, FileMode.Create)))
                 {
                     Console.WriteLine("started...");
                     while (wordReader.Read())
@@ -49,11 +176,13 @@ namespace DiacriticsProject1.Reconstructors.FileDR
 
                         trieWriter.WriteLine(word + " " + fileWriter.BaseStream.Position);
 
-                        var bdRows = GetWordsBinarySearch(rows, id);
-                        fileWriter.Write(bdRows.Count);
-                        foreach (var ng in bdRows)
+                        var foundNgrams = FindFileNgramsBinarySearch(ngrams, id);
+                        SortByFrequencyDesc(foundNgrams);
+
+                        fileWriter.Write(foundNgrams.Count);
+                        foreach (var ng in foundNgrams)
                         {
-                            fileWriter.Write(ng.Word1);
+                            fileWriter.Write(ng.Value);
                         }
                         if (id % 100000 == 0) { Console.WriteLine(id); }
                     }
@@ -62,12 +191,34 @@ namespace DiacriticsProject1.Reconstructors.FileDR
             }
         }
 
-        private static List<DBRow> GetWordsBinarySearch(List<DBRow> rows, int wordId)
+        private static List<FileNgram> GetAllFileNgrams(DiacriticsDBEntities db)
         {
-            var ret = new List<DBRow>();
+            var sqlSelectUniGrams = new SqlCommand("SELECT Word1, Frequency, WordId FROM dbo.UniGramEntities",
+                db.Database.Connection as SqlConnection);
+            sqlSelectUniGrams.CommandType = CommandType.Text;
+
+            var ret = new List<FileNgram>();
+
+            using (SqlDataReader unigramsReader = sqlSelectUniGrams.ExecuteReader())
+            {
+                while (unigramsReader.Read())
+                {
+                    ret.Add(new FileNgram(unigramsReader.GetString(0), unigramsReader.GetInt32(1), unigramsReader.GetInt32(2)));
+                }
+            }
+
+            SortByIdAsc(ret);
+            return ret;
+        }
+
+        // Common
+
+        private static List<FileNgram> FindFileNgramsBinarySearch(List<FileNgram> ngrams, int id)
+        {
+            var ret = new List<FileNgram>();
 
             int bottom = 0;
-            int top = rows.Count - 1;
+            int top = ngrams.Count - 1;
             bool found = false;
 
             while (!found)
@@ -75,27 +226,27 @@ namespace DiacriticsProject1.Reconstructors.FileDR
                 int middle = bottom + (int)Math.Ceiling((double)((top - bottom) / 2));
                 int index = middle;
 
-                if (rows[index].WordId == wordId)
+                if (bottom > top)
+                {
+                    return ret;
+                }
+                else if (ngrams[index].Id == id)
                 {
                     do
                     {
-                        ret.Add(rows[index]);
+                        ret.Add(ngrams[index]);
                         index++;
-                    } while (index < rows.Count && rows[index].WordId == wordId);
+                    } while (index < ngrams.Count && ngrams[index].Id == id);
 
                     index = middle - 1;
-                    while (index >= 0 && rows[index].WordId == wordId)
+                    while (index >= 0 && ngrams[index].Id == id)
                     {
-                        ret.Add(rows[index]);
+                        ret.Add(ngrams[index]);
                         index--;
                     }
                     found = true;
                 }
-                else if (bottom == top) 
-                {
-                    throw new Exception("Id not found!");
-                }
-                else if (rows[index].WordId < wordId)
+                else if (ngrams[index].Id < id)
                 {
                     bottom = index + 1;
                 }
@@ -105,41 +256,17 @@ namespace DiacriticsProject1.Reconstructors.FileDR
                 }
             }
 
-            ret.Sort((x, y) => y.Frequency.CompareTo(x.Frequency));
             return ret;
         }
 
-        private static List<DBRow> GetAllDBRows(DiacriticsDBEntities db)
+        private static void SortByFrequencyDesc(List<FileNgram> ngrams)
         {
-            var sqlSelectUniGrams = new SqlCommand("SELECT Word1, WordId, Frequency FROM dbo.UniGramEntities",
-                db.Database.Connection as SqlConnection);
-            sqlSelectUniGrams.CommandType = CommandType.Text;
-
-            var ret = new List<DBRow>();
-
-            using (SqlDataReader unigramsReader = sqlSelectUniGrams.ExecuteReader())
-            {
-                while (unigramsReader.Read())
-                {
-                    ret.Add(new DBRow(unigramsReader.GetString(0), unigramsReader.GetInt32(1), unigramsReader.GetInt32(2)));
-                }
-            }
-
-            ret.Sort((x, y) => x.WordId.CompareTo(y.WordId));
-            return ret;
+            ngrams.Sort((x, y) => y.Frequency.CompareTo(x.Frequency));
         }
 
-        internal static void Test(string path)
+        private static void SortByIdAsc(List<FileNgram> ngrams)
         {
-            using (StreamReader reader = File.OpenText(path))
-            using (BinaryWriter fileWriter = new BinaryWriter(File.Open("D:/binFile/data.dat", FileMode.Create)))
-            {
-                string line;
-                while ((line = reader.ReadLine()) != null)
-                {
-                    fileWriter.Write(line);
-                }
-            }
+            ngrams.Sort((x, y) => x.Id.CompareTo(y.Id));
         }
 
     }

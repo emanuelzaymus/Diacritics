@@ -6,6 +6,7 @@ using DiacriticsProject1.Tester;
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Data.Entity;
 
 [assembly: InternalsVisibleTo("DiacriticsProject1.UnitTests")]
 
@@ -15,18 +16,17 @@ namespace DiacriticsProject1
     {
         private static List<NgramFile> files = new List<NgramFile>()
             {
-                //new UniGramFile("D:/slovniky/prim-8.0-public-all-word_frequency_non_case_sensitive/skuska3.txt")
-                //new UniGramFile("D:/slovniky/prim-8.0-public-all-word_frequency_non_case_sensitive/skuska2.txt")
-                //new UniGramFile("D:/slovniky/prim-8.0-public-all-word_frequency_non_case_sensitive/skuska1.txt")
-                //new UniGramFile("D:/slovniky/prim-8.0-public-all-word_frequency_non_case_sensitive/prim-8.0-public-all-word_frequency_non_case_sensitive_CLEANED_GOOD-WORDS_TO-LENGTH-30_milion.txt")
+            //new UniGramFile("D:/slovniky/prim-8.0-public-all-word_frequency_non_case_sensitive/skuska3.txt")
+            //new UniGramFile("D:/slovniky/prim-8.0-public-all-word_frequency_non_case_sensitive/skuska2.txt")
+            //new UniGramFile("D:/slovniky/prim-8.0-public-all-word_frequency_non_case_sensitive/skuska1.txt")
+            //new UniGramFile("D:/slovniky/prim-8.0-public-all-word_frequency_non_case_sensitive/prim-8.0-public-all-word_frequency_non_case_sensitive_CLEANED_GOOD-WORDS_TO-LENGTH-30_milion.txt")
 
 
-                //new NgramFile("D:/ngramy/prim-8.0-public-all-4-gramy/prim-8.0-public-all-4-gramy_TO-1_CLEANED_GOOD-WORDS.txt"),
-                //new NgramFile("D:/ngramy/prim-8.0-public-all-3-gramy/prim-8.0-public-all-3-gramy_TO-1_CLEANED_GOOD-WORDS.txt"),
-                //new NgramFile("D:/ngramy/prim-8.0-public-all-2-gramy/prim-8.0-public-all-2-gramy_TO-1_CLEANED_GOOD-WORDS.txt"),
-                new UniGramFile("D:/slovniky/prim-8.0-public-all-word_frequency_non_case_sensitive/prim-8.0-public-all-word_frequency_non_case_sensitive_CLEANED_GOOD-WORDS_TO-LENGTH-30.txt")
-            };
-
+            new NgramFile("D:/ngramy/prim-8.0-public-all-4-gramy/prim-8.0-public-all-4-gramy_TO-1_CLEANED_GOOD-WORDS_TO-LENGTH-30.txt"),
+            new NgramFile("D:/ngramy/prim-8.0-public-all-3-gramy/prim-8.0-public-all-3-gramy_TO-1_CLEANED_GOOD-WORDS_TO-LENGTH-30.txt"),
+            //new NgramFile("D:/ngramy/prim-8.0-public-all-2-gramy/prim-8.0-public-all-2-gramy_TO-1_CLEANED_GOOD-WORDS_TO-LENGTH-30.txt"),
+            //new UniGramFile("D:/slovniky/prim-8.0-public-all-word_frequency_non_case_sensitive/prim-8.0-public-all-word_frequency_non_case_sensitive_CLEANED_GOOD-WORDS_TO-LENGTH-30.txt")
+        };
 
         private static string[] testTexts =
             {
@@ -37,6 +37,8 @@ namespace DiacriticsProject1
                 "D:/testovacie_texty/5/Mor ho.txt",
                 "D:/testovacie_texty/6/PETER HOTRA.txt"
             };
+
+        //private static DbContext db = new DiacriticsDBEntities();
 
         static void Main(string[] args)
         {
@@ -49,10 +51,9 @@ namespace DiacriticsProject1
 
             //using (var dbdr = new DBDR()) { DiacriticsTester.Test(testTexts[2 - 1], dbdr); }
 
-            //FileCreator.CreateBinaryFile();
-            //FileCreator.Test(files[0].Path);
-
-            using (FileDR fdr = new FileDR()) { DiacriticsTester.Test(testTexts[2 - 1], fdr); }
+            CreateBinaryFiles();
+            
+            //using (FileDR fdr = new FileDR()) { DiacriticsTester.Test(testTexts[2 - 1], fdr); }
 
         }
 
@@ -64,19 +65,30 @@ namespace DiacriticsProject1
             Console.WriteLine(fc.CompleteProcessing(file, rmvWordsFromFreq: 0, rmvBadWordsFromFreq: 11, rmvWordsFromLength: 30));
 
             var file2 = new NgramFile("D:/ngramy/prim-8.0-public-all-2-gramy/prim-8.0-public-all-2-gramy.txt");
-            Console.WriteLine(fc.CompleteProcessing(file2, rmvWordsFromFreq: 1, rmvBadWordsFromFreq: 11));
+            Console.WriteLine(fc.CompleteProcessing(file2, rmvWordsFromFreq: 1, rmvBadWordsFromFreq: 11, rmvWordsFromLength: 30));
 
             var file3 = new NgramFile("D:/ngramy/prim-8.0-public-all-3-gramy/prim-8.0-public-all-3-gramy.txt");
-            Console.WriteLine(fc.CompleteProcessing(file3, rmvWordsFromFreq: 1, rmvBadWordsFromFreq: 11));
+            Console.WriteLine(fc.CompleteProcessing(file3, rmvWordsFromFreq: 1, rmvBadWordsFromFreq: 11, rmvWordsFromLength: 30));
 
             var file4 = new NgramFile("D:/ngramy/prim-8.0-public-all-4-gramy/prim-8.0-public-all-4-gramy.txt");
-            Console.WriteLine(fc.CompleteProcessing(file4, rmvWordsFromFreq: 1, rmvBadWordsFromFreq: 11));
+            Console.WriteLine(fc.CompleteProcessing(file4, rmvWordsFromFreq: 1, rmvBadWordsFromFreq: 11, rmvWordsFromLength: 30));
         }
 
         private static void CreateDB()
         {
             DBCreator creator = new DBCreator();
             creator.LoadFiles(files);
+        }
+
+        private static void CreateBinaryFiles()
+        {
+            var fileCreator = new FileCreator();
+            fileCreator.CreateBinaryFilesFromTextFiles(files, "D:/binFiles/");  
+        }
+
+        private static void CreateBinaryFilesFromDB()
+        {
+            FileCreator.CreateBinaryFileFromDBWordsAndUniGramsEntities("D:/binFiles/positionTrie.txt", "D:/binFiles/fileUniGrams.dat");
         }
 
     }

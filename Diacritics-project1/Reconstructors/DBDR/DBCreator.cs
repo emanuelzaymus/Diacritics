@@ -102,14 +102,6 @@ namespace DiacriticsProject1.Reconstructors.DBDR
 
         private void InsertIntoDb(DataTable dt, DiacriticsDBEntities db, string destinationTableName)
         {
-            //using (var sqlNoCheckConstraint = new SqlCommand("ALTER TABLE " + destinationTableName + " NOCHECK CONSTRAINT ALL",
-            //    db.Database.Connection as SqlConnection))
-            //{
-            //    db.Database.Connection.Open();
-            //    sqlNoCheckConstraint.ExecuteNonQuery();
-            //    db.Database.Connection.Close();
-            //}
-
             using (var sqlBulk = new SqlBulkCopy(db.Database.Connection.ConnectionString, SqlBulkCopyOptions.KeepIdentity))
             {
                 sqlBulk.BatchSize = 10000;
@@ -119,30 +111,6 @@ namespace DiacriticsProject1.Reconstructors.DBDR
                 sqlBulk.DestinationTableName = destinationTableName;
                 sqlBulk.WriteToServer(dt);
             }
-
-            //using (var sqlCheckConstraint = new SqlCommand("ALTER TABLE " + destinationTableName + " CHECK CONSTRAINT ALL",
-            //    db.Database.Connection as SqlConnection))
-            //{
-            //    db.Database.Connection.Open();
-            //    sqlCheckConstraint.ExecuteNonQuery();
-            //    db.Database.Connection.Close();
-            //}
-
-            //using (var conn = db.Database.Connection as SqlConnection)
-            //{
-            //    conn.Open();
-            //    var transaction = conn.BeginTransaction();
-
-            //    using (var sqlBulk = new SqlBulkCopy(conn, SqlBulkCopyOptions.KeepIdentity, transaction))
-            //    {
-            //        sqlBulk.BatchSize = 100000;
-            //        sqlBulk.NotifyAfter = 100000;
-            //        sqlBulk.SqlRowsCopied += (sender, eventArgs) => Console.WriteLine("Wrote " + eventArgs.RowsCopied + " records.");
-
-            //        sqlBulk.DestinationTableName = destinationTableName;
-            //        sqlBulk.WriteToServer(dt);
-            //    }
-            //}
         }
 
         private void LoadUniGramsSqlCmd(NgramFile file, DiacriticsDBEntities db)
