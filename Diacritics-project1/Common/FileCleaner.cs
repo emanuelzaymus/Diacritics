@@ -24,8 +24,8 @@ namespace DiacriticsProject1.Common
             rgxDigits = new Regex($"[{digits}]");
         }
 
-        internal string CompleteProcessing(NgramFile file, int rmvWordsFromFreq = 0, int rmvBadWordsFromFreq = int.MaxValue,
-            int rmvWordsFromLength = int.MaxValue)
+        internal string CompleteProcessing(NgramFile file, int rmvWordsFromFreq = 0, bool clean = true,
+            int rmvBadWordsFromFreq = int.MaxValue, int rmvWordsFromLength = int.MaxValue)
         {
             bool isUniGramFile = file is UniGramFile;
 
@@ -35,7 +35,10 @@ namespace DiacriticsProject1.Common
                     ? new UniGramFile(RemoveWordsFromFreqDown(file, rmvWordsFromFreq))
                     : file = new NgramFile(RemoveWordsFromFreqDown(file, rmvWordsFromFreq));
             }
-            file = isUniGramFile ? file = new UniGramFile(Clean(file)) : file = new NgramFile(Clean(file));
+            if (clean)
+            {
+                file = isUniGramFile ? file = new UniGramFile(Clean(file)) : file = new NgramFile(Clean(file));
+            }
 
             if (rmvWordsFromLength == int.MaxValue)
             {

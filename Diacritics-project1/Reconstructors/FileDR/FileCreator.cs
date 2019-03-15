@@ -17,8 +17,8 @@ namespace DiacriticsProject1.Reconstructors.FileDR
         private Trie<char, int> idTrie;
         private int maxId;
         private int minId;
-
-        public FileCreator()
+        
+        private void initAttrs()
         {
             using (var db = new DiacriticsDBEntities())
             {
@@ -28,8 +28,114 @@ namespace DiacriticsProject1.Reconstructors.FileDR
             }
         }
 
-        internal void CreateBinaryFilesFromTextFiles(List<NgramFile> files, string directoryPath)
+        internal void CreateCompoundBinaryFile(string[] binFiles, string binFilePath, string positionTriePath)
         {
+            var words = GetWords();
+            Console.WriteLine("words are loaded");
+            var allBinFiles = GetAllPartialBinFiles(binFiles);
+            var binaryReaders = GetBinaryReaders(allBinFiles);
+            Console.WriteLine("all binary readers are ready");
+
+            using (var trieWriter = new StreamWriter(positionTriePath))
+            using (var binaryWriter = new BinaryWriter(File.Open(binFilePath, FileMode.Create)))
+            {
+                int c = 0;
+                foreach (var w in words)
+                {
+                    trieWriter.WriteLine(w + " " + binaryWriter.BaseStream.Position);
+
+                    var allRelevantNgrams = new List<string>();
+                    foreach (var reader in binaryReaders)
+                    {
+                        int howMany = reader.ReadInt32();
+                        for (int i = 0; i < howMany; i++)
+                        {
+                            allRelevantNgrams.Add(reader.ReadString());
+                        }
+                    }
+                    binaryWriter.Write(allRelevantNgrams.Count);
+                    foreach (var ng in allRelevantNgrams)
+                    {
+                        binaryWriter.Write(ng);
+                    }
+                    if (++c % 100000 == 0) { Console.WriteLine(c); }
+                }
+            }
+
+            Close(binaryReaders);
+        }
+
+        private List<string> GetWords()
+        {
+            var words = new List<string>();
+
+            using (var db = new DiacriticsDBEntities())
+            {
+                db.Database.Connection.Open();
+                var sqlSelectWord = new SqlCommand("SELECT Value FROM dbo.Words ORDER BY Id ASC",
+                        db.Database.Connection as SqlConnection);
+                sqlSelectWord.CommandType = CommandType.Text;
+
+                using (SqlDataReader wordReader = sqlSelectWord.ExecuteReader())
+                {
+                    while (wordReader.Read())
+                    {
+                        words.Add(wordReader.GetString(0));
+                    }
+                }
+                db.Database.Connection.Close();
+            }
+            return words;
+        }
+
+        private void Close(List<BinaryReader> binaryReaders)
+        {
+            foreach (var reader in binaryReaders)
+            {
+                reader.Close();
+            }
+        }
+
+        private List<BinaryReader> GetBinaryReaders(List<string> allBinFiles)
+        {
+            var ret = new List<BinaryReader>();
+
+            foreach (var path in allBinFiles)
+            {
+                ret.Add(new BinaryReader(File.Open(path, FileMode.Open)));
+            }
+
+            return ret;
+        }
+
+        private List<string> GetAllPartialBinFiles(string[] binFiles)
+        {
+            var ret = new List<string>();
+
+            int size = 4;
+            foreach (var path in binFiles)
+            {
+                int stepSize = GetDivisionCountByNumber(size--);
+                int i = 0;
+
+                string finalPath;
+                while (File.Exists(finalPath = TextFile.FileName(path) + i + TextFile.FileExtension(path)))
+                {
+                    ret.Add(finalPath);
+                    Console.WriteLine(finalPath);
+                    i += stepSize;
+                }
+            }
+
+            return ret;
+        }
+
+        // Creating partial files
+
+        internal void CreatePartialBinaryFilesFromFiles(List<NgramFile> files, string directoryPath)
+        {
+            initAttrs();
+
             foreach (var f in files)
             {
                 int count = GetSuitableCountForDivision(f);
@@ -40,7 +146,7 @@ namespace DiacriticsProject1.Reconstructors.FileDR
                 {
                     devidedNgrams = DivideFileBy(f, count, ref eof);
                     string path = directoryPath + Path.GetFileNameWithoutExtension(f.Path) + "_BIN-FILE-FROM-" + (count * i++) + ".dat";
-                    CreateBinaryFileFromTextFile(devidedNgrams, path);
+                    CreatePartialBinaryFile(devidedNgrams, path);
                     Console.WriteLine(path);
                 } while (!eof);
             }
@@ -49,25 +155,26 @@ namespace DiacriticsProject1.Reconstructors.FileDR
         private int GetSuitableCountForDivision(NgramFile file)
         {
             int count;
-            switch (file.Next().Words.Length)
+            count = GetDivisionCountByNumber(file.Next().Words.Length);
+            file.ReOpen();
+            return count;
+        }
+
+        private int GetDivisionCountByNumber(int number)
+        {
+            switch (number)
             {
                 case 1:
-                    count = 20000000;
-                    break;
+                    return 20000000;
                 case 2:
-                    count = 10000000;
-                    break;
+                    return 10000000;
                 case 3:
-                    count = 5000000;
-                    break;
+                    return 5000000;
                 case 4:
-                    count = 2500000;
-                    break;
+                    return 2500000;
                 default:
                     throw new Exception("Unknown length of ngrams");
             }
-            file.ReOpen();
-            return count;
         }
 
         private List<FileNgram> DivideFileBy(NgramFile file, int count, ref bool endOfFile)
@@ -92,7 +199,7 @@ namespace DiacriticsProject1.Reconstructors.FileDR
             return ret;
         }
 
-        internal void CreateBinaryFileFromTextFile(List<FileNgram> ngrams, string path)
+        internal void CreatePartialBinaryFile(List<FileNgram> ngrams, string path)
         {
             SortByIdAsc(ngrams);
             Console.WriteLine("Sorted...");
