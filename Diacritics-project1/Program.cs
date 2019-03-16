@@ -57,11 +57,12 @@ namespace DiacriticsProject1
 
             //CreatePartialBinaryFiles();
             //CreateCompoundBinaryFile();
+            FileCreator.CreateStatisticsAboutBinaryFile(binaryFilePath, positionTriePath);
 
-            using (FileDR fdr = new FileDR(binaryFilePath, positionTriePath))
-            {
-                TestOnTestTexts(fdr);
-            }
+            //using (FileDR fdr = new FileDR(binaryFilePath, positionTriePath))
+            //{
+            //    TestOnTestTexts(fdr);
+            //}
 
         }
 

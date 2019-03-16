@@ -17,7 +17,7 @@ namespace DiacriticsProject1.Reconstructors.FileDR
         private Trie<char, int> idTrie;
         private int maxId;
         private int minId;
-        
+
         private void initAttrs()
         {
             using (var db = new DiacriticsDBEntities())
@@ -26,6 +26,43 @@ namespace DiacriticsProject1.Reconstructors.FileDR
                 maxId = db.Words.Max(x => x.Id);
                 minId = db.Words.Min(x => x.Id);
             }
+        }
+
+        internal static string CreateStatisticsAboutBinaryFile(string binFilePath, string positionTriePath)
+        {
+            string statName = TextFile.FileName(binFilePath) + "_STATS.txt";
+
+            using (StreamReader positionReader = File.OpenText(positionTriePath))
+            using (var binaryReader = new BinaryReader(File.Open(binFilePath, FileMode.Open)))
+            using (var statWriter = new StreamWriter(statName))
+            {
+                int[] allNgCount = new int[5];
+                string line;
+                while ((line = positionReader.ReadLine()) != null)
+                {
+                    string word = line.Substring(0, line.IndexOf(" "));
+                    long position = Convert.ToInt64(line.Substring(line.IndexOf(" ") + 1));
+
+                    int[] ngCount = new int[5];
+
+                    binaryReader.BaseStream.Position = position;
+                    var len = binaryReader.ReadInt32();
+                    for (int i = 0; i < len; i++)
+                    {
+                        string ng = binaryReader.ReadString();
+                        string[] ngArr = ng.Split(' ');
+                        int length = ngArr.Length;
+                        ngCount[length]++;
+                    }
+                    statWriter.WriteLine($"{word} ({ngCount.Sum()}) ({ngCount[4]}, {ngCount[3]}, {ngCount[2]}, {ngCount[1]})");
+
+                    for (int i = 1; i < 5; i++) { allNgCount[i] += ngCount[i]; }
+                }
+                statWriter.WriteLine("All ngrams: {0} (4: {1}, 3: {2}, 2: {3}, 1: {4})",
+                    allNgCount.Sum(), allNgCount[4], allNgCount[3], allNgCount[2], allNgCount[1]);
+            }
+
+            return statName;
         }
 
         internal void CreateCompoundBinaryFile(string[] binFiles, string binFilePath, string positionTriePath)

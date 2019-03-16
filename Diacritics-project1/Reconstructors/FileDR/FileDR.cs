@@ -12,27 +12,10 @@ namespace DiacriticsProject1.Reconstructors.FileDR
 
         public FileDR(string binaryFilePath, string positionTriePath)
         {
-            initPositionTrie(positionTriePath);
+            positionTrie = PositionTrieCreator.CreatePositionTrie(positionTriePath);
             reader = new BinaryReader(File.Open(binaryFilePath, FileMode.Open));
         }
-
-        private void initPositionTrie(string path)
-        {
-            positionTrie = new Trie<char, long>();
-
-            using (StreamReader reader = File.OpenText(path))
-            {
-                string line;
-                while ((line = reader.ReadLine()) != null)
-                {
-                    string word = line.Substring(0, line.IndexOf(" "));
-                    long position = Convert.ToInt64(line.Substring(line.IndexOf(" ") + 1));
-
-                    positionTrie.Add(word, position);
-                }
-            }
-        }
-
+        
         protected override bool SetDiacritics(ref string word, string[] nthBefore, string[] nthAfter)
         {
             long position = positionTrie.Find(word);
@@ -52,7 +35,7 @@ namespace DiacriticsProject1.Reconstructors.FileDR
                 ngram = reader.ReadString();
                 if (MatchesUp(word, ngram.Split(' '), nthBefore, nthAfter, ref result))
                 {
-                    word = result;
+                        word = result;
                     return true;
                 }
             }
