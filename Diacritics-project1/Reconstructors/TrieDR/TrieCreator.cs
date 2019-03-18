@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using DiacriticsProject1.Common;
 using DiacriticsProject1.Common.Files;
 using DiacriticsProject1.Common.Ngrams;
@@ -64,6 +65,38 @@ namespace DiacriticsProject1.Reconstructors.FileDR
                     }
                 }
             }
+        }
+
+        internal static Trie<char, List<string>> Load(string binaryFilePath, string positionTriePath)
+        {
+            var ret = new Trie<char, List<string>>();
+
+            using (StreamReader strmReader = File.OpenText(positionTriePath))
+            using (var binReader = new BinaryReader(File.Open(binaryFilePath, FileMode.Open)))
+            {
+                string line;
+                int c = 0;
+                while ((line = strmReader.ReadLine()) != null)
+                {
+                    string word = line.Substring(0, line.IndexOf(" "));
+                    long position = Convert.ToInt64(line.Substring(line.IndexOf(" ") + 1));
+
+                    binReader.BaseStream.Position = position;
+
+                    int howMany = binReader.ReadInt32();
+
+                    var list = new List<string>();
+                    for (int i = 0; i < howMany; i++)
+                    {
+                        list.Add(binReader.ReadString());
+                    }
+
+                    ret.Add(word, list);
+                    if (++c % 10000 == 0) Console.WriteLine(c);
+                }
+            }
+
+            return ret;
         }
 
     }

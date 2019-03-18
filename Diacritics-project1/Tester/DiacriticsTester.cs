@@ -32,6 +32,10 @@ namespace DiacriticsProject1.Tester
             var sw = Stopwatch.StartNew();
             string reconstructedText = dr.Reconstruct(textWithoutDiacritics);
             sw.Stop();
+            string ngramsStat = dr.GetStatistic();
+            Console.Write(ngramsStat);
+            if (writeStatistics) { File.AppendAllText(statisticsPath, ngramsStat); }
+            dr.EraseStatistic();
             Console.WriteLine($"Elapsed (milliseconds): {sw.Elapsed.TotalMilliseconds}");
             if (writeStatistics) { File.AppendAllText(statisticsPath, $"Elapsed (milliseconds): {sw.Elapsed.TotalMilliseconds}\n"); }
             Console.WriteLine("Done.");

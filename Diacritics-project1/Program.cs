@@ -6,7 +6,6 @@ using DiacriticsProject1.Tester;
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using System.Data.Entity;
 using DiacriticsProject1.Reconstructors;
 
 [assembly: InternalsVisibleTo("DiacriticsProject1.UnitTests")]
@@ -23,10 +22,18 @@ namespace DiacriticsProject1
             new UniGramFile("D:/slovniky/prim-8.0-public-all-word_frequency_non_case_sensitive/prim-8.0-public-all-word_frequency_non_case_sensitive_CLEANED_GOOD-WORDS_TO-LENGTH-30.txt")
         };
 
+        private static List<NgramFile> oldFiles = new List<NgramFile>()
+        {
+            new NgramFile("D:/ngramy/prim-8.0-public-img-sk-n-gramy/prim-8.0-public-img-sk-4-gramy_TO-1_CLEANED_GOOD-WORDS.txt"),
+            new NgramFile("D:/ngramy/prim-8.0-public-img-sk-n-gramy/prim-8.0-public-img-sk-3-gramy_TO-1_CLEANED_GOOD-WORDS.txt"),
+            new NgramFile("D:/ngramy/prim-8.0-public-img-sk-n-gramy/prim-8.0-public-img-sk-2-gramy_TO-1_CLEANED_GOOD-WORDS.txt"),
+            new UniGramFile("D:/slovniky/prim-8.0-public-img-sk-word_frequency_non_case_sensitive/prim-8.0-public-img-sk-word_frequency_non_case_sensitive_CLEANED_GOOD-WORDS.txt")
+        };
+
         private static string[] testTexts =
             {
                 "D:/testovacie_texty/1/Retz.txt",
-                //"D:/testovacie_texty/2/Ako sa eseťákom pokúsili ukradnúť hotel Carlton.txt",
+                "D:/testovacie_texty/2/Ako sa eseťákom pokúsili ukradnúť hotel Carlton.txt",
                 "D:/testovacie_texty/3/Macron ako novodobý Ľudovít XVI.txt",
                 "D:/testovacie_texty/4/Bobby Robson.txt",
                 "D:/testovacie_texty/5/Mor ho.txt",
@@ -48,8 +55,8 @@ namespace DiacriticsProject1
         {
             //CleanFiles();
 
-            //IDiacriticsReconstructor dr = new TrieDR();
-            //DiacriticsTester.Test(testTexts[2 - 1], dr);
+            //IDiacriticsReconstructor dr = new TrieDR(oldFiles);
+            //DiacriticsTester.Test(testTexts[2], dr);
 
             //CreateDB();
 
@@ -112,11 +119,11 @@ namespace DiacriticsProject1
 
         private static void TestOnTestTexts(IDiacriticsReconstructor dr)
         {
-            //DiacriticsTester.Test(testTexts[1], dr);
-            foreach (var text in testTexts)
-            {
-                DiacriticsTester.Test(text, dr);
-            }
+            DiacriticsTester.Test(testTexts[1], dr);
+            //foreach (var text in testTexts)
+            //{
+            //    DiacriticsTester.Test(text, dr);
+            //}
         }
 
     }

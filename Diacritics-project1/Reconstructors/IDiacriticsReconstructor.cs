@@ -2,6 +2,12 @@
 {
     interface IDiacriticsReconstructor
     {
+
         string Reconstruct(string text);
+
+        string GetStatistic();
+
+        void EraseStatistic();
+
     }
 }

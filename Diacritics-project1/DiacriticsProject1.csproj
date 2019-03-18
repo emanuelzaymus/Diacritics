@@ -93,6 +93,7 @@
     <Compile Include="Reconstructors\DBDR\DBCreator.cs" />
     <Compile Include="Reconstructors\DBDR\DBDR.cs" />
     <Compile Include="Reconstructors\DBDR\DBTrieCreator.cs" />
+    <Compile Include="Reconstructors\FileDR\Cache.cs" />
     <Compile Include="Reconstructors\FileDR\FileCreator.cs" />
     <Compile Include="Reconstructors\FileDR\FileDR.cs" />
     <Compile Include="Reconstructors\FileDR\FileNgram.cs" />

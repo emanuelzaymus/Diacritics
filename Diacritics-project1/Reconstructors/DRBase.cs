@@ -1,6 +1,7 @@
 ﻿using DiacriticsProject1.Common;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace DiacriticsProject1.Reconstructors
@@ -8,6 +9,8 @@ namespace DiacriticsProject1.Reconstructors
     abstract class DRBase : IDiacriticsReconstructor
     {
         abstract protected bool SetDiacritics(ref string word, string[] nthBefore, string[] nthAfter);
+
+        int[] countOfSolvedWordsByNgrams = new int[5];
 
         public string Reconstruct(string text)
         {
@@ -150,7 +153,7 @@ namespace DiacriticsProject1.Reconstructors
             string[] ngramWords = new string[ngram.Length];
             for (int i = 0; i < ngram.Length; i++)
             {
-                ngramWords[i]= StringRoutines.MyDiacriticsRemover(ngram[i]);
+                ngramWords[i] = StringRoutines.MyDiacriticsRemover(ngram[i]);
             }
 
             bool matches;
@@ -201,6 +204,34 @@ namespace DiacriticsProject1.Reconstructors
                 }
             }
             return false;
+        }
+
+        protected void PutToStatistic(string ngram)
+        {
+            countOfSolvedWordsByNgrams[ngram.Count(x => x == ' ') + 1]++;
+        }
+
+        public virtual string GetStatistic()
+        {
+            StringBuilder stat = new StringBuilder();
+            stat.Append("When the words were solved:\n");
+            for (int i = countOfSolvedWordsByNgrams.Length - 1; i > 0; i--)
+            {
+                stat.Append(i);
+                stat.Append("-grams: ");
+                stat.Append(countOfSolvedWordsByNgrams[i]);
+                stat.AppendLine();
+            }
+
+            return stat.ToString();
+        }
+
+        public virtual void EraseStatistic()
+        {
+            for (int i = 0; i < countOfSolvedWordsByNgrams.Length; i++)
+            {
+                countOfSolvedWordsByNgrams[i] = 0;
+            }
         }
 
     }
