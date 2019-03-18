@@ -24,7 +24,6 @@ namespace DiacriticsProject1
     
         public int Id { get; set; }
 
-        // TODO: Index na value
         [Column(TypeName = "VARCHAR")]
         [StringLength(100)]
         [Index]

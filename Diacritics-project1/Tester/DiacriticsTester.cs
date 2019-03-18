@@ -51,23 +51,45 @@ namespace DiacriticsProject1.Tester
         {
             string[] originalWords = originalText.Split(' ');
             string[] reconstructedWords = reconstructedText.Split(' ');
-            // TODO: zapametanie pozicie slova (class Word)
 
             Console.WriteLine($"originalWords.Length = {originalWords.Length}");
             Console.WriteLine($"reconstructedWords.Length = {reconstructedWords.Length}");
+
+            if (originalWords.Length != reconstructedWords.Length)
+            {
+                throw new Exception("Length of original and reconstructed text are not equal!");
+            }
 
             int count = 0;
 
             using (var sw = new StreamWriter($"{TextFile.FileName(path)}_MISTAKES-ORIG-RECONST{TextFile.FileExtension(path)}"))
             {
-                for (int i = 0; i < originalWords.Length; i++)
+                int len = originalWords.Length;
+                for (int i = 0; i < len; i++)
                 {
-                    if (i < reconstructedWords.Length && originalWords[i] != reconstructedWords[i]) // TODO: out of bound exception
+                    var originalW = originalWords[i];
+                    var reconstructW = reconstructedWords[i];
+                    if (originalW != reconstructW)
                     {
-                        sw.WriteLine($"{originalWords[i]} - {reconstructedWords[i]}");
+                        sw.WriteLine("{0} {1} {2} {3} {4} {5} {6} - {7} {8} {9} {10} {11} {12} {13}",
+                            i - 3 >= 0 ? originalWords[i - 3] : "",
+                            i - 2 >= 0 ? originalWords[i - 2] : "",
+                            i - 1 >= 0 ? originalWords[i - 1] : "",
+                            originalW,
+                            i + 1 < len ? originalWords[i + 1] : "",
+                            i + 2 < len ? originalWords[i + 2] : "",
+                            i + 3 < len ? originalWords[i + 3] : "",
+
+                            i - 3 >= 0 ? reconstructedWords[i - 3] : "",
+                            i - 2 >= 0 ? reconstructedWords[i - 2] : "",
+                            i - 1 >= 0 ? reconstructedWords[i - 1] : "",
+                            reconstructW,
+                            i + 1 < len ? reconstructedWords[i + 1] : "",
+                            i + 2 < len ? reconstructedWords[i + 2] : "",
+                            i + 3 < len ? reconstructedWords[i + 3] : "");
                         count++;
                     }
-                } // TODO: print whats the difference between {originalWords.Length} and {reconstructedWords.Length}
+                }
             }
 
             Console.WriteLine($"Number of mistakes: {count}");

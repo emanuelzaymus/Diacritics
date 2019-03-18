@@ -20,7 +20,7 @@ namespace DiacriticsProject1.Reconstructors
             string current;
             for (int i = 0; i < parsedStrings.Count; i++)
             {
-                if (IsWord(parsedStrings[i]) /*&& !IsURL(parsedStrings[i])*/)
+                if (IsWord(parsedStrings[i]))
                 {
                     NearWords(parsedStrings, i, out string[] nthBefore, out string[] nthAfter);
                     current = Normalize(parsedStrings[i]);
@@ -41,20 +41,6 @@ namespace DiacriticsProject1.Reconstructors
             }
 
             return finalBuilder.ToString();
-        }
-
-        private bool IsURL(string str) // TODO: doesnt work ({this.split} splits the whole ulr apart)
-        {
-            string[] domains = { "http", "www", "ftp", ".sk", ".com", ".cz", ".uk", ".us", ".to", ".org", ".pl",
-                ".de", ".net", ".gov", ".edu", ".ru", ".fr", ".es", ".ch", ".ca", ".at", ".info" };
-            foreach (var dom in domains)
-            {
-                if (str.Contains(dom))
-                {
-                    return true;
-                }
-            }
-            return false;
         }
 
         private string RecounstructOriginalUpCase(string current, string original)
@@ -116,7 +102,6 @@ namespace DiacriticsProject1.Reconstructors
 
         private List<string> Split(string text)
         {
-            // TODO: html www ftp ignorovat
             var parsedStrings = new List<string>();
             bool wasLetter = false;
             bool first = true;
@@ -132,12 +117,28 @@ namespace DiacriticsProject1.Reconstructors
                 }
                 else if (isLetter && !wasLetter || !isLetter && wasLetter)
                 {
-                    parsedStrings.Add(wordBuilder.ToString());
-                    wordBuilder.Clear(); // = new StringBuilder(); // todo untested
+                    string str = wordBuilder.ToString();
+                    var lowerStr = str.ToLower();
+                    if (lowerStr == "www" || lowerStr == "http" || lowerStr == "https" || lowerStr == "ftp" || lowerStr == "ssh")
+                    {
+                        wordBuilder.Clear();
+                        while (i < text.Length && text[i] != ' ' && text[i] != '\n' && text[i] != '\t')
+                        {
+                            wordBuilder.Append(text[i]);
+                            i++;
+                        }
+                        str += wordBuilder.ToString();
+                    }
+                    parsedStrings.Add(str);
+                    wordBuilder.Clear();
                     wasLetter = isLetter;
                 }
-                wordBuilder.Append(text[i]);
+                if (i < text.Length)
+                {
+                    wordBuilder.Append(text[i]);
+                }
             }
+            parsedStrings.Add(wordBuilder.ToString());
 
             return parsedStrings;
         }

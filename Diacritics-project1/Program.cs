@@ -37,7 +37,8 @@ namespace DiacriticsProject1
                 "D:/testovacie_texty/3/Macron ako novodobý Ľudovít XVI.txt",
                 "D:/testovacie_texty/4/Bobby Robson.txt",
                 "D:/testovacie_texty/5/Mor ho.txt",
-                "D:/testovacie_texty/6/PETER HOTRA.txt"
+                "D:/testovacie_texty/6/PETER HOTRA.txt",
+                "D:/testovacie_texty/7/urls.txt"
             };
 
         private static string[] partialBinFiles =
@@ -119,7 +120,7 @@ namespace DiacriticsProject1
 
         private static void TestOnTestTexts(IDiacriticsReconstructor dr)
         {
-            DiacriticsTester.Test(testTexts[1], dr);
+            DiacriticsTester.Test(testTexts[6], dr);
             //foreach (var text in testTexts)
             //{
             //    DiacriticsTester.Test(text, dr);
