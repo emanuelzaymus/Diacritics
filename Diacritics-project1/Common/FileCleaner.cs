@@ -14,6 +14,7 @@ namespace DiacriticsProject1.Common
         private static string digits = "0-9";
 
         public static Regex rgxChars = new Regex($"[{latinChars}{nonLatinChars}]");
+        public static Regex rgxNonLatinChars = new Regex($"[{nonLatinChars}]");
 
         private Regex rgxNonChars;
         private Regex rgxDigits;

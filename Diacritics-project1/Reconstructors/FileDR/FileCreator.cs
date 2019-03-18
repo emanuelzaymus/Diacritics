@@ -28,43 +28,6 @@ namespace DiacriticsProject1.Reconstructors.FileDR
             }
         }
 
-        internal static string CreateStatisticsAboutBinaryFile(string binFilePath, string positionTriePath)
-        {
-            string statName = TextFile.FileName(binFilePath) + "_STATS.txt";
-
-            using (StreamReader positionReader = File.OpenText(positionTriePath))
-            using (var binaryReader = new BinaryReader(File.Open(binFilePath, FileMode.Open)))
-            using (var statWriter = new StreamWriter(statName))
-            {
-                int[] allNgCount = new int[5];
-                string line;
-                while ((line = positionReader.ReadLine()) != null)
-                {
-                    string word = line.Substring(0, line.IndexOf(" "));
-                    long position = Convert.ToInt64(line.Substring(line.IndexOf(" ") + 1));
-
-                    int[] ngCount = new int[5];
-
-                    binaryReader.BaseStream.Position = position;
-                    var len = binaryReader.ReadInt32();
-                    for (int i = 0; i < len; i++)
-                    {
-                        string ng = binaryReader.ReadString();
-                        string[] ngArr = ng.Split(' ');
-                        int length = ngArr.Length;
-                        ngCount[length]++;
-                    }
-                    statWriter.WriteLine($"{word} ({ngCount.Sum()}) ({ngCount[4]}, {ngCount[3]}, {ngCount[2]}, {ngCount[1]})");
-
-                    for (int i = 1; i < 5; i++) { allNgCount[i] += ngCount[i]; }
-                }
-                statWriter.WriteLine("All ngrams: {0} (4: {1}, 3: {2}, 2: {3}, 1: {4})",
-                    allNgCount.Sum(), allNgCount[4], allNgCount[3], allNgCount[2], allNgCount[1]);
-            }
-
-            return statName;
-        }
-
         internal void CreateCompoundBinaryFile(string[] binFiles, string binFilePath, string positionTriePath)
         {
             var words = GetWords();
@@ -79,27 +42,85 @@ namespace DiacriticsProject1.Reconstructors.FileDR
                 int c = 0;
                 foreach (var w in words)
                 {
-                    trieWriter.WriteLine(w + " " + binaryWriter.BaseStream.Position);
-
+                    int count = binaryReaders.Count;
                     var allRelevantNgrams = new List<string>();
-                    foreach (var reader in binaryReaders)
+                    BinaryReader reader;
+                    int howMany;
+                    for (int i = 0; i < count - 1; i++)
                     {
-                        int howMany = reader.ReadInt32();
-                        for (int i = 0; i < howMany; i++)
+                        reader = binaryReaders[i];
+                        howMany = reader.ReadInt32();
+                        for (int j = 0; j < howMany; j++)
                         {
                             allRelevantNgrams.Add(reader.ReadString());
                         }
                     }
-                    binaryWriter.Write(allRelevantNgrams.Count);
-                    foreach (var ng in allRelevantNgrams)
+
+                    string mostRelevantUniGram = null;
+                    reader = binaryReaders[count - 1];
+                    howMany = reader.ReadInt32();
+                    if (howMany >= 1)
                     {
-                        binaryWriter.Write(ng);
+                        mostRelevantUniGram = reader.ReadString();
+                        // I have to read them all to get to the right position for the next time.
+                        for (int i = 0; i < howMany - 1; i++) { reader.ReadString(); }
                     }
+
+                    // If there is more than 1 unigram, write them all.
+                    if (howMany > 1)
+                    {
+                        trieWriter.WriteLine(w + " " + binaryWriter.BaseStream.Position);
+
+                        allRelevantNgrams = ReduceNumberOfNgrams(allRelevantNgrams, 10000);
+
+                        binaryWriter.Write(allRelevantNgrams.Count + 1);
+                        foreach (var ng in allRelevantNgrams)
+                        {
+                            binaryWriter.Write(ng);
+                        }
+                        binaryWriter.Write(mostRelevantUniGram);
+                    }
+                    // If there is only 1 unigram, write it when it contains diacritics.
+                    else if (FileCleaner.rgxNonLatinChars.IsMatch(mostRelevantUniGram))
+                    {
+                        trieWriter.WriteLine(w + " " + binaryWriter.BaseStream.Position);
+
+                        binaryWriter.Write(1);
+                        binaryWriter.Write(mostRelevantUniGram);
+                    }
+                    // If there is only 1 unigram and does not contain diacritics, do nothing.
+
                     if (++c % 100000 == 0) { Console.WriteLine(c); }
                 }
             }
 
             Close(binaryReaders);
+        }
+
+        private List<string> ReduceNumberOfNgrams(List<string> ngrams, int count)
+        {
+            var ret = new List<string>();
+
+            int c = 0;
+            int lastSize = 4;
+            for (int i = 0; i < ngrams.Count; i++)
+            {
+                string ng = ngrams[i];
+                int size = ng.Count(x => x == ' ') + 1;
+                if (size == lastSize && c < count || lastSize != size)
+                {
+                    if (lastSize != size)
+                    {
+                        lastSize = size;
+                        c = 0;
+                    }
+
+                    ret.Add(ng);
+                    c++;
+                }
+            }
+
+            return ret;
         }
 
         private List<string> GetWords()

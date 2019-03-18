@@ -57,12 +57,14 @@ namespace DiacriticsProject1
 
             //CreatePartialBinaryFiles();
             //CreateCompoundBinaryFile();
-            FileCreator.CreateStatisticsAboutBinaryFile(binaryFilePath, positionTriePath);
+            //FileStatistics.BinaryFileNgramStats(binaryFilePath, positionTriePath);
 
-            //using (FileDR fdr = new FileDR(binaryFilePath, positionTriePath))
-            //{
-            //    TestOnTestTexts(fdr);
-            //}
+            //FileStatistics.BinaryFilePartitioningStats(binaryFilePath, positionTriePath, "a");
+
+            using (FileDR fdr = new FileDR(binaryFilePath, positionTriePath))
+            {
+                TestOnTestTexts(fdr);
+            }
 
         }
 
@@ -110,6 +112,7 @@ namespace DiacriticsProject1
 
         private static void TestOnTestTexts(IDiacriticsReconstructor dr)
         {
+            //DiacriticsTester.Test(testTexts[1], dr);
             foreach (var text in testTexts)
             {
                 DiacriticsTester.Test(text, dr);

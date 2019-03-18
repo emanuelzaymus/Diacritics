@@ -96,6 +96,7 @@
     <Compile Include="Reconstructors\FileDR\FileCreator.cs" />
     <Compile Include="Reconstructors\FileDR\FileDR.cs" />
     <Compile Include="Reconstructors\FileDR\FileNgram.cs" />
+    <Compile Include="Reconstructors\FileDR\FileStatistics.cs" />
     <Compile Include="Reconstructors\FileDR\PositionTrieCreator.cs" />
     <Compile Include="Reconstructors\TrieDR\TrieDR.cs" />
     <Compile Include="Reconstructors\DRBase.cs" />

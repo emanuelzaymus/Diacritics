@@ -105,6 +105,12 @@ namespace DiacriticsProject1.Reconstructors
         {
             return FileCleaner.rgxChars.IsMatch(str);
         }
+
+        private bool IsValidChar(char ch)
+        {
+            return FileCleaner.rgxChars.IsMatch(ch.ToString().ToLower());
+        }
+
         private List<string> Split(string text)
         {
             // TODO: html www ftp ignorovat
@@ -115,7 +121,7 @@ namespace DiacriticsProject1.Reconstructors
             StringBuilder wordBuilder = new StringBuilder();
             for (int i = 0; i < text.Length; i++)
             {
-                bool isLetter = FileCleaner.rgxChars.IsMatch(text[i].ToString().ToLower());
+                bool isLetter = IsValidChar(text[i]);
                 if (first)
                 {
                     wasLetter = isLetter;
@@ -132,6 +138,7 @@ namespace DiacriticsProject1.Reconstructors
 
             return parsedStrings;
         }
+
         private string Normalize(string word)
         {
             return StringRoutines.MyDiacriticsRemover(word).ToLower();
