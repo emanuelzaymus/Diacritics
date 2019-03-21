@@ -62,6 +62,10 @@ namespace DiacriticsProject1.Reconstructors.FileDR
                 foreach (var word in ngramToRemove.Split(' '))
                 {
                     var listRemoveFrom = cache.Find(word);
+                    if (listRemoveFrom == null)
+                    {
+                        continue;
+                    }
                     listRemoveFrom.Remove(priorityNgrams[0]);
                     if (listRemoveFrom.Count == 0)
                     {

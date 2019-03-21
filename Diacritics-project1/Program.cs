@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using DiacriticsProject1.Reconstructors;
+using System.IO;
 
 [assembly: InternalsVisibleTo("DiacriticsProject1.UnitTests")]
 
@@ -52,6 +53,9 @@ namespace DiacriticsProject1
         private static string binaryFilePath = "C:/Users/emanuel.zaymus/Documents/compoundBinFile/compoundBinFile.dat";
         private static string positionTriePath = "C:/Users/emanuel.zaymus/Documents/compoundBinFile/positionTrie.txt";
 
+        private static string diacriticsOrig = "D:/testovacie_texty/4/Bobby Robson_pre_diacritics.txt";
+        private static string diacritics = "D:/testovacie_texty/4/Diacritics/Diacritics.txt";
+
         static void Main(string[] args)
         {
             //CleanFiles();
@@ -73,6 +77,11 @@ namespace DiacriticsProject1
             {
                 TestOnTestTexts(fdr);
             }
+
+            //string originalText = File.OpenText(diacriticsOrig).ReadToEnd();
+            //string reconstructedText = File.OpenText(diacritics).ReadToEnd();
+
+            //DiacriticsTester.FindMistakes(originalText, reconstructedText, diacritics, true);
 
         }
 
@@ -120,11 +129,11 @@ namespace DiacriticsProject1
 
         private static void TestOnTestTexts(IDiacriticsReconstructor dr)
         {
-            DiacriticsTester.Test(testTexts[6], dr);
-            //foreach (var text in testTexts)
-            //{
-            //    DiacriticsTester.Test(text, dr);
-            //}
+            //DiacriticsTester.Test(testTexts[6], dr);
+            foreach (var text in testTexts)
+            {
+                DiacriticsTester.Test(text, dr);
+            }
         }
 
     }

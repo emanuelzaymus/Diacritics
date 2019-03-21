@@ -47,7 +47,7 @@ namespace DiacriticsProject1.Tester
             Console.WriteLine("Done.\n");
         }
 
-        private static void FindMistakes(string originalText, string reconstructedText, string path, bool writeStatistics)
+        public static void FindMistakes(string originalText, string reconstructedText, string path, bool writeStatistics)
         {
             string[] originalWords = originalText.Split(' ');
             string[] reconstructedWords = reconstructedText.Split(' ');

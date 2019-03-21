@@ -29,7 +29,7 @@ namespace DiacriticsProject1.Reconstructors.FileDR
                 return false;
             }
             string result = null;
-                
+
             var cacheList = cache.Get(word);
             if (cacheList != null)
             {
@@ -100,14 +100,7 @@ namespace DiacriticsProject1.Reconstructors.FileDR
 
         public override string GetStatistic()
         {
-            var stat = new StringBuilder();
-            stat.Append(base.GetStatistic());
-
-            stat.Append("From cache: ");
-            stat.Append(countOfCacheSolved);
-            stat.AppendLine();
-
-            return stat.ToString();
+            return base.GetStatistic() + "From cache: " + countOfCacheSolved + "\n";
         }
 
         public override void EraseStatistic()

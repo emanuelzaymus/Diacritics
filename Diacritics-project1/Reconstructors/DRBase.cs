@@ -12,10 +12,14 @@ namespace DiacriticsProject1.Reconstructors
 
         int[] countOfSolvedWordsByNgrams = new int[5];
 
+        private StringBuilder finalBuilder = new StringBuilder();
+        private StringBuilder upCaseStrBuilder = new StringBuilder();
+        private StringBuilder wordBuilder = new StringBuilder();
+        
         public string Reconstruct(string text)
         {
             List<string> parsedStrings = Split(text);
-            StringBuilder finalBuilder = new StringBuilder();
+            finalBuilder.Clear();
 
             string current;
             for (int i = 0; i < parsedStrings.Count; i++)
@@ -45,19 +49,19 @@ namespace DiacriticsProject1.Reconstructors
 
         private string RecounstructOriginalUpCase(string current, string original)
         {
-            StringBuilder sb = new StringBuilder();
+            upCaseStrBuilder.Clear();
             for (int i = 0; i < original.Length; i++)
             {
                 if (Char.IsUpper(original[i]))
                 {
-                    sb.Append(Char.ToUpper(current[i]));
+                    upCaseStrBuilder.Append(Char.ToUpper(current[i]));
                 }
                 else
                 {
-                    sb.Append(current[i]);
+                    upCaseStrBuilder.Append(current[i]);
                 }
             }
-            return sb.ToString();
+            return upCaseStrBuilder.ToString();
         }
 
         private void NearWords(List<string> parsedStrings, int wordPosition, out string[] nthBefore, out string[] nthAfter)
@@ -106,7 +110,7 @@ namespace DiacriticsProject1.Reconstructors
             bool wasLetter = false;
             bool first = true;
 
-            StringBuilder wordBuilder = new StringBuilder();
+            wordBuilder.Clear();
             for (int i = 0; i < text.Length; i++)
             {
                 bool isLetter = IsValidChar(text[i]);

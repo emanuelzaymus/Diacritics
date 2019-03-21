@@ -45,12 +45,12 @@ namespace DiacriticsProject1.Reconstructors.FileDR
                     int count = binaryReaders.Count;
                     var allRelevantNgrams = new List<string>();
                     BinaryReader reader;
-                    int howMany;
+                    int howManyNgrams;
                     for (int i = 0; i < count - 1; i++)
                     {
                         reader = binaryReaders[i];
-                        howMany = reader.ReadInt32();
-                        for (int j = 0; j < howMany; j++)
+                        howManyNgrams = reader.ReadInt32();
+                        for (int j = 0; j < howManyNgrams; j++)
                         {
                             allRelevantNgrams.Add(reader.ReadString());
                         }
@@ -58,20 +58,20 @@ namespace DiacriticsProject1.Reconstructors.FileDR
 
                     string mostRelevantUniGram = null;
                     reader = binaryReaders[count - 1];
-                    howMany = reader.ReadInt32();
-                    if (howMany >= 1)
+                    int howManyUnigrams = reader.ReadInt32();
+                    if (howManyUnigrams >= 1)
                     {
                         mostRelevantUniGram = reader.ReadString();
                         // I have to read them all to get to the right position for the next time.
-                        for (int i = 0; i < howMany - 1; i++) { reader.ReadString(); }
+                        for (int i = 0; i < howManyUnigrams - 1; i++) { reader.ReadString(); }
                     }
 
                     // If there is more than 1 unigram, write them all.
-                    if (howMany > 1)
+                    if (howManyUnigrams > 1)
                     {
                         trieWriter.WriteLine(w + " " + binaryWriter.BaseStream.Position);
 
-                        allRelevantNgrams = ReduceNumberOfNgrams(allRelevantNgrams, 10000);
+                        allRelevantNgrams = ReduceNumberOfNgrams(allRelevantNgrams, new int[] { 0, 0, 20000, 14000, 6000 });
 
                         binaryWriter.Write(allRelevantNgrams.Count + 1);
                         foreach (var ng in allRelevantNgrams)
@@ -97,24 +97,24 @@ namespace DiacriticsProject1.Reconstructors.FileDR
             Close(binaryReaders);
         }
 
-        private List<string> ReduceNumberOfNgrams(List<string> ngrams, int count)
+        private List<string> ReduceNumberOfNgrams(List<string> ngrams, int[] count)
         {
             var ret = new List<string>();
 
             int c = 0;
             int lastSize = 4;
-            for (int i = 0; i < ngrams.Count; i++)
+            foreach (string ng in ngrams)
             {
-                string ng = ngrams[i];
-                int size = ng.Count(x => x == ' ') + 1;
-                if (size == lastSize && c < count || lastSize != size)
-                {
-                    if (lastSize != size)
-                    {
-                        lastSize = size;
-                        c = 0;
-                    }
+                int size = ng.Count(x => x == ' ') + 1; // size = what type of n-gram it actually is
 
+                if (lastSize != size)
+                {
+                    lastSize = size;
+                    c = 0;
+                }
+
+                if (c < count[lastSize])
+                {
                     ret.Add(ng);
                     c++;
                 }
@@ -122,6 +122,32 @@ namespace DiacriticsProject1.Reconstructors.FileDR
 
             return ret;
         }
+
+        //private List<string> ReduceNumberOfNgrams(List<string> ngrams, int[] count)
+        //{
+        //    var ret = new List<string>();
+
+        //    int c = 0;
+        //    int lastSize = 4;
+        //    for (int i = 0; i < ngrams.Count; i++)
+        //    {
+        //        string ng = ngrams[i];
+        //        int size = ng.Count(x => x == ' ') + 1; // size = what type of n-gram it actually is
+        //        if (size == lastSize && c < count[lastSize] || lastSize != size)
+        //        {
+        //            if (lastSize != size)
+        //            {
+        //                lastSize = size;
+        //                c = 0;
+        //            }
+
+        //            ret.Add(ng);
+        //            c++;
+        //        }
+        //    }
+
+        //    return ret;
+        //}
 
         private List<string> GetWords()
         {

@@ -18,10 +18,12 @@ namespace DiacriticsProject1.Common
             { 'Ř', 'R' }, { 'Ů', 'U' }, { 'Ö', 'O' }, { 'Ü', 'U' }
         };
 
+        private static StringBuilder stringBuilder = new StringBuilder();
+
         public static string RemoveDiacritics(string word)
         {
             var normalizedString = word.Normalize(NormalizationForm.FormD);
-            var stringBuilder = new StringBuilder();
+            stringBuilder.Clear();
 
             foreach (var c in normalizedString)
             {
@@ -37,19 +39,19 @@ namespace DiacriticsProject1.Common
         public static string MyDiacriticsRemover(string word)
         {
             char outCh;
-            var sb = new StringBuilder();
+            stringBuilder.Clear();
             foreach (var ch in word)
             {
                 if (letters.TryGetValue(ch, out outCh))
                 {
-                    sb.Append(outCh);
+                    stringBuilder.Append(outCh);
                 }
                 else
                 {
-                    sb.Append(ch);
+                    stringBuilder.Append(ch);
                 }
             }
-            return sb.ToString();
+            return stringBuilder.ToString();
         }
 
     }
