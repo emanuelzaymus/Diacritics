@@ -34,6 +34,7 @@ namespace DiacriticsProject1.Reconstructors.FileDR
                 {
                     if (MatchesUp(word, ngram, nthBefore, nthAfter, ref result))
                     {
+                        PutToStatistic(ngram);
                         word = result;
                         return true;
                     }

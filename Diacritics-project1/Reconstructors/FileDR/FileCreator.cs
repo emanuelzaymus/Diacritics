@@ -97,7 +97,7 @@ namespace DiacriticsProject1.Reconstructors.FileDR
             Close(binaryReaders);
         }
 
-        private List<string> ReduceNumberOfNgrams(List<string> ngrams, int[] count)
+        internal static List<string> ReduceNumberOfNgrams(List<string> ngrams, int[] count)
         {
             var ret = new List<string>();
 

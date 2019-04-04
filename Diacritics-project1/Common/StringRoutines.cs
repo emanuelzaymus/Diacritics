@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 
 namespace DiacriticsProject1.Common
@@ -52,6 +53,15 @@ namespace DiacriticsProject1.Common
                 }
             }
             return stringBuilder.ToString();
+        }
+
+        public static string Normalize(string str)
+        {
+            //return str.ToLower();
+            return str.Replace('"', ' ').Replace('„', ' ').Replace('“', ' ').Replace('”', ' ').Replace('\'', ' ').Replace('`', ' ')
+                .Replace('‘', ' ').Replace('’', ' ').Replace('…', '.').Replace(':', ' ');
+            //.Replace('—', ' ').Replace('–', ' ').Replace('-', ' ');
+            //return string.Join(" ", str.Split(' ', '\t', '\n', '\r').Where(x => x != "").ToArray());
         }
 
     }

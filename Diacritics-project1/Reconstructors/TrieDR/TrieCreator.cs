@@ -41,7 +41,7 @@ namespace DiacriticsProject1.Reconstructors.FileDR
             MyEnum me = MyEnum.SDiakritikou;
 
             var isFlagBezDiakritiky = (me & MyEnum.BezDiakritiky) == MyEnum.BezDiakritiky;
-            
+
         }
 
         internal void Load(NgramFile file)
@@ -90,6 +90,8 @@ namespace DiacriticsProject1.Reconstructors.FileDR
                     {
                         list.Add(binReader.ReadString());
                     }
+
+                    list = FileCreator.ReduceNumberOfNgrams(list, new int[] { 0, 1, 350, 245, 105 });
 
                     ret.Add(word, list);
                     if (++c % 10000 == 0) Console.WriteLine(c);

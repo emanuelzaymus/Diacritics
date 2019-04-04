@@ -3,6 +3,7 @@ using DiacriticsProject1.Common.Ngrams;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace DiacriticsProject1.Common
@@ -28,6 +29,7 @@ namespace DiacriticsProject1.Common
         internal string CompleteProcessing(NgramFile file, int rmvWordsFromFreq = 0, bool clean = true,
             int rmvBadWordsFromFreq = int.MaxValue, int rmvWordsFromLength = int.MaxValue)
         {
+            // todo: toto je zbytocne... NgramFile vzdy ostane UniGramFile
             bool isUniGramFile = file is UniGramFile;
 
             if (rmvWordsFromFreq > 0)
@@ -114,7 +116,7 @@ namespace DiacriticsProject1.Common
             return $"{name}_CLEANED{extension}";
         }
 
-        private string RemoveBadWords(NgramFile file, int fromFrequency)
+        public string RemoveBadWords(NgramFile file, int fromFrequency)
         {
             string name = file.FileName;
             string extension = file.FileExtension;
@@ -281,6 +283,38 @@ namespace DiacriticsProject1.Common
                 Console.WriteLine(e.Message);
             }
 
+        }
+
+        public static void RemoveDiacriticsInFile(string path)
+        {
+            string originalText = File.OpenText(path).ReadToEnd();
+            string textWithoutDiacritics = StringRoutines.MyDiacriticsRemover(originalText);
+            File.WriteAllText($"{TextFile.FileName(path)}_WITHOUT-DIACRITICS{TextFile.FileExtension(path)}", textWithoutDiacritics);
+        }
+
+        public static void CleanFileFromHiddenChars(string path)
+        {
+            using (var strmWriter = new StreamWriter($"{TextFile.FileName(path)}_CLEANED{TextFile.FileExtension(path)}"))
+            using (var binReader = new BinaryReader(File.Open(path, FileMode.Open)))
+            {
+                var rgxLatin = new Regex($"[{latinChars}]");
+                var rgxCommon = new Regex("[-+*/=_—–]");
+                while (binReader.BaseStream.Position != binReader.BaseStream.Length)
+                {
+                    byte b = binReader.ReadByte();
+                    char c = Convert.ToChar(b);
+                    if (rgxLatin.IsMatch(c.ToString().ToLower()) || char.IsDigit(c)
+                        || char.IsPunctuation(c) || char.IsSeparator(c)
+                        || char.IsWhiteSpace(c) /*|| rgxCommon.IsMatch(c.ToString())*/)
+                    {
+                        strmWriter.Write(c);
+                    }
+                    else
+                    {
+                        Console.WriteLine($"<{c}>");
+                    }
+                }
+            }
         }
 
     }
