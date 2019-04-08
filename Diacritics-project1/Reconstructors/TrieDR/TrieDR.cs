@@ -24,6 +24,13 @@ namespace DiacriticsProject1.Reconstructors.FileDR
             trie = TrieCreator.Load(binaryFilePath, positionTriePath);
         }
 
+        public TrieDR(UniGramFile unigrams, List<NgramFile> othersNgrams)
+        {
+            TrieCreator tc = new TrieCreator();
+            tc.GetOptimizedTrie(unigrams, othersNgrams);
+            trie = tc.Get();
+        }
+
         protected override bool SetDiacritics(ref string word, string[] nthBefore, string[] nthAfter)
         {
             List<string> foundNgrams;

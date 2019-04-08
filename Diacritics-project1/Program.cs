@@ -18,7 +18,7 @@ namespace DiacriticsProject1
     {
         private static string[] allTexts =
         {
-            //"/odborne/astronomia/Astronomia.txt",
+            "/odborne/astronomia/Astronomia.txt",
             //"/odborne/bobby robson/Bobby Robson.txt",
             //"/odborne/erozia/Erozia.txt",
             //"/odborne/etika a genove inzinierstvo/Etika a genove inzinierstvo.txt",
@@ -41,10 +41,10 @@ namespace DiacriticsProject1
             //"/publicisticke/ukrajinske volby/Ukrajinske volby.txt",
             //"/publicisticke/vedecka fantastika je predobrazom toho co je mozne/Vedecka fantastika je predobrazom toho co je mozne.txt",
 
-            "/umelecke/banality/Banality.txt",
-            "/umelecke/maco mliec/Maco Mliec.txt",
-            "/umelecke/mor ho/Mor ho.txt",
-            "/umelecke/tapakovci/Tapakovci.txt",
+            //"/umelecke/banality/Banality.txt",
+            //"/umelecke/maco mliec/Maco Mliec.txt",
+            //"/umelecke/mor ho/Mor ho.txt",
+            //"/umelecke/tapakovci/Tapakovci.txt",
         };
 
         private static string[] reconstructorsPath =
@@ -101,6 +101,8 @@ namespace DiacriticsProject1
         {
             //CleanFiles();
 
+            TestOnTestTexts(new TrieDR((UniGramFile)files[3], files.GetRange(0, 3)), 1);
+
             //TestOnTestTexts(new TrieDR(binaryFilePath, positionTriePath), 1);
 
             //CreatePartialBinaryFiles();
@@ -114,7 +116,7 @@ namespace DiacriticsProject1
             //    TestOnTestTexts(fdr, 0);
             //}
 
-            OnlyTestTexts(reconstructorsPath[4]);
+            //OnlyTestTexts(reconstructorsPath[4]);
 
             //Normalize(reconstructorsPath[3]);
             //CreateNonDiacriticsFiles(reconstructorsPath[4]);
