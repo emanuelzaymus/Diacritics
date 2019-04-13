@@ -1,8 +1,6 @@
 ﻿using DiacriticsProject1.Common;
-using DiacriticsProject1.Common.Files;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -17,7 +15,7 @@ namespace DiacriticsProject1.Reconstructors
         private StringBuilder finalBuilder = new StringBuilder();
         private StringBuilder upCaseStrBuilder = new StringBuilder();
         private StringBuilder wordBuilder = new StringBuilder();
-
+        
         public string Reconstruct(string text)
         {
             List<string> parsedStrings = Split(text);
@@ -241,23 +239,5 @@ namespace DiacriticsProject1.Reconstructors
             }
         }
 
-        public void Reconstrut(string sourcePath, string destinationPath)
-        {
-            if (!File.Exists(sourcePath))
-            {
-                throw new Exception("File " + sourcePath + " does not exist!");
-            }
-
-            if (!File.Exists(destinationPath))
-            {
-                throw new Exception("File " + destinationPath + " does not exist!");
-            }
-
-            string textWithoutDiacritics = File.OpenText(sourcePath).ReadToEnd();
-
-            string reconstructedText = Reconstruct(textWithoutDiacritics);
-
-            File.WriteAllText(destinationPath, reconstructedText);
-        }
     }
 }
