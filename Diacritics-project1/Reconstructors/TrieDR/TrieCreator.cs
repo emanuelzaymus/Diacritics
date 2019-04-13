@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using DiacriticsProject1.Common;
 using DiacriticsProject1.Common.Files;
 using DiacriticsProject1.Common.Ngrams;
@@ -55,9 +56,13 @@ namespace DiacriticsProject1.Reconstructors.FileDR
         {
             var ngramLists = new List<List<string>>();
             LoadUnigrams(uniGramFiles, ngramLists);
+            Console.WriteLine("unigrams loaded");
             OptimizeUniGramTrie(ngramLists);
+            Console.WriteLine("unigrams optimized");
             OptimizedLoad(otherNgramFiles);
+            Console.WriteLine("other files loaded");
             SwitchUniGramsToTheEnd(ngramLists);
+            Console.WriteLine("unigrams switched");
         }
 
         private void LoadUnigrams(UniGramFile uniGramFiles, List<List<string>> ngramLists)
@@ -103,39 +108,21 @@ namespace DiacriticsProject1.Reconstructors.FileDR
                     l.RemoveRange(2, l.Count - 2);
                 }
             }
-
-            //Ngram ngram;
-            //while ((ngram = uniGramFile.Next()) != null)
-            //{
-            //    foreach (string w in ngram.Words)
-            //    {
-            //        string nonDiacriticsWord = StringRoutines.MyDiacriticsRemover(w);
-            //        List<string> foundList = trie.Find(nonDiacriticsWord);
-            //        if (foundList != null)
-            //        {
-            //            if (foundList.Count == 1)
-            //            {
-            //                if (!FileCleaner.rgxNonLatinChars.IsMatch(foundList[0]))
-            //                {
-            //                    trie.Remove(nonDiacriticsWord);
-            //                }
-            //            }
-            //            else
-            //            {
-            //                foundList.RemoveRange(1, foundList.Count - 1);
-            //            }
-            //        }
-            //    }
-            //}
+            ngramLists.RemoveAll(x => x == null);
         }
 
         private void OptimizedLoad(List<NgramFile> otherNgramFiles)
         {
+            var maxAllowedConut = new int[5] { 0, 702, 702, 352, 107 };
             // load 1, 350, 245, 105  (1 2 3 4)
             foreach (var file in otherNgramFiles)
             {
                 Ngram ngram;
                 string lineWordsFormated;
+
+                int size = file.Next().Words.Length;
+                file.ReOpen();
+
                 while ((ngram = file.Next()) != null)
                 {
                     lineWordsFormated = string.Join(" ", ngram.Words);
@@ -143,12 +130,14 @@ namespace DiacriticsProject1.Reconstructors.FileDR
                     {
                         string nonDiacriticsWord = StringRoutines.MyDiacriticsRemover(w);
                         List<string> foundList = trie.Find(nonDiacriticsWord);
-                        if (foundList != null && foundList.Count > 1)
+
+                        if (foundList != null && foundList.Count > 1 && foundList.Count < maxAllowedConut[size])
                         {
                             foundList.Add(lineWordsFormated);
                         }
                     }
                 }
+                Console.WriteLine(" 4 3 2");
             }
         }
 
@@ -157,7 +146,7 @@ namespace DiacriticsProject1.Reconstructors.FileDR
             for (int i = 0; i < ngramLists.Count; i++)
             {
                 var l = ngramLists[i];
-                if (l != null)
+                if (l.Count > 1)
                 {
                     string uniGram = l[0];
                     l.RemoveAt(0);

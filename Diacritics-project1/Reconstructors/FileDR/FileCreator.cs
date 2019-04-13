@@ -123,32 +123,6 @@ namespace DiacriticsProject1.Reconstructors.FileDR
             return ret;
         }
 
-        //private List<string> ReduceNumberOfNgrams(List<string> ngrams, int[] count)
-        //{
-        //    var ret = new List<string>();
-
-        //    int c = 0;
-        //    int lastSize = 4;
-        //    for (int i = 0; i < ngrams.Count; i++)
-        //    {
-        //        string ng = ngrams[i];
-        //        int size = ng.Count(x => x == ' ') + 1; // size = what type of n-gram it actually is
-        //        if (size == lastSize && c < count[lastSize] || lastSize != size)
-        //        {
-        //            if (lastSize != size)
-        //            {
-        //                lastSize = size;
-        //                c = 0;
-        //            }
-
-        //            ret.Add(ng);
-        //            c++;
-        //        }
-        //    }
-
-        //    return ret;
-        //}
-
         private List<string> GetWords()
         {
             var words = new List<string>();
