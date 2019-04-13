@@ -5,7 +5,7 @@ using System.Text;
 
 namespace DiacriticsProject1.Reconstructors.FileDR
 {
-    class FileDR : DRBase, IDisposable
+    class FileDR : DiacriticsReconstructor, IDisposable
     {
         private Trie<char, long> positionTrie;
         private BinaryReader reader;

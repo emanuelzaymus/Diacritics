@@ -6,7 +6,7 @@ using PBCD.Algorithms.DataStructure;
 
 namespace DiacriticsProject1.Reconstructors.DBDR
 {
-    class DBDR : DRBase, IDisposable
+    class DBDR : DiacriticsReconstructor, IDisposable
     {
         private DiacriticsDBEntities db;
 

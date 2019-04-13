@@ -12,7 +12,7 @@ namespace DiacriticsProject1.Tester
     {
         private static string statisticsPath;
 
-        internal static void Test(string path, IDiacriticsReconstructor dr, bool writeStatistics = true)
+        internal static void Test(string path, DiacriticsReconstructor dr, bool writeStatistics = true)
         {
             long bytes = GC.GetTotalMemory(true);
             Console.WriteLine($"Memory (bytes): {bytes}");

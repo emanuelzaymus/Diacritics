@@ -5,10 +5,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Xceed.Words.NET;
 
 namespace DiacriticsProject1.Reconstructors
 {
-    abstract class DRBase : IDiacriticsReconstructor
+    abstract class DiacriticsReconstructor
     {
         abstract protected bool SetDiacritics(ref string word, string[] nthBefore, string[] nthAfter);
 
@@ -244,14 +245,10 @@ namespace DiacriticsProject1.Reconstructors
         public void Reconstrut(string sourcePath, string destinationPath)
         {
             if (!File.Exists(sourcePath))
-            {
                 throw new Exception("File " + sourcePath + " does not exist!");
-            }
 
             if (!File.Exists(destinationPath))
-            {
                 throw new Exception("File " + destinationPath + " does not exist!");
-            }
 
             string textWithoutDiacritics = File.OpenText(sourcePath).ReadToEnd();
 
@@ -259,5 +256,29 @@ namespace DiacriticsProject1.Reconstructors
 
             File.WriteAllText(destinationPath, reconstructedText);
         }
+
+        public void ReconstructWordDocument(string sourcePath, string destinationPath)
+        {
+            if (!File.Exists(sourcePath))
+                throw new Exception("File " + sourcePath + " does not exist!");
+
+            if (!File.Exists(destinationPath))
+                throw new Exception("File " + destinationPath + " does not exist!");
+
+            string textWithoutDiacritics;
+            using (DocX sourceDoc = DocX.Load(sourcePath))
+            {
+                textWithoutDiacritics = sourceDoc.Text;
+            }
+
+            string reconstructedText = Reconstruct(textWithoutDiacritics);
+
+            using (DocX destinationDoc = DocX.Create(destinationPath))
+            {
+                destinationDoc.InsertParagraph(reconstructedText);
+                destinationDoc.Save();
+            }
+        }
+
     }
 }

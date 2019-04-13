@@ -106,8 +106,7 @@
     <Compile Include="Reconstructors\FileDR\FileStatistics.cs" />
     <Compile Include="Reconstructors\FileDR\PositionTrieCreator.cs" />
     <Compile Include="Reconstructors\TrieDR\TrieDR.cs" />
-    <Compile Include="Reconstructors\DRBase.cs" />
-    <Compile Include="Reconstructors\IDiacriticsReconstructor.cs" />
+    <Compile Include="Reconstructors\DiacriticsReconstructor.cs" />
     <Compile Include="Tester\DiacriticsTester.cs" />
     <Compile Include="Common\FileCleaner.cs" />
     <Compile Include="Common\StringRoutines.cs" />

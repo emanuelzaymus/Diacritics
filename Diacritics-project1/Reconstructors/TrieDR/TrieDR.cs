@@ -5,7 +5,7 @@ using PBCD.Algorithms.DataStructure;
 
 namespace DiacriticsProject1.Reconstructors.FileDR
 {
-    class TrieDR : DRBase
+    class TrieDR : DiacriticsReconstructor
     {
         private Trie<char, List<string>> trie;
 

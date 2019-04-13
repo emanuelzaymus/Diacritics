@@ -101,8 +101,6 @@ namespace DiacriticsProject1
         static void Main(string[] args)
         {
 
-            CreateSampleDocument();
-
             //CleanFiles();
 
             //TestOnTestTexts(new TrieDR((UniGramFile)files[3], files.GetRange(0, 3)), 1);
@@ -222,7 +220,7 @@ namespace DiacriticsProject1
             FileCreator.CreateBinaryFileFromDBWordsAndUniGramsEntities("D:/binFiles/positionTrie.txt", "D:/binFiles/fileUniGrams.dat");
         }
 
-        private static void TestOnTestTexts(IDiacriticsReconstructor dr, int rPath)
+        private static void TestOnTestTexts(DiacriticsReconstructor dr, int rPath)
         {
             foreach (var text in allTexts)
             {
@@ -240,33 +238,6 @@ namespace DiacriticsProject1
                 }
             }
         }
-
-
-        public static void CreateSampleDocument()
-        {
-            string fileNameIn = @"D:\testovacie_texty\nepouzite texty\To vy ste celebrity.docx";
-            var docIn = DocX.Load(fileNameIn);
-            string text = docIn.Text;
-            docIn.Dispose();
-
-
-            // Modify to suit your machine:
-            string fileNameOut = @"D:\DocXExample.docx";
-
-            // Create a document in memory:
-            var docOut = DocX.Create(fileNameOut);
-
-            // Insert a paragrpah:
-            docOut.InsertParagraph(text);
-
-            // Save to the output directory:
-            docOut.Save();
-
-            // Open in Word:
-            //Process.Start("WINWORD.EXE", fileName);
-        }
-
-
 
     }
 }
