@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
 using System.Text;
 
 namespace DiacriticsProject1.Common
@@ -21,22 +19,6 @@ namespace DiacriticsProject1.Common
 
         private static StringBuilder stringBuilder = new StringBuilder();
 
-        public static string RemoveDiacritics(string word)
-        {
-            var normalizedString = word.Normalize(NormalizationForm.FormD);
-            stringBuilder.Clear();
-
-            foreach (var c in normalizedString)
-            {
-                var unicodeCategory = CharUnicodeInfo.GetUnicodeCategory(c);
-                if (unicodeCategory != UnicodeCategory.NonSpacingMark)
-                {
-                    stringBuilder.Append(c);
-                }
-            }
-            return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
-        }
-
         public static string MyDiacriticsRemover(string word)
         {
             char outCh;
@@ -53,15 +35,6 @@ namespace DiacriticsProject1.Common
                 }
             }
             return stringBuilder.ToString();
-        }
-
-        public static string Normalize(string str)
-        {
-            //return str.ToLower();
-            return str.Replace('"', ' ').Replace('„', ' ').Replace('“', ' ').Replace('”', ' ').Replace('\'', ' ').Replace('`', ' ')
-                .Replace('‘', ' ').Replace('’', ' ').Replace('…', '.').Replace(':', ' ');
-            //.Replace('—', ' ').Replace('–', ' ').Replace('-', ' ');
-            //return string.Join(" ", str.Split(' ', '\t', '\n', '\r').Where(x => x != "").ToArray());
         }
 
     }

@@ -1,21 +1,20 @@
 ﻿using DiacriticsProject1.Common;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using System.Text;
+using Xceed.Words.NET;
 
 namespace DiacriticsProject1.Reconstructors
 {
-    abstract class DRBase : IDiacriticsReconstructor
+    abstract class DiacriticsReconstructor
     {
         abstract protected bool SetDiacritics(ref string word, string[] nthBefore, string[] nthAfter);
-
-        int[] countOfSolvedWordsByNgrams = new int[5];
 
         private StringBuilder finalBuilder = new StringBuilder();
         private StringBuilder upCaseStrBuilder = new StringBuilder();
         private StringBuilder wordBuilder = new StringBuilder();
-        
+
         public string Reconstruct(string text)
         {
             List<string> parsedStrings = Split(text);
@@ -211,31 +210,35 @@ namespace DiacriticsProject1.Reconstructors
             return false;
         }
 
-        protected void PutToStatistic(string ngram)
+        public void Reconstruct(string sourcePath, string destinationPath)
         {
-            countOfSolvedWordsByNgrams[ngram.Count(x => x == ' ') + 1]++;
+            if (!File.Exists(sourcePath))
+                throw new Exception("File " + sourcePath + " does not exist!");
+            
+            string textWithoutDiacritics = File.OpenText(sourcePath).ReadToEnd();
+
+            string reconstructedText = Reconstruct(textWithoutDiacritics);
+
+            File.WriteAllText(destinationPath, reconstructedText);
         }
 
-        public virtual string GetStatistic()
+        public void ReconstructWordDocument(string sourcePath, string destinationPath)
         {
-            StringBuilder stat = new StringBuilder();
-            stat.Append("When the words were solved:\n");
-            for (int i = countOfSolvedWordsByNgrams.Length - 1; i > 0; i--)
+            if (!File.Exists(sourcePath))
+                throw new Exception("File " + sourcePath + " does not exist!");
+            
+            string textWithoutDiacritics;
+            using (DocX sourceDoc = DocX.Load(sourcePath))
             {
-                stat.Append(i);
-                stat.Append("-grams: ");
-                stat.Append(countOfSolvedWordsByNgrams[i]);
-                stat.AppendLine();
+                textWithoutDiacritics = sourceDoc.Text;
             }
 
-            return stat.ToString();
-        }
+            string reconstructedText = Reconstruct(textWithoutDiacritics);
 
-        public virtual void EraseStatistic()
-        {
-            for (int i = 0; i < countOfSolvedWordsByNgrams.Length; i++)
+            using (DocX destinationDoc = DocX.Create(destinationPath))
             {
-                countOfSolvedWordsByNgrams[i] = 0;
+                destinationDoc.InsertParagraph(reconstructedText);
+                destinationDoc.Save();
             }
         }
 

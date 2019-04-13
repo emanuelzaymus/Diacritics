@@ -1,33 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using DiacriticsProject1.Common.Files;
 using PBCD.Algorithms.DataStructure;
 
-namespace DiacriticsProject1.Reconstructors.FileDR
+namespace DiacriticsProject1.Reconstructors.TrieDR
 {
-    class TrieDR : DRBase
+    class TrieDR : DiacriticsReconstructor
     {
         private Trie<char, List<string>> trie;
 
-        public TrieDR(List<NgramFile> files)
-        {
-            var creator = new TrieCreator();
-
-            creator.Load(files);
-
-            trie = creator.Get();
-        }
-
-        public TrieDR(string binaryFilePath, string positionTriePath)
+        internal TrieDR(string binaryFilePath, string positionTriePath)
         {
             trie = TrieCreator.Load(binaryFilePath, positionTriePath);
-        }
-
-        public TrieDR(UniGramFile unigrams, List<NgramFile> othersNgrams)
-        {
-            TrieCreator tc = new TrieCreator();
-            tc.GetOptimizedTrie(unigrams, othersNgrams);
-            trie = tc.Get();
         }
 
         protected override bool SetDiacritics(ref string word, string[] nthBefore, string[] nthAfter)
@@ -40,7 +23,6 @@ namespace DiacriticsProject1.Reconstructors.FileDR
                 {
                     if (MatchesUp(word, ngram, nthBefore, nthAfter, ref result))
                     {
-                        PutToStatistic(ngram);
                         word = result;
                         return true;
                     }

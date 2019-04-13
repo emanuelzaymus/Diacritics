@@ -4,9 +4,10 @@ using System.IO;
 using DiacriticsProject1.Common;
 using DiacriticsProject1.Common.Files;
 using DiacriticsProject1.Common.Ngrams;
+using DiacriticsProject1.Reconstructors.FileDR;
 using PBCD.Algorithms.DataStructure;
 
-namespace DiacriticsProject1.Reconstructors.FileDR
+namespace DiacriticsProject1.Reconstructors.TrieDR
 {
     class TrieCreator
     {

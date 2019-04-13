@@ -170,5 +170,11 @@
       <LastGenOutput>DiacriticsModel.cs</LastGenOutput>
     </Content>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Diacritics\Diacritics.csproj">
+      <Project>{8348ea31-0990-4d86-9c5c-b3fdc52981b0}</Project>
+      <Name>Diacritics</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

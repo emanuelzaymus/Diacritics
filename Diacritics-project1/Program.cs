@@ -2,14 +2,13 @@
 using DiacriticsProject1.Common.Files;
 using DiacriticsProject1.Reconstructors.DBDR;
 using DiacriticsProject1.Reconstructors.FileDR;
+using DiacriticsProject1.Reconstructors.TrieDR;
 using DiacriticsProject1.Tester;
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using DiacriticsProject1.Reconstructors;
 using System.IO;
-using Xceed.Words.NET;
-using System.Diagnostics;
 
 [assembly: InternalsVisibleTo("DiacriticsProject1.UnitTests")]
 
@@ -20,32 +19,32 @@ namespace DiacriticsProject1
         private static string[] allTexts =
         {
             "/odborne/astronomia/Astronomia.txt",
-            //"/odborne/bobby robson/Bobby Robson.txt",
-            //"/odborne/erozia/Erozia.txt",
-            //"/odborne/etika a genove inzinierstvo/Etika a genove inzinierstvo.txt",
-            //"/odborne/mimoplucne tbc/Mimoplucne TBC.txt",
-            //"/odborne/staroveky rim/Staroveky Rim.txt",
-            //"/odborne/vcela medonosna/Vcela medonosna.txt",
+            "/odborne/bobby robson/Bobby Robson.txt",
+            "/odborne/erozia/Erozia.txt",
+            "/odborne/etika a genove inzinierstvo/Etika a genove inzinierstvo.txt",
+            "/odborne/mimoplucne tbc/Mimoplucne TBC.txt",
+            "/odborne/staroveky rim/Staroveky Rim.txt",
+            "/odborne/vcela medonosna/Vcela medonosna.txt",
 
-            //"/publicisticke/ako sa esetakom pokusili ukradnut hotel carlton/Ako sa esetakom pokusili ukradnut hotel Carlton.txt",
-            //"/publicisticke/bratislavsky bikesharing predstavil novy cennik/Bratislavsky bikesharing predstavil novy cennik.txt",
-            //"/publicisticke/domaca skola ju naucila s radostou sluzit druhym/Domaca skola ju naucila s radostou sluzit druhym.txt",
-            //"/publicisticke/huawei p30 pro oficialne predstaveny/Huawei P30 Pro oficialne predstaveny.txt",
-            //"/publicisticke/macron ako novodoby ludovit xvi/Macron ako novodoby Ludovit XVI.txt",
-            //"/publicisticke/najlepsi politicky film sucasnosti/Najlepsi politicky film sucasnosti.txt",
-            //"/publicisticke/nato ma 70 rokov/NATO ma 70 rokov.txt",
-            //"/publicisticke/paci sa mi robit humor bez nadavok/Paci sa mi robit humor bez nadavok.txt",
-            //"/publicisticke/retz/Retz.txt",
-            //"/publicisticke/rokovania s usa budu pokracovat/Rokovania s USA budu pokracovat.txt",
-            //"/publicisticke/smrt domorodych americanov po prichode europanov ochladila planetu/Smrt domorodych Americanov po prichode Europanov ochladila planetu.txt",
-            //"/publicisticke/smutna premierka na odchode/Smutna premierka na odchode.txt",
-            //"/publicisticke/ukrajinske volby/Ukrajinske volby.txt",
-            //"/publicisticke/vedecka fantastika je predobrazom toho co je mozne/Vedecka fantastika je predobrazom toho co je mozne.txt",
+            "/publicisticke/ako sa esetakom pokusili ukradnut hotel carlton/Ako sa esetakom pokusili ukradnut hotel Carlton.txt",
+            "/publicisticke/bratislavsky bikesharing predstavil novy cennik/Bratislavsky bikesharing predstavil novy cennik.txt",
+            "/publicisticke/domaca skola ju naucila s radostou sluzit druhym/Domaca skola ju naucila s radostou sluzit druhym.txt",
+            "/publicisticke/huawei p30 pro oficialne predstaveny/Huawei P30 Pro oficialne predstaveny.txt",
+            "/publicisticke/macron ako novodoby ludovit xvi/Macron ako novodoby Ludovit XVI.txt",
+            "/publicisticke/najlepsi politicky film sucasnosti/Najlepsi politicky film sucasnosti.txt",
+            "/publicisticke/nato ma 70 rokov/NATO ma 70 rokov.txt",
+            "/publicisticke/paci sa mi robit humor bez nadavok/Paci sa mi robit humor bez nadavok.txt",
+            "/publicisticke/retz/Retz.txt",
+            "/publicisticke/rokovania s usa budu pokracovat/Rokovania s USA budu pokracovat.txt",
+            "/publicisticke/smrt domorodych americanov po prichode europanov ochladila planetu/Smrt domorodych Americanov po prichode Europanov ochladila planetu.txt",
+            "/publicisticke/smutna premierka na odchode/Smutna premierka na odchode.txt",
+            "/publicisticke/ukrajinske volby/Ukrajinske volby.txt",
+            "/publicisticke/vedecka fantastika je predobrazom toho co je mozne/Vedecka fantastika je predobrazom toho co je mozne.txt",
 
-            //"/umelecke/banality/Banality.txt",
-            //"/umelecke/maco mliec/Maco Mliec.txt",
-            //"/umelecke/mor ho/Mor ho.txt",
-            //"/umelecke/tapakovci/Tapakovci.txt",
+            "/umelecke/banality/Banality.txt",
+            "/umelecke/maco mliec/Maco Mliec.txt",
+            "/umelecke/mor ho/Mor ho.txt",
+            "/umelecke/tapakovci/Tapakovci.txt",
         };
 
         private static string[] reconstructorsPath =
@@ -100,36 +99,16 @@ namespace DiacriticsProject1
 
         static void Main(string[] args)
         {
+            TestOnTestTexts(new TrieDR(binaryFilePath, positionTriePath), 1);
 
-            //CleanFiles();
+            using (FileDR fdr = new FileDR(binaryFilePath, positionTriePath))
+            {
+                TestOnTestTexts(fdr, 0);
+            }
 
-            //TestOnTestTexts(new TrieDR((UniGramFile)files[3], files.GetRange(0, 3)), 1);
-
-            //TestOnTestTexts(new TrieDR(binaryFilePath, positionTriePath), 1);
-
-            //CreatePartialBinaryFiles();
-            //CreateCompoundBinaryFile();
-            //FileStatistics.BinaryFileNgramStats(binaryFilePath, positionTriePath);
-
-            //FileStatistics.BinaryFilePartitioningStats(binaryFilePath, positionTriePath, "a");
-
-            //using (FileDR fdr = new FileDR(binaryFilePath, positionTriePath))
-            //{
-            //    TestOnTestTexts(fdr, 0);
-            //}
-
-            //OnlyTestTexts(reconstructorsPath[4]);
-
-            //Normalize(reconstructorsPath[3]);
-            //CreateNonDiacriticsFiles(reconstructorsPath[4]);
-
-            //Helper();
-
-            //Exists(reconstructorsPath[0]);
-
-            //var n = reconstructorsPath[3] + TextFile.FileName(allTexts[0]) + "_WITHOUT-DIACRITICS.txt";
-            //Console.WriteLine(n);
-            //FileCleaner.CleanFileFromHiddenChars(n);
+            OnlyTestTexts(reconstructorsPath[4]);
+            OnlyTestTexts(reconstructorsPath[3]);
+            OnlyTestTexts(reconstructorsPath[2]);
         }
 
         private static void Normalize(string rPath)
@@ -166,18 +145,6 @@ namespace DiacriticsProject1
 
                 DiacriticsTester.FindMistakes(originalText, reconstructedText, rPath + text, true);
             }
-        }
-
-        private static void Exists(string path)
-        {
-            foreach (var text in allTexts)
-            {
-                if (!File.Exists(path + text))
-                {
-                    throw new Exception(path + text + " DO NOT EXISTS!!!");
-                }
-            }
-            Console.WriteLine("All texts exists.");
         }
 
         private static void CleanFiles()
@@ -225,17 +192,6 @@ namespace DiacriticsProject1
             foreach (var text in allTexts)
             {
                 DiacriticsTester.Test(reconstructorsPath[rPath] + text, dr);
-            }
-        }
-
-        private static void Helper()
-        {
-            using (var helper = new StreamWriter("D:/helper2.txt"))
-            {
-                for (int i = 0; i < 100; i++)
-                {
-                    helper.Write(i + "  ");
-                }
             }
         }
 

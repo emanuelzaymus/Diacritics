@@ -1,5 +1,4 @@
 ﻿using DiacriticsProject1.Common;
-using DiacriticsProject1.Common.Files;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -242,14 +241,11 @@ namespace DiacriticsProject1.Reconstructors
             }
         }
 
-        public void Reconstrut(string sourcePath, string destinationPath)
+        public void Reconstruct(string sourcePath, string destinationPath)
         {
             if (!File.Exists(sourcePath))
                 throw new Exception("File " + sourcePath + " does not exist!");
-
-            if (!File.Exists(destinationPath))
-                throw new Exception("File " + destinationPath + " does not exist!");
-
+            
             string textWithoutDiacritics = File.OpenText(sourcePath).ReadToEnd();
 
             string reconstructedText = Reconstruct(textWithoutDiacritics);
@@ -261,10 +257,7 @@ namespace DiacriticsProject1.Reconstructors
         {
             if (!File.Exists(sourcePath))
                 throw new Exception("File " + sourcePath + " does not exist!");
-
-            if (!File.Exists(destinationPath))
-                throw new Exception("File " + destinationPath + " does not exist!");
-
+            
             string textWithoutDiacritics;
             using (DocX sourceDoc = DocX.Load(sourcePath))
             {
