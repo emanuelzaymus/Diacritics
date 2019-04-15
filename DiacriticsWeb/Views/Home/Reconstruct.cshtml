@@ -1,0 +1,11 @@
+﻿@{
+    ViewData["Title"] = "Reconstruct";
+}
+
+@model DiacriticsWeb.Models.DiacriticsText
+
+    <br />
+
+    @*<p>@Html.DisplayFor(model => model.ReconstructedText)</p>*@
+
+    <textarea asp-for="ReconstructedText" class="form-control" rows="25" style="resize: none"></textarea>

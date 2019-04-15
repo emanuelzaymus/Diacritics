@@ -4,9 +4,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using DiacriticsWeb.Models;
+using Web.Models;
 
-namespace DiacriticsWeb.Controllers
+namespace Web.Controllers
 {
     public class HomeController : Controller
     {
@@ -16,17 +16,38 @@ namespace DiacriticsWeb.Controllers
         }
 
         [HttpPost]
-        public IActionResult Reconstruct(DiacriticsText model)
+        public IActionResult Index(DiacriticsText model)
         {
-            model.ReconstructedText = model.OriginalText + "asdfasdadsasd66666666666666";
-
-            return View(model);
+            return View();
         }
 
         public IActionResult About()
         {
             ViewData["Message"] = "Your application description page.";
 
+            return View();
+        }
+
+        //public IActionResult Contact()
+        //{
+        //    ViewData["Message"] = "Your contact page.";
+
+        //    return View();
+        //}
+
+        public IActionResult Contact(DiacriticsText model)
+        {
+            ViewData["Message"] = "Your contact page.";
+
+            
+
+            model.ReconstructedText = model.OriginalText + "9999999999999";
+
+            return View(model);
+        }
+
+        public IActionResult Privacy()
+        {
             return View();
         }
 

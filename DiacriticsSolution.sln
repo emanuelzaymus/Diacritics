@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiacriticsWeb", "Diacritics
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Diacritics", "Diacritics\Diacritics.csproj", "{8348EA31-0990-4D86-9C5C-B3FDC52981B0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Web", "Web\Web.csproj", "{F7936B4D-A39C-4EC7-A9F9-EA71FBB4E107}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{8348EA31-0990-4D86-9C5C-B3FDC52981B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8348EA31-0990-4D86-9C5C-B3FDC52981B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8348EA31-0990-4D86-9C5C-B3FDC52981B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7936B4D-A39C-4EC7-A9F9-EA71FBB4E107}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7936B4D-A39C-4EC7-A9F9-EA71FBB4E107}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7936B4D-A39C-4EC7-A9F9-EA71FBB4E107}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7936B4D-A39C-4EC7-A9F9-EA71FBB4E107}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

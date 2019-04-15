@@ -7,14 +7,14 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Diacritics;
+
 
 namespace DiacriticsWeb
 {
     public class Program
     {
-        private static string binaryFilePath = "C:/Users/emanuel.zaymus/Documents/compoundBinFile/compoundBinFile.dat";
-        private static string positionTriePath = "C:/Users/emanuel.zaymus/Documents/compoundBinFile/positionTrie.txt";
+        private static readonly string binaryFilePath = "C:/Users/emanuel.zaymus/Documents/compoundBinFile/compoundBinFile.dat";
+        private static readonly string positionTriePath = "C:/Users/emanuel.zaymus/Documents/compoundBinFile/positionTrie.txt";
 
         public static void Main(string[] args)
         {

@@ -2,23 +2,12 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="row">
-    <div class="col-md-6">
+@model DiacriticsWeb.Models.DiacriticsText
+
+    <br />
+
+    <form asp-action="Reconstruct" asp-controller="Home">
+        <textarea asp-for="OriginalText" class="form-control" rows="25" style="resize: none"></textarea>
         <br />
-
-        <form method="post">
-            <textarea @*asp-for="Body"*@ class="form-control" rows="25" style="resize: none"></textarea>
-            <br />
-            <input type="submit" name="submit" value="Submit" />
-        </form>
-
-    </div>
-    <div class="col-md-6">
-        <br />
-
-        <form method="post">
-            <textarea @*asp-for="Body2" *@ class="form-control" rows="25" style="resize: none"></textarea>
-        </form>
-
-    </div>
-</div>
+        <input type="submit" name="submit" value="Reconstruct" />
+    </form>
