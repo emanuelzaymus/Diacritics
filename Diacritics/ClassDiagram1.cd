@@ -1,0 +1,123 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="DiacriticsProject1.Reconstructors.DiacriticsReconstructor">
+    <Position X="4.5" Y="0.5" Width="2.25" />
+    <Members>
+      <Field Name="finalBuilder" Hidden="true" />
+      <Method Name="IsValidChar" Hidden="true" />
+      <Method Name="IsWord" Hidden="true" />
+      <Method Name="NearWords" Hidden="true" />
+      <Method Name="Normalize" Hidden="true" />
+      <Method Name="RecounstructOriginalUpCase" Hidden="true" />
+      <Method Name="Split" Hidden="true" />
+      <Field Name="upCaseStrBuilder" Hidden="true" />
+      <Field Name="wordBuilder" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAkAAEKAAAAAAAAgAAAgQAgEhAAAAgAA=</HashCode>
+      <FileName>DiacriticsProject1\Reconstructors\DiacriticsReconstructor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Diacritics.InMemoryReconstructor">
+    <Position X="3.25" Y="4.75" Width="2.25" />
+    <Members>
+      <Field Name="dr" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAgAAAAAAAAAAEAgAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>InMemoryReconstructor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Diacritics.Reconstructor" BaseTypeListCollapsed="true">
+    <Position X="5.75" Y="4.75" Width="2.25" />
+    <Members>
+      <Field Name="dr" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAgAAAAAAAAAAEAgAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Reconstructor.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.208" Collapsed="true" />
+  </Class>
+  <Class Name="DiacriticsProject1.Reconstructors.TrieDR.TrieDR">
+    <Position X="3.75" Y="2.75" Width="1.5" />
+    <Members>
+      <Field Name="trie" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAhAAAAAAA=</HashCode>
+      <FileName>DiacriticsProject1\Reconstructors\TrieDR\TrieDR.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DiacriticsProject1.Reconstructors.TrieDR.TrieCreator">
+    <Position X="1.5" Y="2.75" Width="1.5" />
+    <Members>
+      <Field Name="trie" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAAAAABAgAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DiacriticsProject1\Reconstructors\TrieDR\TrieCreator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DiacriticsProject1.Reconstructors.FileDR.PositionTrieCreator">
+    <Position X="8.25" Y="4.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAA=</HashCode>
+      <FileName>DiacriticsProject1\Reconstructors\FileDR\PositionTrieCreator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DiacriticsProject1.Reconstructors.FileDR.FileDR">
+    <Position X="6" Y="2.75" Width="1.5" />
+    <Members>
+      <Field Name="cache" Hidden="true" />
+      <Field Name="countOfCacheSolved" Hidden="true" />
+      <Field Name="positionTrie" Hidden="true" />
+      <Field Name="reader" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAACAAAAAAAAAAAAAAAEAAAAAAAAABIAAQAAA=</HashCode>
+      <FileName>DiacriticsProject1\Reconstructors\FileDR\FileDR.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DiacriticsProject1.Reconstructors.FileDR.FileCreator">
+    <Position X="1.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DiacriticsProject1\Reconstructors\FileDR\FileCreator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DiacriticsProject1.Reconstructors.FileDR.Cache">
+    <Position X="8.5" Y="2.75" Width="1.5" />
+    <Members>
+      <Field Name="cache" Hidden="true" />
+      <Method Name="CheckSize" Hidden="true" />
+      <Field Name="isSetSize" Hidden="true" />
+      <Field Name="priorityNgrams" Hidden="true" />
+      <Field Name="size" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>ACoAAAABAAAAAABAAIAAAAAAAAAAAAAAAAEAAABAAAA=</HashCode>
+      <FileName>DiacriticsProject1\Reconstructors\FileDR\Cache.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DiacriticsProject1.Common.StringRoutines">
+    <Position X="8.25" Y="1.25" Width="1.75" />
+    <Members>
+      <Field Name="letters" Hidden="true" />
+      <Field Name="stringBuilder" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAACAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAACAAA=</HashCode>
+      <FileName>DiacriticsProject1\Common\StringRoutines.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DiacriticsProject1.Common.FileCleaner" Collapsed="true">
+    <Position X="8.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAEAAAAAAAAAAAAAAAAgAAIAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DiacriticsProject1\Common\FileCleaner.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

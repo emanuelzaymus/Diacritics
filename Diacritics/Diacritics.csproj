@@ -48,7 +48,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DiacriticsProject1\Common\FileCleaner.cs" />
-    <Compile Include="DiacriticsProject1\Common\Files\TextFile.cs" />
     <Compile Include="DiacriticsProject1\Common\StringRoutines.cs" />
     <Compile Include="DiacriticsProject1\Reconstructors\DiacriticsReconstructor.cs" />
     <Compile Include="DiacriticsProject1\Reconstructors\FileDR\Cache.cs" />
@@ -62,6 +61,7 @@
     <Compile Include="Reconstructor.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
