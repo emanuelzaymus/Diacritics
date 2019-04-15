@@ -248,9 +248,6 @@ namespace DiacriticsProject1.Reconstructors
 
         public void Reconstruct(string sourcePath, string destinationPath)
         {
-            if (!File.Exists(sourcePath))
-                throw new Exception("File " + sourcePath + " does not exist!");
-            
             string textWithoutDiacritics = File.OpenText(sourcePath).ReadToEnd();
 
             string reconstructedText = Reconstruct(textWithoutDiacritics);
@@ -260,9 +257,6 @@ namespace DiacriticsProject1.Reconstructors
 
         public void ReconstructWordDocument(string sourcePath, string destinationPath)
         {
-            if (!File.Exists(sourcePath))
-                throw new Exception("File " + sourcePath + " does not exist!");
-            
             string textWithoutDiacritics;
             using (DocX sourceDoc = DocX.Load(sourcePath))
             {
