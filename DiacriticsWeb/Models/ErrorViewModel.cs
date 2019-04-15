@@ -1,5 +1,3 @@
-using System;
-
 namespace DiacriticsWeb.Models
 {
     public class ErrorViewModel

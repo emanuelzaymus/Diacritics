@@ -1,32 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using DiacriticsWeb.Models;
+using Diacritics;
 
 namespace DiacriticsWeb.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly Reconstructor reconstructor;
+
+        public HomeController(Reconstructor reconstructor)
+        {
+            this.reconstructor = reconstructor;
+        }
+
         public IActionResult Index()
         {
             return View();
         }
 
         [HttpPost]
-        public IActionResult Reconstruct(DiacriticsText model)
+        public IActionResult Index(DiacriticsText model)
         {
-            model.ReconstructedText = model.OriginalText + "asdfasdadsasd66666666666666";
+            model.ReconstructedText = reconstructor.Reconstruct(model.OriginalText);
 
             return View(model);
         }
 
         public IActionResult About()
         {
-            ViewData["Message"] = "Your application description page.";
-
             return View();
         }
 
@@ -35,5 +37,6 @@ namespace DiacriticsWeb.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
     }
 }

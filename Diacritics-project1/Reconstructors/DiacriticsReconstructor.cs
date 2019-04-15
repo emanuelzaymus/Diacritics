@@ -20,6 +20,11 @@ namespace DiacriticsProject1.Reconstructors
 
         public string Reconstruct(string text)
         {
+            if (text == null)
+            {
+                return null;
+            }
+
             List<string> parsedStrings = Split(text);
             finalBuilder.Clear();
 

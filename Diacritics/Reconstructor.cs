@@ -23,7 +23,7 @@ namespace Diacritics
         /// Reconstructs diacritics.
         /// </summary>
         /// <param name="text">Text without diacritics.</param>
-        /// <returns>Reconstructed text.</returns>
+        /// <returns>Reconstructed text. If input string text is null then returns null.</returns>
         public string Reconstruct(string text)
         {
             return dr.Reconstruct(text);

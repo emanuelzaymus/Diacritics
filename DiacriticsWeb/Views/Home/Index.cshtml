@@ -1,13 +1,28 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Domov";
 }
 
 @model DiacriticsWeb.Models.DiacriticsText
 
-    <br />
+<div class="row">
+    <div class="col-md-6">
 
-    <form asp-action="Reconstruct" asp-controller="Home">
-        <textarea asp-for="OriginalText" class="form-control" rows="25" style="resize: none"></textarea>
         <br />
-        <input type="submit" name="submit" value="Reconstruct" />
-    </form>
+
+        <form method="post" asp-action="Index" asp-controller="Home">
+            <textarea asp-for="OriginalText" class="form-control" rows="25" style="resize: none"
+                      placeholder="Text bez diakritiky"></textarea>
+            <br />
+            <input type="submit" name="submit" value="Dolpň diakritiku" class="btn btn-default" />
+        </form>
+
+    </div>
+    <div class="col-md-6">
+
+        <br />
+
+        <textarea asp-for="ReconstructedText" class="form-control" rows="25" style="resize: none"
+                  placeholder="Text so zrekonštruovanou diakritikou"></textarea>
+
+    </div>
+</div>
