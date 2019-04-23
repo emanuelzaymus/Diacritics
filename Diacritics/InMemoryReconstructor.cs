@@ -4,7 +4,7 @@ namespace Diacritics
 {
     public class InMemoryReconstructor
     {
-        TrieDR dr;
+        private TrieDR dr;
 
         /// <summary>
         /// InMemoryReconstuctor is fast diacritics reconstructor that reconstructs 
