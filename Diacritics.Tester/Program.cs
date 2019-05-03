@@ -52,17 +52,17 @@ namespace Diacritics.Tester
         {
             Console.WriteLine("Instructions:");
 
-            Console.WriteLine("Arguments:\n" +
-                "\t0 -> OriginalTextPath,\n" +
-                "\t1 -> ReconstructedTextPath,\n" +
+            Console.WriteLine("Arguments: \n" +
+                "\t0 -> OriginalTextPath \n" +
+                "\t1 -> ReconstructedTextPath \n" +
                 "\t2 -> WriteStatistics (0 = false, 1 = true)");
 
             Console.WriteLine("OR");
 
             Console.WriteLine(
-                "\t0 -> OriginalText,\n" +
-                "\t1 -> ReconstructedText,\n" +
-                "\t2 -> Path (path where to write mistakes and statistics),\n" +
+                "\t0 -> OriginalText \n" +
+                "\t1 -> ReconstructedText \n" +
+                "\t2 -> Path (path where to write mistakes and statistics) \n" +
                 "\t3 -> WriteStatistics (0 = false, 1 = true)");
         }
 
