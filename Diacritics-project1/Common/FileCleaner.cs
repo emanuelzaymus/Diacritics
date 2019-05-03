@@ -29,7 +29,6 @@ namespace DiacriticsProject1.Common
         internal string CompleteProcessing(NgramFile file, int rmvWordsFromFreq = 0, bool clean = true,
             int rmvBadWordsFromFreq = int.MaxValue, int rmvWordsFromLength = int.MaxValue)
         {
-            // todo: toto je zbytocne... NgramFile vzdy ostane UniGramFile
             bool isUniGramFile = file is UniGramFile;
 
             if (rmvWordsFromFreq > 0)
