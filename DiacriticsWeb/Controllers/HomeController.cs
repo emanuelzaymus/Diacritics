@@ -22,6 +22,11 @@ namespace DiacriticsWeb.Controllers
         [HttpPost]
         public IActionResult Index(DiacriticsText model)
         {
+            if (model.OriginalText.Length > 10000)
+            {
+                model.OriginalText = model.OriginalText.Substring(0, 10000);
+            }
+
             model.ReconstructedText = reconstructor.Reconstruct(model.OriginalText);
 
             return View(model);

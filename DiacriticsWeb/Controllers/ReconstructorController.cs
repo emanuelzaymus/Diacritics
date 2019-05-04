@@ -28,6 +28,11 @@ namespace DiacriticsWeb.Controllers
         [HttpPost]
         public async Task<ActionResult<ApiText>> PostApiText([FromBody]ApiText apiText)
         {
+            if (apiText.Text.Length > 10000)
+            {
+                apiText.Text = apiText.Text.Substring(0, 10000);
+            }
+
             apiText.Text = reconstructor.Reconstruct(apiText.Text);
 
             return CreatedAtAction(null, apiText);
