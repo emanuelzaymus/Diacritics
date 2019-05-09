@@ -165,7 +165,7 @@ namespace DiacriticsProject1.Reconstructors.TrieDR
             var ret = new Trie<char, List<string>>();
 
             using (StreamReader strmReader = File.OpenText(positionTriePath))
-            using (var binReader = new BinaryReader(File.Open(binaryFilePath, FileMode.Open)))
+            using (var binReader = new BinaryReader(File.OpenRead(binaryFilePath)))
             {
                 string line;
                 int c = 0;

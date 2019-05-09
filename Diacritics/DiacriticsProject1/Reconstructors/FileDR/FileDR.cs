@@ -6,17 +6,18 @@ namespace DiacriticsProject1.Reconstructors.FileDR
 {
     class FileDR : DiacriticsReconstructor, IDisposable
     {
-        private Trie<char, long> positionTrie;
+        private static Trie<char, long> positionTrie;
         private BinaryReader reader;
         private Cache cache;
-        private int countOfCacheSolved;
 
         internal FileDR(string binaryFilePath, string positionTriePath)
         {
-            positionTrie = PositionTrieCreator.CreatePositionTrie(positionTriePath);
-            reader = new BinaryReader(File.Open(binaryFilePath, FileMode.Open));
+            if (positionTrie == null)
+            {
+                positionTrie = PositionTrieCreator.CreatePositionTrie(positionTriePath);
+            }
+            reader = new BinaryReader(File.OpenRead(binaryFilePath));
             cache = new Cache(1000);
-            countOfCacheSolved = 0;
         }
 
         protected override bool SetDiacritics(ref string word, string[] nthBefore, string[] nthAfter)
@@ -37,7 +38,6 @@ namespace DiacriticsProject1.Reconstructors.FileDR
                     if (MatchesUp(word, ng.Split(' '), nthBefore, nthAfter, ref result))
                     {
                         word = result;
-                        countOfCacheSolved++;
                         return true;
                     }
                 }

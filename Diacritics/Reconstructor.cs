@@ -8,9 +8,14 @@ namespace Diacritics
         private FileDR dr;
 
         /// <summary>
+        /// <para>
         /// Reconstuctor is fast diacritics reconstructor that reconstructs 
         /// one word approximately in 4ms with 98,17% accuracy. It needs at least 1.5GB RAM. 
-        /// Creating this object may take few seconds. It is recommended to create this object only once.
+        /// </para>
+        /// <para>
+        /// Creation of first instance of this class may take few seconds. 
+        /// Once the program creates internal structure in memory, it will be used in others instances. 
+        /// </para>
         /// </summary>
         /// <param name="binaryFilePath">Path to binary file "compoundBinFile.dat".</param>
         /// <param name="positionTriePath">Path to text file "positionTrie.txt".</param>

@@ -17,9 +17,9 @@ namespace DiacriticsProject1.Common
             { 'Ř', 'R' }, { 'Ů', 'U' }, { 'Ö', 'O' }, { 'Ü', 'U' }
         };
 
-        private static StringBuilder stringBuilder = new StringBuilder();
+        private StringBuilder stringBuilder = new StringBuilder();
 
-        public static string MyDiacriticsRemover(string word)
+        public string MyDiacriticsRemover(string word)
         {
             char outCh;
             stringBuilder.Clear();

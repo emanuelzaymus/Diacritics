@@ -7,12 +7,6 @@ namespace DiacriticsWeb.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly Reconstructor reconstructor;
-
-        public HomeController(Reconstructor reconstructor)
-        {
-            this.reconstructor = reconstructor;
-        }
 
         public IActionResult Index()
         {
@@ -27,6 +21,7 @@ namespace DiacriticsWeb.Controllers
                 model.OriginalText = model.OriginalText.Substring(0, 10000);
             }
 
+            var reconstructor = new Reconstructor(Startup.BinaryFilePath, Startup.PositionTriePath);
             model.ReconstructedText = reconstructor.Reconstruct(model.OriginalText);
 
             return View(model);

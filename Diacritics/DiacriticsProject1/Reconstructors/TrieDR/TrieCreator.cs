@@ -8,21 +8,13 @@ namespace DiacriticsProject1.Reconstructors.TrieDR
 {
     class TrieCreator
     {
-        private Trie<char, List<string>> trie;
-
-        public TrieCreator()
-        {
-            trie = new Trie<char, List<string>>();
-        }
-
-        internal Trie<char, List<string>> Get() => trie;
 
         internal static Trie<char, List<string>> Load(string binaryFilePath, string positionTriePath)
         {
             var ret = new Trie<char, List<string>>();
 
             using (StreamReader strmReader = File.OpenText(positionTriePath))
-            using (var binReader = new BinaryReader(File.Open(binaryFilePath, FileMode.Open)))
+            using (var binReader = new BinaryReader(File.OpenRead(binaryFilePath)))
             {
                 string line;
                 while ((line = strmReader.ReadLine()) != null)

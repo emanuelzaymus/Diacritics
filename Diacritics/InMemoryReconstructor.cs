@@ -7,9 +7,11 @@ namespace Diacritics
         private TrieDR dr;
 
         /// <summary>
+        /// <para>
         /// InMemoryReconstuctor is fast diacritics reconstructor that reconstructs 
-        /// one word approximately in 0.2ms with 98,07% accuracy. It needs at least 5GB RAM. 
-        /// Creating this object may take several minutes. So create this object only once.
+        /// one word approximately in 0.2ms with 98,07% accuracy. It needs at least 5GB RAM.
+        /// </para>
+        /// <para>Creating this object may take several minutes. It is recommended to create this object only once.</para>
         /// </summary>
         /// <param name="binaryFilePath">Path to binary file "compoundBinFile.dat".</param>
         /// <param name="positionTriePath">Path to text file "positionTrie.txt".</param>

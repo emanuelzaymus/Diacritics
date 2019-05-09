@@ -15,7 +15,7 @@ namespace DiacriticsProject1.Reconstructors.FileDR
         public FileDR(string binaryFilePath, string positionTriePath)
         {
             positionTrie = PositionTrieCreator.CreatePositionTrie(positionTriePath);
-            reader = new BinaryReader(File.Open(binaryFilePath, FileMode.Open));
+            reader = new BinaryReader(File.OpenRead(binaryFilePath));
             cache = new Cache(1000);
             countOfCacheSolved = 0;
         }

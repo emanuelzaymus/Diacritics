@@ -14,6 +14,7 @@ namespace DiacriticsProject1.Reconstructors
         private StringBuilder finalBuilder = new StringBuilder();
         private StringBuilder upCaseStrBuilder = new StringBuilder();
         private StringBuilder wordBuilder = new StringBuilder();
+        private StringRoutines stringRoutines = new StringRoutines();
 
         public string Reconstruct(string text)
         {
@@ -153,7 +154,7 @@ namespace DiacriticsProject1.Reconstructors
 
         private string Normalize(string word)
         {
-            return StringRoutines.MyDiacriticsRemover(word).ToLower();
+            return stringRoutines.MyDiacriticsRemover(word).ToLower();
         }
 
         protected bool MatchesUp(string word, string[] ngram, string[] nthBefore, string[] nthAfter, ref string result)
@@ -162,7 +163,7 @@ namespace DiacriticsProject1.Reconstructors
             string[] ngramWords = new string[ngram.Length];
             for (int i = 0; i < ngram.Length; i++)
             {
-                ngramWords[i] = StringRoutines.MyDiacriticsRemover(ngram[i]);
+                ngramWords[i] = stringRoutines.MyDiacriticsRemover(ngram[i]);
             }
 
             bool matches;

@@ -6,12 +6,12 @@ namespace DiacriticsProject1.Reconstructors.FileDR
 {
     class Cache
     {
-
         private Trie<char, List<string>> cache = new Trie<char, List<string>>();
 
         private int size;
         private bool isSetSize;
         private List<string> priorityNgrams; // Last n (size) used ngrams.
+        private StringRoutines stringRoutines = new StringRoutines();
 
         public Cache()
         {
@@ -31,7 +31,7 @@ namespace DiacriticsProject1.Reconstructors.FileDR
             {
                 return;
             }
-            var nonDiacritics = StringRoutines.MyDiacriticsRemover(ngram);
+            var nonDiacritics = stringRoutines.MyDiacriticsRemover(ngram);
 
             foreach (var word in nonDiacritics.Split(' '))
             {
@@ -58,7 +58,7 @@ namespace DiacriticsProject1.Reconstructors.FileDR
             priorityNgrams.Add(ngram);
             if (priorityNgrams.Count > size)
             {
-                var ngramToRemove = StringRoutines.MyDiacriticsRemover(priorityNgrams[0]);
+                var ngramToRemove = stringRoutines.MyDiacriticsRemover(priorityNgrams[0]);
                 foreach (var word in ngramToRemove.Split(' '))
                 {
                     var listRemoveFrom = cache.Find(word);
