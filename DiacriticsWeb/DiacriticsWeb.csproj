@@ -13,4 +13,8 @@
     <ProjectReference Include="..\Diacritics\Diacritics.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\images\" />
+  </ItemGroup>
+
 </Project>
