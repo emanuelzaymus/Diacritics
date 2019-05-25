@@ -12,6 +12,10 @@ namespace DiacriticsProject1.Tester
     {
         private static string statisticsPath;
 
+        private static int countOfAllOrigWords = 0;
+        private static int countOfAllReconstWords = 0;
+        private static int countOfAllMistakes = 0;
+
         internal static void Test(string path, DiacriticsReconstructor dr, bool writeStatistics = true)
         {
             long bytes = GC.GetTotalMemory(true);
@@ -65,7 +69,7 @@ namespace DiacriticsProject1.Tester
 
             int count = 0;
 
-            using (var sw = new StreamWriter($"{TextFile.FileName(path)}_MISTAKES-ORIG-RECONST{TextFile.FileExtension(path)}"))
+            using (var sw = new StreamWriter($"{TextFile.FileName(path)}_MISTAKES-RECONST-ORIG{TextFile.FileExtension(path)}"))
             {
                 //int len = originalWords.Length;
                 int len = Math.Min(originalWords.Length, reconstructedWords.Length);
@@ -76,21 +80,22 @@ namespace DiacriticsProject1.Tester
                     if (originalW != reconstructW)
                     {
                         sw.WriteLine("{0} {1} {2} {3} {4} {5} {6} - {7} {8} {9} {10} {11} {12} {13}",
-                            i - 3 >= 0 ? originalWords[i - 3] : "",
-                            i - 2 >= 0 ? originalWords[i - 2] : "",
-                            i - 1 >= 0 ? originalWords[i - 1] : "",
-                            originalW,
-                            i + 1 < len ? originalWords[i + 1] : "",
-                            i + 2 < len ? originalWords[i + 2] : "",
-                            i + 3 < len ? originalWords[i + 3] : "",
-
                             i - 3 >= 0 ? reconstructedWords[i - 3] : "",
                             i - 2 >= 0 ? reconstructedWords[i - 2] : "",
                             i - 1 >= 0 ? reconstructedWords[i - 1] : "",
                             reconstructW,
                             i + 1 < len ? reconstructedWords[i + 1] : "",
                             i + 2 < len ? reconstructedWords[i + 2] : "",
-                            i + 3 < len ? reconstructedWords[i + 3] : "");
+                            i + 3 < len ? reconstructedWords[i + 3] : "",
+
+                            i - 3 >= 0 ? originalWords[i - 3] : "",
+                            i - 2 >= 0 ? originalWords[i - 2] : "",
+                            i - 1 >= 0 ? originalWords[i - 1] : "",
+                            originalW,
+                            i + 1 < len ? originalWords[i + 1] : "",
+                            i + 2 < len ? originalWords[i + 2] : "",
+                            i + 3 < len ? originalWords[i + 3] : "");
+
                         count++;
                     }
                 }
@@ -105,6 +110,19 @@ namespace DiacriticsProject1.Tester
                 File.AppendAllText(statisticsPath, $"reconstructedWords.Length = {reconstructedWords.Length}\n");
                 File.AppendAllText(statisticsPath, $"Number of mistakes: {count}\n");
             }
+
+            countOfAllOrigWords += originalWords.Length;
+            countOfAllReconstWords += reconstructedWords.Length;
+            countOfAllMistakes += count;
+        }
+
+        public static void PrintOverallStats()
+        {
+            Console.WriteLine($"countOfAllOrigWords = {countOfAllOrigWords}");
+            Console.WriteLine($"countOfAllReconstWords = {countOfAllReconstWords}");
+            Console.WriteLine($"countOfAllMistakes = {countOfAllMistakes}");
+
+            Console.WriteLine("Success rate: " + ( 100 - ((double)countOfAllMistakes / countOfAllOrigWords) * 100));
         }
 
     }

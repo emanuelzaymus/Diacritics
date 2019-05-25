@@ -97,18 +97,36 @@ namespace DiacriticsProject1
         private static string diacriticsOrig = "D:/testovacie_texty/4/Bobby Robson_pre_diacritics.txt";
         private static string diacritics = "D:/testovacie_texty/4/Diacritics/Diacritics.txt";
 
+        private static string wiki_path_AA = "D:/OutputWikiData/AA/";
+        private static string wiki_path_AB = "D:/OutputWikiData/AB/";
+        private static string wiki_path_AC = "D:/OutputWikiData/AC/";
+
+        private static int wiki_AA_count = 100;
+        private static int wiki_AB_count = 100;
+        private static int wiki_AC_count = 38;
+
+        private static string wiki_ = "wiki_";
+
         static void Main(string[] args)
         {
-            TestOnTestTexts(new TrieDR(binaryFilePath, positionTriePath), 1);
+            //TestOnTestTexts(new TrieDR(binaryFilePath, positionTriePath), 1);
 
-            using (FileDR fdr = new FileDR(binaryFilePath, positionTriePath))
+            //TrieDR trieDR = new TrieDR(binaryFilePath, positionTriePath);
+            //TestWiki(trieDR);
+
+            using (FileDR dr = new FileDR(binaryFilePath, positionTriePath))
             {
-                TestOnTestTexts(fdr, 0);
+                TestWiki(dr);
             }
 
-            OnlyTestTexts(reconstructorsPath[4]);
-            OnlyTestTexts(reconstructorsPath[3]);
-            OnlyTestTexts(reconstructorsPath[2]);
+            //using (FileDR fdr = new FileDR(binaryFilePath, positionTriePath))
+            //{
+            //    TestOnTestTexts(fdr, 0);
+            //}
+
+            //OnlyTestTexts(reconstructorsPath[4]);
+            //OnlyTestTexts(reconstructorsPath[3]);
+            //OnlyTestTexts(reconstructorsPath[2]);
         }
 
         private static void Normalize(string rPath)
@@ -193,6 +211,18 @@ namespace DiacriticsProject1
             {
                 DiacriticsTester.Test(reconstructorsPath[rPath] + text, dr);
             }
+        }
+
+        private static void TestWiki(DiacriticsReconstructor dr)
+        {
+            for (int i = 2; i < 7; i++)
+            {
+                var path = wiki_path_AA +"FileDR/"+ wiki_ + string.Format("{0:00}", i);
+                //Console.WriteLine(path);
+                DiacriticsTester.Test(path, dr);
+            }
+
+            DiacriticsTester.PrintOverallStats();
         }
 
     }
