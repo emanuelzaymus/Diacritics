@@ -215,7 +215,7 @@ namespace DiacriticsProject1
 
         private static void TestWiki(DiacriticsReconstructor dr)
         {
-            for (int i = 2; i < 7; i++)
+            for (int i = 7; i < 8; i++)
             {
                 var path = wiki_path_AA +"FileDR/"+ wiki_ + string.Format("{0:00}", i);
                 //Console.WriteLine(path);
