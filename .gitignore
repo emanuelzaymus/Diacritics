@@ -263,3 +263,4 @@ __pycache__/
 #Program data
 **/compoundBinFile.dat
 **/positionTrie.txt
+**/compoundBinFile_STATS.txt
