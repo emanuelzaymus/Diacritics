@@ -6,8 +6,12 @@ This program was created for Bachelor's thesis at [Faculty of Management Science
 
 ### How it works
 The program uses data from [Slovak National Corpus](https://korpus.sk/index_en.html) from Ľ. Štúr Institute of Linguistics, Slovak Academy of Sciences. We used data set/language corpus [prim-8.0-public-all](https://korpus.sk/prim(2d)8(2e)0_en.html) made out of 1.5 billion of tokens (namely subcorpuses of 4-grams, 3-grams, 2-grams and words). Yout can find them all [here](https://korpus.sk/files/prim-8.0/).
-Algorithm reconstructs every single word separately. It uses data structure [trie](https://en.wikipedia.org/wiki/Trie) for fastest access to the list of appropriate n-grams for each non-diacritics word. List of appropriate n-grams for non-diacritics word consists only of n-grams containing that word. In addition the list is grouped by n (from 4-grams to 1-gram) and sorted by absolute occurance in language. Then all n-grams are compared with the word and it's surrouding words one by one until there is match. After then the word is replaced with found diacritics form.
-For more info in Slovak look at the bachelor's thesis: [Automatická rekonštrukcia diakritiky pre slovenčinu](https://opac.crzp.sk/?fn=detailBiblioForm&sid=BCA102CB6C4CA54D4AE7A475C35B&seo=CRZP-detail-kniha)
+Algorithm reconstructs every single word separately. It uses data structure [trie](https://en.wikipedia.org/wiki/Trie) for fastest access to the list of appropriate n-grams for each non-diacritics word. List of appropriate n-grams for non-diacritics word consists only of n-grams containing that word. In addition, the list is grouped by n (from 4-grams to 1-gram) and sorted by absolute occurrence in language. Then all n-grams are compared with the word and it's surrouding words one by one until there is match. After then the word is being replaced with found diacritics form.
+
+### More information
+- Bachelor's thesis in Slovak language: [Automatická rekonštrukcia diakritiky pre slovenčinu](https://opac.crzp.sk/?fn=detailBiblioForm&sid=BCA102CB6C4CA54D4AE7A475C35B&seo=CRZP-detail-kniha)
+- Conference Paper in English: [Automatic restoration of diacritics based on word n-grams for Slovak texts](https://www.researchgate.net/publication/342255712_Automatic_restoration_of_diacritics_based_on_word_n-grams_for_Slovak_texts) or on [IEEE Xplore](https://ieeexplore.ieee.org/document/9119328)
+- Article in English: [Diacritics restoration based on word n-grams for Slovak texts](https://www.researchgate.net/publication/349351309_Diacritics_restoration_based_on_word_n-grams_for_Slovak_texts) or on [De Gruyter](https://www.degruyter.com/document/doi/10.1515/comp-2020-0143/html)
 
 ### Used technologies
 - C#
